@@ -12,58 +12,18 @@ import {
   Menu,
   X,
 } from 'lucide-react';
+import Logo from '@/assets/images/pentorax.jpeg';
 
 const ShopNowIcon: React.FC = () => (
   <ExternalLink className="ml-2 h-5 w-5" aria-hidden="true" />
 );
 
 const PentoraxLogo: React.FC = () => (
-  <div className="flex items-center space-x-2">
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 40 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M19.9999 5.054C14.73 6.13 10.37 10.37 9.17993 15.454L19.9999 20L19.9999 5.054Z"
-        fill="#29ABE2"
-      />
-      <path
-        d="M24.5459 9.18C29.6299 10.37 33.8699 14.73 34.9459 20H19.9999L24.5459 9.18Z"
-        fill="#29ABE2"
-      />
-      <path
-        d="M30.8199 24.546C29.6299 29.63 25.2699 33.87 19.9999 34.946V20L30.8199 24.546Z"
-        fill="#29ABE2"
-      />
-      <path
-        d="M15.4539 30.82C10.3699 29.63 6.12993 25.27 5.05393 20H19.9999L15.4539 30.82Z"
-        fill="#29ABE2"
-      />
-      <path
-        d="M20 20L27.071 27.071"
-        stroke="#F97316"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M20 20L12.929 27.071"
-        stroke="#F97316"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <circle cx="20" cy="20" r="8" fill="white" />
-      <path
-        d="M20 20L25.303 14.697"
-        stroke="#F97316"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        transform="rotate(45 20 20)"
-      />
-    </svg>
-    <span className="text-3xl font-bold text-primary">pentorax</span>
+  <div className="flex items-center space-x-2k">
+    <img src={Logo} alt="Pentorax Logo" className="h-20 w-20 object-contain" />
+    <span className="ml-[-27px] text-3xl font-normal text-primary">
+      pentorax
+    </span>
   </div>
 );
 
@@ -168,7 +128,7 @@ const Header: React.FC = () => {
 
             {/* Desktop Nav */}
             <nav
-              className="hidden items-center space-x-6 lg:flex"
+              className="hidden items-center lg:flex font-sand text-[14px]"
               aria-label="Main navigation"
             >
               {navLinks.map((item, index) => (
@@ -186,7 +146,7 @@ const Header: React.FC = () => {
                     {item.dropdown && <ChevronDown className="ml-1 h-4 w-4" />}
                   </a>
                   {index < navLinks.length - 1 && (
-                    <span className="mx-3 text-accent">|</span>
+                    <span className="mx-3 text-primary">|</span>
                   )}
                   {item.dropdown && (
                     <div className="absolute left-0 top-full z-50 hidden w-48 rounded-md bg-white py-1 shadow-lg group-hover:block">

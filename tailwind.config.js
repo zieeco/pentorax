@@ -17,6 +17,7 @@ export default {
         roboto: ['Roboto', 'sans-serif'],
         openSans: ['Open Sans', 'sans-serif'],
         sourceSansPro: ['Source Sans Pro', 'sans-serif'],
+        sand: ['Quicksand', 'sans-serif'],
       },
       borderRadius: {
         lg: 'var(--radius)',

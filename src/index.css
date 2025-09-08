@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Domine:wght@400..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Figtree:ital,wght@0,300..900;1,300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Domine:wght@400..700&family=Quicksand:wght@300..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Figtree:ital,wght@0,300..900;1,300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -14,12 +14,12 @@ body {
 @layer base {
   :root {
     /* BRAND COLORS (Pentorax) */
-    --primary: 199 82% 52%;     /* Blue (#29ABE2) */
-    --secondary: 43 94% 64%;    /* Yellow (#F9C74F) */
-    --accent: 158 45% 46%;      /* Green (#43AA8B) */
-    --muted: 231 77% 59%;       /* Indigo (#4361EE) */
-    --foreground: 228 7% 18%;   /* Dark (#2D2D2D) */
-    --background: 0 0% 100%;    /* Light/White */
+    --primary: 199 82% 52%; /* Blue (#29ABE2) */
+    --secondary: 43 94% 64%; /* Yellow (#F9C74F) */
+    --accent: 158 45% 46%; /* Green (#43AA8B) */
+    --muted: 231 77% 59%; /* Indigo (#4361EE) */
+    --foreground: 228 7% 18%; /* Dark (#2D2D2D) */
+    --background: 0 0% 100%; /* Light/White */
 
     --primary-foreground: 210 40% 98%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -61,9 +61,9 @@ body {
     --popover-foreground: 210 40% 98%;
 
     /* Invert brand colors for dark mode */
-    --primary: 199 82% 60%;     /* Lighter blue for contrast */
+    --primary: 199 82% 60%; /* Lighter blue for contrast */
     --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 43 94% 72%;    /* Softer yellow */
+    --secondary: 43 94% 72%; /* Softer yellow */
     --secondary-foreground: 210 40% 98%;
     --accent: 158 45% 54%;
     --accent-foreground: 210 40% 98%;
