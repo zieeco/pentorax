@@ -63,81 +63,72 @@ const PentoraxLogo: React.FC = () => (
         transform="rotate(45 20 20)"
       />
     </svg>
-    <span className="text-3xl font-bold text-orange-500">pentorax</span>
+    <span className="text-3xl font-bold text-primary">pentorax</span>
   </div>
 );
 
 const TopHeader: React.FC = () => (
-  <div className="fixed top-0 z-50 hidden w-full bg-[#29ABE2] text-white lg:block">
-    {' '}
+  <div className="fixed top-0 z-50 hidden w-full bg-primary text-white lg:block">
     <div className="container mx-auto flex h-12 items-center justify-center gap-[20rem] px-4 py-8 sm:px-6 lg:px-8">
-      {' '}
+      {/* Contact Info */}
       <div className="flex items-center space-x-6 text-sm">
-        {' '}
         <a
           href="tel:07002288888"
-          className="flex items-center space-x-2 transition-colors hover:text-gray-200"
+          className="flex items-center space-x-2 transition-colors hover:text-secondary"
         >
-          {' '}
-          <Phone className="h-4 w-4" aria-hidden="true" />{' '}
-          <span>07002288888</span>{' '}
-        </a>{' '}
+          <Phone className="h-4 w-4" aria-hidden="true" />
+          <span>07002288888</span>
+        </a>
         <a
           href="mailto:support@pentorax.com"
-          className="flex items-center space-x-2 transition-colors hover:text-gray-200"
+          className="flex items-center space-x-2 transition-colors hover:text-secondary"
         >
-          {' '}
-          <Mail className="h-4 w-4" aria-hidden="true" />{' '}
-          <span>support@pentorax.com</span>{' '}
-        </a>{' '}
-      </div>{' '}
+          <Mail className="h-4 w-4" aria-hidden="true" />
+          <span>support@pentorax.com</span>
+        </a>
+      </div>
+
+      {/* Socials + Contact Button */}
       <div className="flex items-center space-x-6">
-        {' '}
         <div className="flex items-center space-x-4">
-          {' '}
           <a
             href="#"
             aria-label="LinkedIn"
-            className="transition-colors hover:text-gray-200"
+            className="transition-colors hover:text-secondary"
           >
-            {' '}
-            <Linkedin className="h-4 w-4" aria-hidden="true" />{' '}
-          </a>{' '}
+            <Linkedin className="h-4 w-4" aria-hidden="true" />
+          </a>
           <a
             href="#"
             aria-label="Facebook"
-            className="transition-colors hover:text-gray-200"
+            className="transition-colors hover:text-secondary"
           >
-            {' '}
-            <Facebook className="h-4 w-4" aria-hidden="true" />{' '}
-          </a>{' '}
+            <Facebook className="h-4 w-4" aria-hidden="true" />
+          </a>
           <a
             href="#"
             aria-label="Instagram"
-            className="transition-colors hover:text-gray-200"
+            className="transition-colors hover:text-secondary"
           >
-            {' '}
-            <Instagram className="h-4 w-4" aria-hidden="true" />{' '}
-          </a>{' '}
+            <Instagram className="h-4 w-4" aria-hidden="true" />
+          </a>
           <a
             href="#"
             aria-label="YouTube"
-            className="transition-colors hover:text-gray-200"
+            className="transition-colors hover:text-secondary"
           >
-            {' '}
-            <Youtube className="h-4 w-4" aria-hidden="true" />{' '}
-          </a>{' '}
-        </div>{' '}
+            <Youtube className="h-4 w-4" aria-hidden="true" />
+          </a>
+        </div>
         <a
           href="#"
-          className="flex items-center space-x-2 rounded-md border border-white px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-white hover:text-[#29ABE2]"
+          className="flex items-center space-x-2 rounded-md border border-white px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-white hover:text-primary"
         >
-          {' '}
-          <span>Contact Us</span>{' '}
-          <Building2 className="h-5 w-5" aria-hidden="true" />{' '}
-        </a>{' '}
-      </div>{' '}
-    </div>{' '}
+          <span>Contact Us</span>
+          <Building2 className="h-5 w-5" aria-hidden="true" />
+        </a>
+      </div>
+    </div>
   </div>
 );
 
@@ -170,6 +161,7 @@ const Header: React.FC = () => {
       <div className="bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-20 items-center justify-between">
+            {/* Logo */}
             <a href="/" aria-label="Pentorax Home">
               <PentoraxLogo />
             </a>
@@ -186,7 +178,7 @@ const Header: React.FC = () => {
                 >
                   <a
                     href={item.href}
-                    className="flex items-center font-medium text-gray-700 hover:text-[#29ABE2]"
+                    className="flex items-center font-medium text-gray-700 hover:text-primary"
                     aria-haspopup={!!item.dropdown}
                     aria-expanded={false}
                   >
@@ -194,16 +186,15 @@ const Header: React.FC = () => {
                     {item.dropdown && <ChevronDown className="ml-1 h-4 w-4" />}
                   </a>
                   {index < navLinks.length - 1 && (
-                    <span className="mx-3 text-orange-400">|</span>
+                    <span className="mx-3 text-accent">|</span>
                   )}
-
                   {item.dropdown && (
                     <div className="absolute left-0 top-full z-50 hidden w-48 rounded-md bg-white py-1 shadow-lg group-hover:block">
                       {item.dropdown.map((subItem) => (
                         <a
                           key={subItem}
                           href="#"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-secondary/10 hover:text-secondary"
                         >
                           {subItem}
                         </a>
@@ -218,7 +209,7 @@ const Header: React.FC = () => {
             <div className="hidden items-center lg:flex">
               <a
                 href="#"
-                className="flex items-center rounded-md border-2 border-gray-800 px-6 py-2 font-semibold text-gray-800 hover:bg-gray-800 hover:text-white"
+                className="flex items-center rounded-md border-2 border-primary px-6 py-2 font-semibold text-primary transition-all hover:bg-primary hover:text-white"
               >
                 Shop Now <ShopNowIcon />
               </a>
@@ -229,7 +220,7 @@ const Header: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-gray-600 hover:text-gray-800"
+                className="text-gray-600 hover:text-primary"
                 aria-expanded={isMenuOpen}
                 aria-controls="mobile-menu"
               >
@@ -253,7 +244,7 @@ const Header: React.FC = () => {
               <a
                 key={item.name}
                 href={item.href}
-                className="flex items-center py-2 text-gray-600 hover:text-[#29ABE2]"
+                className="flex items-center py-2 text-gray-600 hover:text-primary"
               >
                 {item.name}
                 {item.dropdown && <ChevronDown className="ml-1 h-4 w-4" />}
@@ -261,7 +252,7 @@ const Header: React.FC = () => {
             ))}
             <a
               href="#"
-              className="mt-4 flex items-center justify-center rounded-md border-2 border-gray-800 px-6 py-2 font-semibold text-gray-800 hover:bg-gray-800 hover:text-white"
+              className="mt-4 flex items-center justify-center rounded-md border-2 border-primary px-6 py-2 font-semibold text-primary transition-all hover:bg-primary hover:text-white"
             >
               Shop Now <ExternalLink className="ml-2 h-5 w-5" />
             </a>
