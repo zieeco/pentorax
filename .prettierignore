@@ -1,0 +1,4 @@
+node_modules/
+dist/
+ignored-folder/
+ignored-file.sql
