@@ -6,7 +6,7 @@ const Hero: React.FC = () => {
 
   useEffect(() => {
     setIsVisible(true);
-
+    
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -31,7 +31,7 @@ const Hero: React.FC = () => {
 
   // Energy flow lines component
   const EnergyFlows = () => (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {/* Animated flowing lines */}
       <div className="absolute left-0 top-1/4 h-0.5 w-full animate-pulse bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60"></div>
       <div
@@ -122,7 +122,7 @@ const Hero: React.FC = () => {
               Enjoy 24/7 uninterrupted power with top-quality and reliable solar
               solutions.
             </p>
-
+            
             {/* Enhanced feature list */}
             {/* <div className="mt-6 flex flex-wrap justify-center gap-4 lg:justify-start">
               <div className="flex items-center space-x-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
@@ -167,9 +167,9 @@ const Hero: React.FC = () => {
               <div className="absolute inset-0 animate-pulse rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 opacity-75 blur transition-all duration-300 group-hover:opacity-100"></div>
 
               <img
-                src="https://images.unsplash.com/photo-1594736797933-d0301ba9d6c8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Premium Solar Equipment - Professional Solar System"
-                className="relative w-full max-w-md transform rounded-lg shadow-2xl transition-all duration-500 group-hover:scale-105"
+                src="/public/black-solar.png"
+                alt="Modern Solar Installation"
+                className="relative w-full max-w-md rounded-lg shadow-2xl transform group-hover:scale-105 transition-all duration-500"
               />
 
               {/* Interactive overlay on image */}
