@@ -62,19 +62,19 @@ const Hero: React.FC = () => {
     </div>
   );
 
-  const TrustBadges = () => (
-    <div className="absolute bottom-8 left-8 flex space-x-4 opacity-80">
-      <div className="rounded-full border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-sm">
-        <span className="text-xs text-white">25-Year Warranty</span>
-      </div>
-      <div className="rounded-full border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-sm">
-        <span className="text-xs text-white">5000+ Customers</span>
-      </div>
-    </div>
-  );
+  // const TrustBadges = () => (
+  //   <div className="absolute bottom-8 left-8 flex space-x-4 opacity-80">
+  //     <div className="rounded-full border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-sm">
+  //       <span className="text-xs text-white">25-Year Warranty</span>
+  //     </div>
+  //     <div className="rounded-full border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-sm">
+  //       <span className="text-xs text-white">5000+ Customers</span>
+  //     </div>
+  //   </div>
+  // );
 
   return (
-    <section className="relative h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 text-white">
+    <section className="font-sand relative h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 text-white">
       {/* Background Image with Parallax Effect */}
       <div
         className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center bg-no-repeat"
@@ -105,14 +105,14 @@ const Hero: React.FC = () => {
       <StatsOverlay />
 
       {/* Trust Badges */}
-      <TrustBadges />
+      {/* <TrustBadges /> */}
 
       <div className="container relative z-10 mx-auto flex h-full items-center px-4 sm:px-6 lg:px-8">
         <div className="flex w-full flex-col items-center lg:flex-row">
           <div
             className={`transform text-center transition-all duration-1000 lg:w-1/2 lg:text-left ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
           >
-            <h1 className="mb-6 text-4xl font-extrabold leading-tight md:text-5xl lg:text-6xl">
+            <h1 className="mb-6 font-sand text-4xl font-semibold leading-tight md:text-5xl lg:text-6xl">
               Make Smart Solar Decisions and Enjoy{' '}
               <span className="animate-pulse bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
                 Optimal Benefits
@@ -124,7 +124,7 @@ const Hero: React.FC = () => {
             </p>
 
             {/* Enhanced feature list */}
-            <div className="mt-6 flex flex-wrap justify-center gap-4 lg:justify-start">
+            {/* <div className="mt-6 flex flex-wrap justify-center gap-4 lg:justify-start">
               <div className="flex items-center space-x-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
                 <div className="h-2 w-2 animate-pulse rounded-full bg-green-400"></div>
                 <span className="text-sm">Zero Down Payment</span>
@@ -133,7 +133,7 @@ const Hero: React.FC = () => {
                 <div className="h-2 w-2 animate-pulse rounded-full bg-blue-400"></div>
                 <span className="text-sm">Tax Credits Available</span>
               </div>
-            </div>
+            </div> */}
 
             <div className="mt-8">
               <a
@@ -154,9 +154,9 @@ const Hero: React.FC = () => {
             </div>
 
             {/* Urgency message */}
-            <p className="mt-4 animate-pulse text-sm text-cyan-300">
+            {/* <p className="mt-4 animate-pulse text-sm text-cyan-300">
               ⚡ Limited time: 30% Federal Tax Credit expires soon
-            </p>
+            </p> */}
           </div>
 
           <div
@@ -167,8 +167,8 @@ const Hero: React.FC = () => {
               <div className="absolute inset-0 animate-pulse rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 opacity-75 blur transition-all duration-300 group-hover:opacity-100"></div>
 
               <img
-                src="https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Modern Solar Installation"
+                src="https://images.unsplash.com/photo-1594736797933-d0301ba9d6c8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                alt="Premium Solar Equipment - Professional Solar System"
                 className="relative w-full max-w-md transform rounded-lg shadow-2xl transition-all duration-500 group-hover:scale-105"
               />
 
