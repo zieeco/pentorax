@@ -21,7 +21,7 @@ const ShopNowIcon: React.FC = () => (
 const PentoraxLogo: React.FC = () => (
   <div className="flex items-center space-x-2k">
     <img src={Logo} alt="Pentorax Logo" className="h-20 w-20 object-contain" />
-    <span className="ml-[-27px] text-3xl font-normal text-primary">
+    <span className="ml-[-27px] text-3xl font-sand font-normal text-primary">
       pentorax
     </span>
   </div>
@@ -33,11 +33,11 @@ const TopHeader: React.FC = () => (
       {/* Contact Info */}
       <div className="flex items-center space-x-6 text-sm">
         <a
-          href="tel:07002288888"
+          href="tel:+2348081598604"
           className="flex items-center space-x-2 transition-colors hover:text-secondary"
         >
           <Phone className="h-4 w-4" aria-hidden="true" />
-          <span>07002288888</span>
+          <span>+234 808 159 8604</span>
         </a>
         <a
           href="mailto:support@pentorax.com"
