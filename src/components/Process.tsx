@@ -50,17 +50,23 @@ const ProcessStep: React.FC<ProcessStepProps> = ({
         <div
           className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-full font-bold text-white transition-all duration-500 ${
             isHovered
-              ? 'scale-110 bg-gradient-to-r from-blue-600 to-cyan-600'
-              : 'bg-gray-400'
+              ? 'scale-110 bg-gradient-to-r from-blue-600 to-cyan-600 shadow-lg shadow-blue-500/30'
+              : 'bg-gray-400 shadow-md'
           }`}
         >
           {step}
+          {/* Subtle pulse ring on hover */}
+          <div
+            className={`absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 transition-all duration-1000 ${
+              isHovered ? 'scale-150 opacity-0' : 'scale-100 opacity-0'
+            }`}
+          ></div>
         </div>
         {step < 4 && (
           <div
             className={`ml-4 h-0.5 flex-1 transition-all duration-700 ${
               isHovered
-                ? 'bg-gradient-to-r from-blue-600 to-cyan-600'
+                ? 'bg-gradient-to-r from-blue-600 to-cyan-600 shadow-sm shadow-blue-500/20'
                 : 'bg-gray-300'
             }`}
           ></div>
@@ -69,72 +75,87 @@ const ProcessStep: React.FC<ProcessStepProps> = ({
 
       {/* Content card */}
       <div
-        className={`flex-1 rounded-xl border border-gray-100 bg-white p-6 shadow-lg transition-all duration-500 ${
-          isHovered ? '-translate-y-2 border-blue-200 shadow-2xl' : ''
+        className={`relative flex-1 rounded-xl border border-gray-100 bg-white p-6 shadow-lg transition-all duration-500 ${
+          isHovered
+            ? '-translate-y-2 border-blue-200 shadow-2xl shadow-blue-500/10'
+            : ''
         }`}
       >
-        {/* Icon and duration */}
-        <div className="mb-4 flex items-center justify-between">
-          <div
-            className={`rounded-full p-3 transition-all duration-300 ${
-              isHovered ? 'scale-110 bg-blue-100' : 'bg-gray-100'
+        {/* Subtle gradient overlay on hover */}
+        <div
+          className={`absolute inset-0 rounded-xl bg-gradient-to-br from-blue-50/50 via-transparent to-cyan-50/30 transition-opacity duration-500 ${
+            isHovered ? 'opacity-100' : 'opacity-0'
+          }`}
+        ></div>
+
+        <div className="relative z-10">
+          {/* Icon and duration */}
+          <div className="mb-4 flex items-center justify-between">
+            <div
+              className={`rounded-full p-3 transition-all duration-300 ${
+                isHovered
+                  ? 'scale-110 bg-blue-100 shadow-sm shadow-blue-500/20'
+                  : 'bg-gray-100'
+              }`}
+            >
+              <div
+                className={`transition-colors duration-300 ${
+                  isHovered ? 'text-blue-600' : 'text-gray-600'
+                }`}
+              >
+                {icon}
+              </div>
+            </div>
+            <div className="flex items-center text-sm text-gray-500">
+              <Clock className="mr-1 h-4 w-4" />
+              {duration}
+            </div>
+          </div>
+
+          {/* Title and description */}
+          <h3
+            className={`mb-3 text-xl font-bold transition-colors duration-300 ${
+              isHovered ? 'text-blue-600' : 'text-gray-800'
             }`}
           >
-            <div
-              className={`transition-colors duration-300 ${
-                isHovered ? 'text-blue-600' : 'text-gray-600'
-              }`}
-            >
-              {icon}
-            </div>
+            {title}
+          </h3>
+
+          <p className="mb-4 leading-relaxed text-gray-600">{description}</p>
+
+          {/* Details list with animation */}
+          <div
+            className={`space-y-2 overflow-hidden transition-all duration-500 ${
+              showDetails ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
+            }`}
+          >
+            {details.map((detail, index) => (
+              <div
+                key={index}
+                className={`flex transform items-start text-sm text-gray-700 transition-all duration-500 ${
+                  showDetails ? 'translate-x-0' : '-translate-x-4'
+                }`}
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                <CheckCircle className="mr-2 mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                {detail}
+              </div>
+            ))}
           </div>
-          <div className="flex items-center text-sm text-gray-500">
-            <Clock className="mr-1 h-4 w-4" />
-            {duration}
+
+          {/* Learn more link */}
+          <div
+            className={`mt-4 transform border-t border-gray-100 pt-4 transition-all duration-300 ${
+              isHovered
+                ? 'translate-y-0 opacity-100'
+                : 'translate-y-2 opacity-0'
+            }`}
+          >
+            <button className="flex items-center text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
+              Learn More
+              <ArrowRight className="ml-1 h-4 w-4 transition-transform hover:translate-x-1" />
+            </button>
           </div>
-        </div>
-
-        {/* Title and description */}
-        <h3
-          className={`mb-3 text-xl font-bold transition-colors duration-300 ${
-            isHovered ? 'text-blue-600' : 'text-gray-800'
-          }`}
-        >
-          {title}
-        </h3>
-
-        <p className="mb-4 leading-relaxed text-gray-600">{description}</p>
-
-        {/* Details list with animation */}
-        <div
-          className={`space-y-2 overflow-hidden transition-all duration-500 ${
-            showDetails ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
-          }`}
-        >
-          {details.map((detail, index) => (
-            <div
-              key={index}
-              className={`flex transform items-start text-sm text-gray-700 transition-all duration-500 ${
-                showDetails ? 'translate-x-0' : '-translate-x-4'
-              }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
-            >
-              <CheckCircle className="mr-2 mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
-              {detail}
-            </div>
-          ))}
-        </div>
-
-        {/* Learn more link */}
-        <div
-          className={`mt-4 transform border-t border-gray-100 pt-4 transition-all duration-300 ${
-            isHovered ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
-          }`}
-        >
-          <button className="flex items-center text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
-            Learn More
-            <ArrowRight className="ml-1 h-4 w-4" />
-          </button>
         </div>
       </div>
     </div>
@@ -207,7 +228,7 @@ const PentoraxProcess: React.FC = () => {
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50/30 to-cyan-50/30 py-20 font-sand">
-      {/* Background pattern */}
+      {/* Enhanced background pattern */}
       <div
         className="absolute inset-0 opacity-5"
         style={{
@@ -215,17 +236,22 @@ const PentoraxProcess: React.FC = () => {
         }}
       ></div>
 
+      {/* Additional floating elements */}
+      <div className="absolute left-10 top-20 h-32 w-32 rounded-full bg-gradient-to-br from-blue-400/5 to-cyan-400/5 blur-xl"></div>
+      <div className="absolute right-16 top-40 h-24 w-24 rounded-full bg-gradient-to-br from-cyan-400/5 to-blue-400/5 blur-xl"></div>
+      <div className="absolute bottom-32 left-1/4 h-28 w-28 rounded-full bg-gradient-to-br from-blue-300/5 to-purple-300/5 blur-xl"></div>
+
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="mb-16 text-center">
-          <div className="mb-4 inline-flex items-center rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-600">
+          <div className="mb-4 inline-flex items-center rounded-full bg-blue-100/80 px-4 py-2 text-sm font-medium text-blue-600 backdrop-blur-sm">
             <Users className="mr-2 h-4 w-4" />
             Our Proven Process
           </div>
-          <h2 className="mb-6 bg-gradient-to-r from-gray-800 via-blue-700 to-cyan-600 bg-clip-text text-4xl font-bold text-transparent lg:text-5xl">
-            What Will Arnergy Offer You?
+          <h2 className="mb-6 bg-gradient-to-r from-gray-800 via-blue-700 to-cyan-600 bg-clip-text text-4xl font-bold text-transparent drop-shadow-sm lg:text-5xl">
+            What Will Pentorax Offer You?
           </h2>
-          <p className="mx-auto max-w-3xl text-xl text-gray-600">
+          <p className="mx-auto max-w-3xl text-xl text-gray-600 drop-shadow-sm">
             From initial consultation to long-term support, we guide you through
             every step of your solar journey with expertise and care
           </p>
@@ -268,10 +294,10 @@ const PentoraxProcess: React.FC = () => {
           ].map((item, index) => (
             <div
               key={index}
-              className="group rounded-xl border border-white/20 bg-white/60 p-6 text-center backdrop-blur-sm transition-all duration-300 hover:bg-white/80"
+              className="group rounded-xl border border-white/30 bg-white/70 p-6 text-center backdrop-blur-sm transition-all duration-300 hover:bg-white/90 hover:shadow-lg hover:shadow-blue-500/10"
             >
               <div
-                className={`inline-flex h-16 w-16 items-center justify-center bg-${item.color}-100 mb-4 rounded-full transition-transform duration-300 group-hover:scale-110`}
+                className={`inline-flex h-16 w-16 items-center justify-center bg-${item.color}-100/80 mb-4 rounded-full shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-md`}
               >
                 <div className={`text-${item.color}-600`}>{item.icon}</div>
               </div>
@@ -285,7 +311,7 @@ const PentoraxProcess: React.FC = () => {
 
         {/* CTA */}
         <div className="mt-12 text-center">
-          <button className="transform rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-xl">
+          <button className="transform rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 px-8 py-4 font-semibold text-white shadow-lg shadow-blue-500/25 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/30">
             Start Your Solar Journey Today
           </button>
         </div>
