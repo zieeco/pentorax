@@ -246,7 +246,7 @@ const Solutions: React.FC = () => {
   // Enhanced solution items with additional data
   const solutionItems: SolutionItemProps[] = [
     {
-      image: 'public/roof.jpeg',
+      image: 'public/roof.png',
       title: 'Residential Solar Solutions',
       ratingLabel: 'Customer Ratings',
       ratingScore: 5,
