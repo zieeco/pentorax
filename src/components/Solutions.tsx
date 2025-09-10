@@ -266,8 +266,7 @@ const Solutions: React.FC = () => {
       testimonial: 'Our energy bills dropped by 80% within the first month!',
     },
     {
-      image:
-        'https://images.unsplash.com/photo-1505739880927-47edf1d8d2d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      image: 'public/commercial.png',
       title: 'Commercial Solar Solutions',
       ratingLabel: 'Operational Efficiency',
       ratingScore: 5,
@@ -368,10 +367,10 @@ const Solutions: React.FC = () => {
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
         {/* Enhanced header */}
         <div className="mb-12">
-          <div className="mb-4 inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-600">
+          {/* <div className="mb-4 inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-600">
             <Zap className="mr-2 h-4 w-4" />
             Powered by Innovation
-          </div>
+          </div> */}
           <h2 className="bg-gradient-to-r from-gray-800 via-blue-700 to-cyan-600 bg-clip-text text-left text-4xl font-bold text-transparent lg:text-5xl">
             Our Solar Solutions
           </h2>
