@@ -115,11 +115,12 @@ const Hero: React.FC = () => {
             >
               <h1 className="mb-6 font-sand text-4xl font-semibold leading-tight md:text-5xl lg:text-[3rem]">
                 <span className="font-extrabold">
-                  A Sustainable Energy Future
+                  Together, Powering a Sustainable
+                  Energy Future
                 </span>{' '}
                 <br></br>
                 <span className="animate-pulse bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                  Powered Together, with Optimal Benefits
+                  with Optimal Benefits
                 </span>
               </h1>
               <p className="mx-auto mt-6 max-w-xl text-lg text-gray-200 md:text-xl lg:mx-0">
@@ -166,11 +167,11 @@ const Hero: React.FC = () => {
         </div>
       </section>
 
-      <div
+      {/* <div
         className={`absolute right-8 top-[82%] z-10 mb-10 flex transform justify-center transition-all delay-300 duration-1000 lg:mt-0 lg:w-1/2 lg:justify-end ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}
       >
         <div className="group relative">
-          {/* Glowing border effect */}
+          Glowing border effect
           <div className="rounded-lgd bg-gradiesnt-to-r from-scyan-500 to-blsue-500 absolute inset-0 animate-pulse opacity-75 blur transition-all duration-300 group-hover:opacity-100" />
 
           <img
@@ -179,15 +180,15 @@ const Hero: React.FC = () => {
             className="roundedd-lg shadfow-2xl relative w-full max-w-md transform transition-all duration-500 group-hover:scale-105"
           />
 
-          {/* Interactive overlay on image */}
+          Interactive overlay on image
           <div className="rounded-lgs bg-grsadient-to-t from-sblue-900/50 to-trasnsparent absolute inset-0 flex items-end justify-center p-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
             <div className="text-center">
-              {/* <div className="text-2xl font-bold text-white">$0</div> */}
+              <div className="text-2xl font-bold text-white">$0</div>
               <div className="text-sm text-cyan-300">pentorax</div>
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
