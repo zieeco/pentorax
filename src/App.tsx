@@ -1,6 +1,5 @@
 import React from 'react';
 import Header from '@/components/Header';
-// import Header2 from '@/components/cmp2/Header';
 import Hero from '@/components/Hero';
 import Solutions from '@/components/Solutions';
 import CallToAction from '@/components/CallToAction';
@@ -12,15 +11,16 @@ import CaseStudies from '@/components/CaseStudies';
 import Partners from '@/components/Partners';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
+import PentoraxProcess from './components/Process';
 
 const App: React.FC = () => {
   return (
     <div className="bg-white font-sans text-gray-800">
       <Header />
-      {/* <Header2 /> */}
       <main>
         <Hero />
         <Solutions />
+        <PentoraxProcess />
         <CallToAction />
         <Offerings />
         <Journey />
