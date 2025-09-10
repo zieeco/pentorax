@@ -1,21 +1,143 @@
+// import React from 'react';
+
+// const StarIcon: React.FC<{ filled: boolean }> = ({ filled }) => (
+//   <svg
+//     className={`h-5 w-5 ${filled ? 'text-yellow-400' : 'text-gray-300'}`}
+//     fill="currentColor"
+//     viewBox="0 0 20 20"
+//   >
+//     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.368-2.448a1 1 0 00-1.176 0l-3.368 2.448c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.07 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z" />
+//   </svg>
+// );
+
+// const Rating: React.FC<{ score: number }> = ({ score }) => (
+//   <div className="flex">
+//     {[...Array(5)].map((_, i) => (
+//       <StarIcon key={i} filled={i < score} />
+//     ))}
+//   </div>
+// );
+
+// interface SolutionItemProps {
+//   image: string;
+//   title: string;
+//   ratingLabel: string;
+//   ratingScore: number;
+//   description: string;
+// }
+
+// const SolutionItem: React.FC<SolutionItemProps> = ({
+//   image,
+//   title,
+//   ratingLabel,
+//   ratingScore,
+//   description,
+// }) => (
+//   <div>
+//     {/* Image with overlay effect */}
+//     <div className="group relative">
+//       <img src={image} alt={title} className="h-56 w-full object-cover" />
+//       <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-400 opacity-0 transition-opacity duration-500 group-hover:opacity-50"></div>
+//     </div>
+
+//     {/* Divider line */}
+//     <hr className="my-4 border-gray-300" />
+
+//     {/* Content */}
+//     <h3 className="text-lg font-bold text-gray-800">{title}</h3>
+//     <div className="my-2 flex items-center">
+//       <span className="mr-2 text-sm font-medium text-gray-600">
+//         {ratingLabel}
+//       </span>
+//       <Rating score={ratingScore} />
+//     </div>
+//     <p className="text-sm text-gray-600">{description}</p>
+//   </div>
+// );
+
+// const Solutions: React.FC = () => {
+//   const solutionItems: SolutionItemProps[] = [
+//     {
+//       image:
+//         'https://images.unsplash.com/photo-1509395176047-4a66953fd231?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+//       title: 'Residential Solar Solutions',
+//       ratingLabel: 'Customer Ratings',
+//       ratingScore: 5,
+//       description:
+//         'Stable, healthy, and noiseless electricity that meets the energy and comfort needs of homes.',
+//     },
+//     {
+//       image:
+//         'https://images.unsplash.com/photo-1505739880927-47edf1d8d2d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+//       title: 'Commercial Solar Solutions',
+//       ratingLabel: 'Operational Efficiency',
+//       ratingScore: 5,
+//       description:
+//         'Reliable, cost-effective, and sustainable energy solutions tailored for businesses.',
+//     },
+//     {
+//       image:
+//         'https://images.unsplash.com/photo-1584270354949-1c9c76db16f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+//       title: 'Industrial Solar Solutions',
+//       ratingLabel: 'Energy Savings',
+//       ratingScore: 4,
+//       description:
+//         'Power factories and large-scale operations with high-capacity solar energy.',
+//     },
+//     {
+//       image:
+//         'https://images.unsplash.com/photo-1603297631881-bc89e916a5f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+//       title: 'Off-Grid Solar Systems',
+//       ratingLabel: 'Reliability',
+//       ratingScore: 5,
+//       description:
+//         'Stay powered in remote areas with fully independent off-grid solar systems.',
+//     },
+//   ];
+
+//   return (
+//     <section className="bg-gray-50 py-20">
+//       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+//         <h2 className="mb-12 text-center text-4xl font-bold text-gray-800">
+//           Our Solar Solutions
+//         </h2>
+
+//         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+//           {solutionItems.map((item, index) => (
+//             <SolutionItem key={index} {...item} />
+//           ))}
+//         </div>
+//       </div>
+//     </section>
+//   );
+// };
+
+// export default Solutions;
 
 import React from 'react';
 
 const StarIcon: React.FC<{ filled: boolean }> = ({ filled }) => (
-  <svg className={`w-5 h-5 ${filled ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20">
+  <svg
+    className={`h-5 w-5 ${filled ? 'text-yellow-400' : 'text-gray-300'}`}
+    fill="currentColor"
+    viewBox="0 0 20 20"
+  >
     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.368-2.448a1 1 0 00-1.176 0l-3.368 2.448c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.07 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z" />
   </svg>
 );
 
-const Rating: React.FC<{ score: number }> = ({ score }) => (
-  <div className="flex">
+const Rating: React.FC<{ score: number; label: string }> = ({
+  score,
+  label,
+}) => (
+  <div className="flex" aria-label={`${label}: ${score} out of 5`}>
     {[...Array(5)].map((_, i) => (
       <StarIcon key={i} filled={i < score} />
     ))}
   </div>
 );
 
-interface SolutionCardProps {
+interface SolutionItemProps {
   image: string;
   title: string;
   ratingLabel: string;
@@ -23,47 +145,89 @@ interface SolutionCardProps {
   description: string;
 }
 
-const SolutionCard: React.FC<SolutionCardProps> = ({ image, title, ratingLabel, ratingScore, description }) => {
-  return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
-      <img src={image} alt={title} className="w-full h-56 object-cover" />
-      <div className="p-6">
-        <h3 className="text-xl font-bold text-gray-800">{title}</h3>
-        <div className="flex items-center my-3">
-          <span className="text-sm font-medium text-gray-600 mr-2">{ratingLabel}</span>
-          <Rating score={ratingScore} />
-        </div>
-        <p className="text-gray-600">
-          {description}
-        </p>
-      </div>
+const SolutionItem: React.FC<SolutionItemProps> = ({
+  image,
+  title,
+  ratingLabel,
+  ratingScore,
+  description,
+}) => (
+  <div className="group flex h-full flex-col space-y-4">
+    {/* Image with zoom + overlay */}
+    <div className="relative overflow-hidden">
+      <img
+        src={image}
+        alt={title}
+        className="h-40 w-full transform object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-400 opacity-0 transition-opacity duration-500 group-hover:opacity-50"></div>
     </div>
-  );
-};
 
+    {/* Divider line */}
+    <hr className="border-gray-300" />
+
+    {/* Content with fade-in effect */}
+    <div className="flex flex-1 flex-col opacity-90 transition-opacity duration-500 group-hover:opacity-100">
+      <h3 className="text-lg font-bold text-gray-800">{title}</h3>
+      <div className="my-2 flex items-center">
+        <span className="mr-2 text-sm font-medium text-gray-600">
+          {ratingLabel}
+        </span>
+        <Rating score={ratingScore} label={ratingLabel} />
+      </div>
+      <p className="mt-auto text-sm text-gray-600">{description}</p>
+    </div>
+  </div>
+);
 
 const Solutions: React.FC = () => {
+  const solutionItems: SolutionItemProps[] = [
+    {
+      image: 'public/roof.jpeg',
+      title: 'Residential Solar Solutions',
+      ratingLabel: 'Customer Ratings',
+      ratingScore: 5,
+      description:
+        'Stable, healthy, and noiseless electricity that meets the energy and comfort needs of homes.',
+    },
+    {
+      image:
+        'https://unsplash.com/photos/a-close-up-of-a-solar-panel-on-a-building-2SfssudtyIA',
+      title: 'Commercial Solar Solutions',
+      ratingLabel: 'Operational Efficiency',
+      ratingScore: 5,
+      description:
+        'Reliable, cost-effective, and sustainable energy solutions tailored for businesses.',
+    },
+    {
+      image: 'public/industrial.png',
+      title: 'Industrial Solar Solutions',
+      ratingLabel: 'Energy Savings',
+      ratingScore: 4,
+      description:
+        'Power factories and large-scale operations with high-capacity solar energy.',
+    },
+    {
+      image: 'public/grid.png',
+      title: 'Off-Grid Solar Systems',
+      ratingLabel: 'Reliability',
+      ratingScore: 5,
+      description:
+        'Stay powered in remote areas with fully independent off-grid solar systems.',
+    },
+  ];
+
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="bg-gray-50 py-20 lg:pt-28 font-sand">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-4xl font-bold text-center text-gray-800 mb-12">
+        <h2 className="mb-12 text-left text-4xl lg:text-5xl font-bold text-gray-800">
           Our Solar Solutions
         </h2>
-        <div className="grid md:grid-cols-2 gap-10">
-          <SolutionCard
-            image="https://picsum.photos/600/400?image=1074"
-            title="Residential Solar Solutions"
-            ratingLabel="Customer Ratings"
-            ratingScore={5}
-            description="Get stable, healthy, and noiseless electricity that meets the energy and comfort needs of your home, compound, or housing estates."
-          />
-          <SolutionCard
-            image="https://picsum.photos/600/400?image=257"
-            title="Commercial Solar Solutions"
-            ratingLabel="Operational Efficiency"
-            ratingScore={5}
-            description="Enhance your business operations with reliable, cost-effective, and sustainable energy solutions from Arnergy Solar."
-          />
+
+        <div className="grid grid-cols-1 gap-8 space-y-6 md:grid-cols-2 md:space-y-0 lg:grid-cols-4">
+          {solutionItems.map((item, index) => (
+            <SolutionItem key={index} {...item} />
+          ))}
         </div>
       </div>
     </section>
@@ -71,3 +235,4 @@ const Solutions: React.FC = () => {
 };
 
 export default Solutions;
+
