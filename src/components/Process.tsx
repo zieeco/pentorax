@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Headphones,
   CheckCircle,
   Clock,
-  Users,
-  Award,
   ArrowRight,
   MessageCircle,
   ClipboardCheck,
@@ -20,6 +17,7 @@ interface ProcessStepProps {
   icon: React.ReactNode;
   duration: string;
   isActive?: boolean;
+  backgroundImage?: string;
 }
 
 const ProcessStep: React.FC<ProcessStepProps> = ({
@@ -27,8 +25,9 @@ const ProcessStep: React.FC<ProcessStepProps> = ({
   title,
   description,
   details,
-  icon,
+  // icon,
   duration,
+  backgroundImage,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
@@ -60,7 +59,7 @@ const ProcessStep: React.FC<ProcessStepProps> = ({
             className={`absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 transition-all duration-1000 ${
               isHovered ? 'scale-150 opacity-0' : 'scale-100 opacity-0'
             }`}
-          ></div>
+          />
         </div>
         {step < 4 && (
           <div
@@ -69,44 +68,48 @@ const ProcessStep: React.FC<ProcessStepProps> = ({
                 ? 'bg-gradient-to-r from-blue-600 to-cyan-600 shadow-sm shadow-blue-500/20'
                 : 'bg-gray-300'
             }`}
-          ></div>
+          />
         )}
       </div>
 
-      {/* Content card */}
+      {/* Content card with background image */}
       <div
-        className={`relative flex-1 rounded-xl border border-gray-100 bg-white p-6 shadow-lg transition-all duration-500 ${
-          isHovered
-            ? '-translate-y-2 border-blue-200 shadow-2xl shadow-blue-500/10'
-            : ''
+        className={`relative flex-1 overflow-hidden shadow-lg transition-all duration-500 ${
+          isHovered ? '-translate-y-2 shadow-2xl shadow-blue-500/10' : ''
         }`}
       >
-        {/* Subtle gradient overlay on hover */}
+        {/* Background image */}
         <div
-          className={`absolute inset-0 rounded-xl bg-gradient-to-br from-blue-50/50 via-transparent to-cyan-50/30 transition-opacity duration-500 ${
-            isHovered ? 'opacity-100' : 'opacity-0'
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700"
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+          }}
+        ></div>
+
+        {/* Overlay */}
+        <div
+          className={`absolute inset-0 transition-all duration-500 ${
+            isHovered
+              ? 'bg-gradient-to-br from-blue-900/85 via-blue-800/80 to-cyan-900/85'
+              : 'bg-gradient-to-br from-gray-900/75 via-gray-800/70 to-gray-900/75'
           }`}
         ></div>
 
-        <div className="relative z-10">
+        {/* Content */}
+        <div className="relative z-10 p-6 text-white">
           {/* Icon and duration */}
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex items-end justify-between">
             <div
               className={`rounded-full p-3 transition-all duration-300 ${
                 isHovered
-                  ? 'scale-110 bg-blue-100 shadow-sm shadow-blue-500/20'
-                  : 'bg-gray-100'
+                  ? 'scagle-110 bg-whhite/20 shadow-ssm backdrop-blur-sm'
+                  : 'bg-whigte/10 backdrop-blur-sms'
               }`}
             >
-              <div
-                className={`transition-colors duration-300 ${
-                  isHovered ? 'text-blue-600' : 'text-gray-600'
-                }`}
-              >
-                {icon}
-              </div>
+              {/* <div className="text-white">{icon}</div> */}
             </div>
-            <div className="flex items-center text-sm text-gray-500">
+            <div className="flex items-center text-sm text-white/80">
               <Clock className="mr-1 h-4 w-4" />
               {duration}
             </div>
@@ -115,13 +118,13 @@ const ProcessStep: React.FC<ProcessStepProps> = ({
           {/* Title and description */}
           <h3
             className={`mb-3 text-xl font-bold transition-colors duration-300 ${
-              isHovered ? 'text-blue-600' : 'text-gray-800'
+              isHovered ? 'text-cyan-200' : 'text-white'
             }`}
           >
             {title}
           </h3>
 
-          <p className="mb-4 leading-relaxed text-gray-600">{description}</p>
+          <p className="mb-4 leading-relaxed text-white/90">{description}</p>
 
           {/* Details list with animation */}
           <div
@@ -132,12 +135,12 @@ const ProcessStep: React.FC<ProcessStepProps> = ({
             {details.map((detail, index) => (
               <div
                 key={index}
-                className={`flex transform items-start text-sm text-gray-700 transition-all duration-500 ${
+                className={`flex transform items-start text-sm text-white/90 transition-all duration-500 ${
                   showDetails ? 'translate-x-0' : '-translate-x-4'
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <CheckCircle className="mr-2 mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                <CheckCircle className="mr-2 mt-0.5 h-4 w-4 flex-shrink-0 text-cyan-300" />
                 {detail}
               </div>
             ))}
@@ -145,13 +148,13 @@ const ProcessStep: React.FC<ProcessStepProps> = ({
 
           {/* Learn more link */}
           <div
-            className={`mt-4 transform border-t border-gray-100 pt-4 transition-all duration-300 ${
+            className={`mt-4 transform border-t border-white/20 pt-4 transition-all duration-300 ${
               isHovered
                 ? 'translate-y-0 opacity-100'
                 : 'translate-y-2 opacity-0'
             }`}
           >
-            <button className="flex items-center text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
+            <button className="flex items-center text-sm font-medium text-cyan-200 transition-colors hover:text-cyan-100">
               Learn More
               <ArrowRight className="ml-1 h-4 w-4 transition-transform hover:translate-x-1" />
             </button>
@@ -226,6 +229,14 @@ const PentoraxProcess: React.FC = () => {
     },
   ];
 
+  // Background images for each step
+  const backgroundImages = [
+    'public/consultation.png',
+    'public/system-design.jpeg',
+    'public/installation.png',
+    'public/maintenance.png',
+  ];
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50/30 to-cyan-50/30 py-20 font-sand">
       {/* Enhanced background pattern */}
@@ -234,7 +245,7 @@ const PentoraxProcess: React.FC = () => {
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000' fill-opacity='0.1'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
-      ></div>
+      />
 
       {/* Additional floating elements */}
       <div className="absolute left-10 top-20 h-32 w-32 rounded-full bg-gradient-to-br from-blue-400/5 to-cyan-400/5 blur-xl"></div>
@@ -244,10 +255,6 @@ const PentoraxProcess: React.FC = () => {
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="mb-16 text-center">
-          <div className="mb-4 inline-flex items-center rounded-full bg-blue-100/80 px-4 py-2 text-sm font-medium text-blue-600 backdrop-blur-sm">
-            <Users className="mr-2 h-4 w-4" />
-            Our Proven Process
-          </div>
           <h2 className="mb-6 bg-gradient-to-r from-gray-800 via-blue-700 to-cyan-600 bg-clip-text text-4xl font-bold text-transparent drop-shadow-sm lg:text-5xl">
             What Will Pentorax Offer You?
           </h2>
@@ -265,55 +272,12 @@ const PentoraxProcess: React.FC = () => {
               className="transform transition-all duration-500"
               style={{ animationDelay: `${index * 200}ms` }}
             >
-              <ProcessStep {...step} />
+              <ProcessStep
+                {...step}
+                backgroundImage={backgroundImages[index]}
+              />
             </div>
           ))}
-        </div>
-
-        {/* Bottom stats/guarantees */}
-        <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
-          {[
-            {
-              icon: <Award className="h-8 w-8" />,
-              title: 'Quality Guarantee',
-              description: '25-year warranty on all installations',
-              color: 'blue',
-            },
-            {
-              icon: <Users className="h-8 w-8" />,
-              title: 'Expert Team',
-              description: 'Certified professionals with 10+ years experience',
-              color: 'green',
-            },
-            {
-              icon: <Headphones className="h-8 w-8" />,
-              title: '24/7 Support',
-              description: 'Round-the-clock technical assistance',
-              color: 'purple',
-            },
-          ].map((item, index) => (
-            <div
-              key={index}
-              className="group rounded-xl border border-white/30 bg-white/70 p-6 text-center backdrop-blur-sm transition-all duration-300 hover:bg-white/90 hover:shadow-lg hover:shadow-blue-500/10"
-            >
-              <div
-                className={`inline-flex h-16 w-16 items-center justify-center bg-${item.color}-100/80 mb-4 rounded-full shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-md`}
-              >
-                <div className={`text-${item.color}-600`}>{item.icon}</div>
-              </div>
-              <h3 className="mb-2 text-xl font-bold text-gray-800">
-                {item.title}
-              </h3>
-              <p className="text-gray-600">{item.description}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <div className="mt-12 text-center">
-          <button className="transform rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 px-8 py-4 font-semibold text-white shadow-lg shadow-blue-500/25 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/30">
-            Start Your Solar Journey Today
-          </button>
         </div>
       </div>
     </section>
