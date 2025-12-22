@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     
-    # Local apps
+    # Custom apps
     'apps.core',
     'apps.products',
     'apps.cart',
