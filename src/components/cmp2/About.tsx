@@ -87,7 +87,7 @@ const About = () => {
               <p>
                 From small residential installations to large-scale commercial and 
                 industrial projects, we've successfully deployed over 50MW of solar 
-                capacity, helping thousands of customers reduce their energy costs 
+                capacity, helping thousands of customers reduce their energy costs saving
                 and carbon footprint.
               </p>
             </div>

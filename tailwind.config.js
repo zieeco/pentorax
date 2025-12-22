@@ -108,6 +108,30 @@ export default {
           from: { transform: 'translateX(100%)' },
           to: { transform: 'translateX(0)' },
         },
+        // Custom animations for solar hero
+        float: {
+          '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+          '50%': { transform: 'translateY(-10px) rotate(5deg)' },
+        },
+        shimmer: {
+          '0%': { transform: 'translateX(-100%) skewX(-12deg)' },
+          '100%': { transform: 'translateX(200%) skewX(-12deg)' },
+        },
+        'energy-flow': {
+          '0%': { transform: 'translateX(-100%)', opacity: '0' },
+          '50%': { opacity: '1' },
+          '100%': { transform: 'translateX(100%)', opacity: '0' },
+        },
+        'glow-pulse': {
+          '0%, 100%': {
+            boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)',
+            transform: 'scale(1)',
+          },
+          '50%': {
+            boxShadow: '0 0 40px rgba(59, 130, 246, 0.8)',
+            transform: 'scale(1.02)',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -118,6 +142,11 @@ export default {
         'slide-in-from-bottom': 'slide-in-from-bottom 0.3s ease-out',
         'slide-in-from-left': 'slide-in-from-left 0.3s ease-out',
         'slide-in-from-right': 'slide-in-from-right 0.3s ease-out',
+        // Custom animations for solar hero
+        float: 'float 6s ease-in-out infinite',
+        shimmer: 'shimmer 1s ease-in-out',
+        'energy-flow': 'energy-flow 3s ease-in-out infinite',
+        'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
       },
       spacing: {
         18: '4.5rem',
@@ -151,3 +180,4 @@ export default {
   },
   plugins: [require('tailwindcss-animate')],
 };
+// https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"

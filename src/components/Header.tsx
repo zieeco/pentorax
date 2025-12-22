@@ -19,10 +19,14 @@ const ShopNowIcon: React.FC = () => (
 );
 
 const PentoraxLogo: React.FC = () => (
-  <div className="flex items-center space-x-2k">
-    <img src={Logo} alt="Pentorax Logo" className="h-20 w-20 object-contain" />
-    <span className="ml-[-27px] text-3xl font-sand font-normal text-primary">
-      pentorax
+  <div className="space-x-2k flex items-center">
+    <img
+      src={Logo}
+      alt="Pentorax Logo"
+      className="mt-[-20px] h-[7.5rem] w-[7.5rem] object-contain"
+    />
+    <span className="text-3xdl mt-[-8px] ml-[-41px] font-sand text-[2.59rem] font-extrabold leading-[2.25rem] text-primary">
+      PentoraX
     </span>
   </div>
 );
@@ -119,8 +123,8 @@ const Header: React.FC = () => {
     <header className="mt-20 bg-white shadow-sm">
       <TopHeader />
       <div className="bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
+        <div className="containejr mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <a href="/" aria-label="Pentorax Home">
               <PentoraxLogo />

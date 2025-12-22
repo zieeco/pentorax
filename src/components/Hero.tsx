@@ -57,7 +57,7 @@ const Hero: React.FC = () => {
     <div className="absolute right-8 top-1/4 transform rounded-lg border border-white/20 bg-white/10 p-4 backdrop-blur-sm transition-all duration-1000 hover:scale-105">
       <div className="text-center">
         <div className="text-2xl font-bold text-cyan-300">50%</div>
-        <div className="text-xs text-white/80">Energy Savings</div>
+        <div className="text-xs text-white/80">Energy Costs Saving </div>
       </div>
     </div>
   );
