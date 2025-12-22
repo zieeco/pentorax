@@ -1,0 +1,42 @@
+services:
+  backend:
+    build:
+      context: ../backend
+      target: development
+    volumes:
+      - ../backend:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../.env
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ../frontend
+      target: development
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    env_file:
+      - ../.env
+    environment:
+      - VITE_API_URL=http://localhost:8000/api
+
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME:-pentorax}
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:

@@ -18,8 +18,8 @@ RUN apt-get update && apt-get install -y \
 # Development stage
 FROM base as development
 
-COPY requirements/dev.txt /app/requirements.txt
-RUN pip install -r requirements.txt
+COPY requirements/ /app/requirements/
+RUN pip install -r /app/requirements/dev.txt
 
 COPY . /app/
 
@@ -30,8 +30,8 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 # Production stage
 FROM base as production
 
-COPY requirements/prod.txt /app/requirements.txt
-RUN pip install -r requirements.txt
+COPY requirements/ /app/requirements/
+RUN pip install -r /app/requirements/prod.txt
 
 COPY . /app/
 
