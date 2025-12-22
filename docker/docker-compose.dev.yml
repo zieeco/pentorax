@@ -1,0 +1,28 @@
+name: pentorax
+
+services:
+  backend:
+    build:
+      context: ../backend
+      target: development
+    volumes:
+      - ../backend:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../.env
+    command: python manage.py runserver 0.0.0.0:8000
+
+  frontend:
+    build:
+      context: ../frontend
+      target: development
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    env_file:
+      - ../.env
+    environment:
+      - VITE_API_URL=http://localhost:8000/api
