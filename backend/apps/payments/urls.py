@@ -1,1 +1,4 @@
-# urls.py for payments app
+from django.urls import path
+
+urlpatterns = []
+

@@ -1,1 +1,4 @@
-# urls.py for orders app
+from django.urls import path
+
+urlpatterns = []
+

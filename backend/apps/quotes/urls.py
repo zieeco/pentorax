@@ -1,1 +1,4 @@
-# urls.py for quotes app
+from django.urls import path
+
+urlpatterns = []
+
