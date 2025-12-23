@@ -1,4 +1,13 @@
-from django.urls import path
+"""
+URL configuration for orders app
+"""
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import OrderViewSet
 
-urlpatterns = []
+router = DefaultRouter()
+router.register(r'', OrderViewSet, basename='order')
 
+urlpatterns = [
+    path('', include(router.urls)),
+]

@@ -1,4 +1,13 @@
-from django.urls import path
+"""
+URL configuration for cart app
+"""
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import CartViewSet
 
-urlpatterns = []
+router = DefaultRouter()
+router.register(r'', CartViewSet, basename='cart')
 
+urlpatterns = [
+    path('', include(router.urls)),
+]
