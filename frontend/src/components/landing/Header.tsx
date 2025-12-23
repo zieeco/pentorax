@@ -85,7 +85,7 @@ const TopHeader: React.FC = () => (
           </a>
         </div>
         <a
-          href="#"
+          href="/contact"
           className="flex items-center space-x-2 rounded-md border border-white px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-white hover:text-primary"
         >
           <span>Contact Us</span>
@@ -100,22 +100,46 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'About Us', href: '#', dropdown: ['Our Story', 'Team', 'Careers'] },
+    { name: 'Home', href: '/' },
+    { 
+      name: 'About Us', 
+      href: '/about', 
+      dropdown: [
+        { name: 'Our Story', href: '/about' },
+        { name: 'Team', href: '/about/team' },
+        { name: 'Careers', href: '/about/careers' },
+      ] 
+    },
     {
       name: 'Energy Solutions',
-      href: '#',
-      dropdown: ['Residential', 'Commercial', 'Industrial'],
+      href: '/solutions',
+      dropdown: [
+        { name: 'Residential', href: '/solutions/residential' },
+        { name: 'Commercial', href: '/solutions/commercial' },
+        { name: 'Industrial', href: '/solutions/industrial' },
+        { name: 'Off-Grid', href: '/solutions/off-grid' },
+      ],
     },
     {
       name: 'Solar Products',
-      href: '#',
-      dropdown: ['Solar Panels', 'Inverters', 'Batteries', 'Accessories'],
+      href: '/products',
+      dropdown: [
+        { name: 'Solar Panels', href: '/products/solar-panels' },
+        { name: 'Inverters', href: '/products/inverters' },
+        { name: 'Batteries', href: '/products/batteries' },
+        { name: 'Accessories', href: '/products/accessories' },
+      ],
     },
     {
       name: 'Resources',
-      href: '#',
-      dropdown: ['Blog', 'Case Studies', 'FAQs', 'Support', 'Contact Us'],
+      href: '/blog',
+      dropdown: [
+        { name: 'Blog', href: '/blog' },
+        { name: 'Case Studies', href: '/case-studies' },
+        { name: 'FAQs', href: '/faqs' },
+        { name: 'Support', href: '/support' },
+        { name: 'Contact Us', href: '/contact' },
+      ],
     },
   ];
 
@@ -156,11 +180,11 @@ const Header: React.FC = () => {
                     <div className="absolute left-0 top-full z-50 hidden w-48 rounded-md bg-white py-1 shadow-lg group-hover:block">
                       {item.dropdown.map((subItem) => (
                         <a
-                          key={subItem}
-                          href="#"
+                          key={subItem.name}
+                          href={subItem.href}
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-secondary/10 hover:text-secondary"
                         >
-                          {subItem}
+                          {subItem.name}
                         </a>
                       ))}
                     </div>
@@ -172,7 +196,7 @@ const Header: React.FC = () => {
             {/* Shop Now */}
             <div className="hidden items-center lg:flex">
               <a
-                href="#"
+                href="/shop"
                 className="flex items-center rounded-md border-2 border-primary px-6 py-2 font-semibold text-primary transition-all hover:bg-primary hover:text-white"
               >
                 Shop Now <ShopNowIcon />
@@ -215,7 +239,7 @@ const Header: React.FC = () => {
               </a>
             ))}
             <a
-              href="#"
+              href="/shop"
               className="mt-4 flex items-center justify-center rounded-md border-2 border-primary px-6 py-2 font-semibold text-primary transition-all hover:bg-primary hover:text-white"
             >
               Shop Now <ExternalLink className="ml-2 h-5 w-5" />

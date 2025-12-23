@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Home,
   Building2,
@@ -65,6 +66,7 @@ interface SolutionItemProps {
   stats?: { value: string; label: string }[];
   badge?: string;
   testimonial?: string;
+  link?: string;
 }
 
 const SolutionItem: React.FC<SolutionItemProps> = ({
@@ -78,7 +80,9 @@ const SolutionItem: React.FC<SolutionItemProps> = ({
   stats = [],
   badge,
   testimonial,
+  link,
 }) => {
+  const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -230,6 +234,7 @@ const SolutionItem: React.FC<SolutionItemProps> = ({
 
         {/* Learn More Button */}
         <button
+          onClick={() => link && navigate(link)}
           className={`mt-auto flex transform items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 px-4 py-2 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg ${
             isHovered ? 'shadow-lg' : ''
           }`}
@@ -264,6 +269,7 @@ const Solutions: React.FC = () => {
       ],
       badge: 'Most Popular',
       testimonial: 'Our energy bills dropped by 80% within the first month!',
+      link: '/solutions/residential',
     },
     {
       image: 'public/commercial.png',
@@ -283,6 +289,7 @@ const Solutions: React.FC = () => {
         { value: '15 yrs', label: 'ROI Period' },
       ],
       testimonial: 'Reduced our operational costs by 30% in just 6 months.',
+      link: '/solutions/commercial',
     },
     {
       image: 'public/industrial.png',
@@ -302,6 +309,7 @@ const Solutions: React.FC = () => {
         { value: '99.5%', label: 'Uptime' },
       ],
       testimonial: 'Our factory now runs 100% on clean solar energy.',
+      link: '/solutions/industrial',
     },
     {
       image: 'public/grid.png',
@@ -322,6 +330,7 @@ const Solutions: React.FC = () => {
       ],
       badge: 'Recommended',
       testimonial: 'Perfect solution for our remote research station.',
+      link: '/solutions/off-grid',
     },
   ];
 

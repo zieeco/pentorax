@@ -28,13 +28,13 @@ const Testimonials: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
           <TestimonialCard
-            quote="I had a chance to visit Arnergy's office in Lagos, and it's safe to say I was arnerg-ized by our conversations."
+            quote="I had a chance to visit Pentorax's office in Lagos, and it's safe to say I was energized by our conversations."
             name="Bill Gates"
             title="Breakthrough Energy (BEV) Founder (2023)"
             avatar="https://picsum.photos/100/100?image=1005"
           />
           <TestimonialCard
-            quote="Arnergy is in the right segment towards meeting the Nigeria's demands for energy. We need the private sector to take leadership in such conversations. What Arnergy is doing is good not just for businesses, but for families and the climate."
+            quote="Pentorax is in the right segment towards meeting Nigeria's demands for energy. We need the private sector to take leadership in such conversations. What Pentorax is doing is good not just for businesses, but for families and the climate."
             name="Nicolas Simard"
             title="The Canada High Commissioner (2021)"
             avatar="https://picsum.photos/100/100?image=1027"

@@ -1,170 +1,177 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 
-interface StatItemProps {
-  value: string;
-  label: string;
-  subLabel?: string;
-  isVisible: boolean;
+interface CountUpProps {
+  end: number;
+  decimals?: number;
+  suffix?: string;
+  duration?: number;
 }
 
-const StatItem: React.FC<StatItemProps> = ({
-  value,
-  label,
-  subLabel,
-  isVisible,
-}) => {
-  const [displayValue, setDisplayValue] = useState('0');
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    // Extract number and suffix from value
-    const match = value.match(/^([\d.]+)(.*)$/);
-    if (!match) {
-      setDisplayValue(value);
-      return;
-    }
-
-    const targetNumber = parseFloat(match[1]);
-    const suffix = match[2];
-
-    // Animation duration and steps
-    const duration = 2000; // 2 seconds
-    const steps = 60;
-    const stepDuration = duration / steps;
-    const increment = targetNumber / steps;
-
-    let currentNumber = 0;
-    let stepCount = 0;
-
-    const timer = setInterval(() => {
-      stepCount++;
-      currentNumber = Math.min(currentNumber + increment, targetNumber);
-
-      // Format the number based on its size
-      let formattedNumber;
-      if (targetNumber >= 1000000) {
-        formattedNumber = (currentNumber / 1000000).toFixed(1);
-        if (stepCount === steps) {
-          // Ensure final value matches exactly
-          formattedNumber = (targetNumber / 1000000).toFixed(1);
-        }
-      } else if (targetNumber >= 1000) {
-        formattedNumber = (currentNumber / 1000).toFixed(1);
-        if (stepCount === steps) {
-          formattedNumber = (targetNumber / 1000).toFixed(1);
-        }
-      } else {
-        formattedNumber = currentNumber.toFixed(1);
-        if (stepCount === steps) {
-          formattedNumber = targetNumber.toString();
-        }
-      }
-
-      setDisplayValue(formattedNumber + suffix);
-
-      if (stepCount >= steps) {
-        clearInterval(timer);
-        // Set final exact value
-        setDisplayValue(value);
-      }
-    }, stepDuration);
-
-    return () => clearInterval(timer);
-  }, [isVisible, value]);
-
-  return (
-    <div className="text-center">
-      <p className="text-4xl font-extrabold text-primary transition-all duration-300 lg:text-5xl">
-        {displayValue}
-      </p>
-      <p className="mt-2 text-lg font-semibold text-gray-700">{label}</p>
-      {subLabel && <p className="text-sm text-gray-500">{subLabel}</p>}
-    </div>
-  );
-};
-
-const Journey: React.FC = () => {
+const CountUp: React.FC<CountUpProps> = ({ end, decimals = 0, suffix = "", duration = 2000 }) => {
+  const [count, setCount] = useState(0);
+  const countRef = useRef<HTMLSpanElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.disconnect(); // Stop observing once animation has started
         }
       },
-      {
-        threshold: 0.3, // Trigger when 30% of the section is visible
-        rootMargin: '0px 0px -100px 0px', // Start animation a bit before fully visible
-      },
+      { threshold: 0.1 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    if (countRef.current) {
+      observer.observe(countRef.current);
     }
 
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!isVisible) return;
+
+    let startTimestamp: number | null = null;
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      // Easing function: easeOutExpo
+      const easedProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      setCount(easedProgress * end);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  }, [end, duration, isVisible]);
+
   return (
-    <section ref={sectionRef} className="bg-background py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 flex items-center justify-center">
-          <h2 className="mr-4 text-3xl font-bold text-foreground">
-            OUR JOURNEY SO FAR...
+    <span ref={countRef}>
+      {decimals === 0 
+        ? Math.floor(count).toLocaleString() 
+        : count.toFixed(decimals)}
+      {suffix}
+    </span>
+  );
+};
+
+interface StatItemProps {
+  target: number;
+  decimals?: number;
+  suffix: string;
+  label: string;
+  sublabel?: string;
+}
+
+const StatItem: React.FC<StatItemProps> = ({ target, decimals = 0, suffix, label, sublabel }) => (
+  <div className="group flex flex-col items-center text-center p-2">
+    <div className="space-y-0.5">
+      <div className="text-4xl lg:text-6xl font-black text-gray-900 tracking-tighter transition-colors duration-300 group-hover:text-primary">
+        <CountUp end={target} decimals={decimals} suffix={suffix} />
+      </div>
+      <p className="text-[11px] font-extrabold text-gray-500 uppercase tracking-[0.2em] transition-colors group-hover:text-gray-900">
+        {label}
+      </p>
+      {sublabel && (
+        <p className="text-[10px] font-bold text-gray-400 italic mt-1 max-w-[150px] mx-auto">
+          {sublabel}
+        </p>
+      )}
+    </div>
+  </div>
+);
+
+const Journey: React.FC = () => {
+  const stats = [
+    { 
+      target: 9.8, 
+      decimals: 1,
+      suffix: "GWh+", 
+      label: "Energy Generated"
+    },
+    { 
+      target: 9.3, 
+      decimals: 1,
+      suffix: "MWp+", 
+      label: "PV Capacity"
+    },
+    { 
+      target: 23.8, 
+      decimals: 1,
+      suffix: "MWh+", 
+      label: "Storage (BESS)"
+    },
+    { 
+      target: 23000, 
+      decimals: 0,
+      suffix: "MT+", 
+      label: "CO2 Displaced"
+    },
+    { 
+      target: 200, 
+      decimals: 0,
+      suffix: "k+", 
+      label: "Trees Grown", 
+      sublabel: "Sequestered Carbon Equivalent"
+    },
+    { 
+      target: 2.2, 
+      decimals: 1,
+      suffix: "M", 
+      label: "Diesel Avoided", 
+      sublabel: "Litres Equivalent"
+    }
+  ];
+
+  return (
+    <section className="relative py-16 bg-white overflow-hidden font-sand">
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#0052CC 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
+      <div className="absolute top-0 right-0 w-1/4 h-1/4 bg-gradient-to-bl from-primary/5 to-transparent blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-gradient-to-tr from-secondary/5 to-transparent blur-3xl"></div>
+
+      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/10 text-primary text-[9px] font-black uppercase tracking-[0.3em] mb-4">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
+            </span>
+            <span>Impact Metrics</span>
+          </div>
+          <h2 className="text-3xl lg:text-5xl font-black text-gray-900 mb-3 tracking-tight">
+            Our Journey <span className="text-primary">In Numbers</span>
           </h2>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-10 w-10 text-primary"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2 2h8a1 1 0 001-1zM3 11h10M16 16l4-4m0 0l-4-4m4 4H9"
-            />
-          </svg>
+          <div className="h-1 w-12 bg-primary mx-auto rounded-full mb-4"></div>
+          <p className="text-base text-gray-500 max-w-xl mx-auto font-medium leading-snug">
+            Reporting our global environmental footprint and key energy milestones achieved through continuous innovation.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
-          <StatItem
-            value="9.8GWh+"
-            label="Green Energy Generated"
-            isVisible={isVisible}
-          />
-          <StatItem
-            value="9.3MWp+"
-            label="Installed Solar PV Capacity"
-            isVisible={isVisible}
-          />
-          <StatItem
-            value="23.8MWh+"
-            label="Active Storage System (BESS)"
-            isVisible={isVisible}
-          />
-          <StatItem
-            value="23,000MT+"
-            label="Displaced CO2e Equivalent"
-            isVisible={isVisible}
-          />
-          <StatItem
-            value="200k+"
-            label="Sequestered Carbon Equivalent"
-            subLabel="(Tree Seedlings Grown)"
-            isVisible={isVisible}
-          />
-          <StatItem
-            value="2.2million"
-            label="Avoided Diesel Equivalent (Litres)"
-            isVisible={isVisible}
-          />
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          {stats.map((stat, index) => (
+            <StatItem 
+              key={index}
+              target={stat.target}
+              decimals={stat.decimals}
+              suffix={stat.suffix}
+              label={stat.label}
+              sublabel={stat.sublabel}
+            />
+          ))}
+        </div>
+
+        <div className="mt-16 pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-gray-400 text-[9px] font-bold uppercase tracking-widest">
+            Verified by PentoraX Labs 2024
+          </p>
+          <div className="flex items-center space-x-4">
+            <span className="text-[9px] font-black text-gray-300 uppercase">Tier 1 Compliance</span>
+            <div className="h-4 w-px bg-gray-200"></div>
+            <span className="text-[9px] font-black text-gray-300 uppercase">ISO 14001 Standards</span>
+          </div>
         </div>
       </div>
     </section>
