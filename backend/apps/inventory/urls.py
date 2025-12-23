@@ -1,4 +1,13 @@
-from django.urls import path
+"""
+URL configuration for inventory app
+"""
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import StockViewSet
 
-urlpatterns = []
+router = DefaultRouter()
+router.register(r'stock', StockViewSet, basename='stock')
 
+urlpatterns = [
+    path('', include(router.urls)),
+]
