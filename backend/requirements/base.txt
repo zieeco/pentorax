@@ -1,5 +1,6 @@
 Django>=5.1,<5.2
 djangorestframework>=3.15.0
+django-filter>=24.3
 django-cors-headers>=4.6.0
 python-dotenv>=1.0.0
 supabase>=2.10.0
@@ -7,3 +8,4 @@ paystack>=1.5.0
 Pillow>=11.0.0
 psycopg2-binary>=2.9.10
 gunicorn>=23.0.0
+resend>=2.0.0
