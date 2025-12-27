@@ -1,18 +1,13 @@
-"""
-Serializers for blog app
-"""
 from rest_framework import serializers
 from .models import BlogCategory, BlogPost
-from django.db import connection
 
 
 class BlogCategorySerializer(serializers.ModelSerializer):
-    """Serializer for blog categories"""
     post_count = serializers.SerializerMethodField()
     
     class Meta:
         model = BlogCategory
-        fields = ['id', 'name', 'slug', 'post_count', 'created_at']
+        fields = ['id', 'name', 'slug', 'description', 'post_count', 'created_at']
         read_only_fields = ['id', 'created_at']
     
     def get_post_count(self, obj):
@@ -20,18 +15,14 @@ class BlogCategorySerializer(serializers.ModelSerializer):
 
 
 class BlogPostListSerializer(serializers.ModelSerializer):
-    """Lightweight serializer for blog post lists"""
     category_name = serializers.SerializerMethodField()
+    read_time = serializers.SerializerMethodField()
     
     class Meta:
         model = BlogPost
-        fields = [
-            'id', 'title', 'slug', 'excerpt', 'featured_image',
-            'category_name',
-            'author_id',
-            'is_published',
-            'published_at', 'created_at'
-        ]
+        fields = ['id', 'title', 'slug', 'excerpt', 'featured_image',
+                  'category_name', 'author_name', 'is_featured',
+                  'published_at', 'read_time', 'created_at']
         read_only_fields = ['id', 'created_at']
     
     def get_category_name(self, obj):
@@ -42,22 +33,28 @@ class BlogPostListSerializer(serializers.ModelSerializer):
             except BlogCategory.DoesNotExist:
                 return None
         return None
+    
+    def get_read_time(self, obj):
+        """Calculate estimated read time in minutes"""
+        words_per_minute = 200
+        word_count = len(obj.content.split())
+        read_time = max(1, round(word_count / words_per_minute))
+        return f"{read_time} min read"
 
 
 class BlogPostDetailSerializer(serializers.ModelSerializer):
-    """Detailed serializer for single blog post view"""
     category = serializers.SerializerMethodField()
+    read_time = serializers.SerializerMethodField()
     
     class Meta:
         model = BlogPost
-        fields = [
-            'id', 'title', 'slug', 'content', 'excerpt',
-            'featured_image', 'category', 
-            'author_id',
-            'is_published', 'published_at', 'created_at', 'updated_at'
-        ]
+        fields = ['id', 'title', 'slug', 'content', 'excerpt',
+                  'featured_image', 'category', 'author_id', 'author_name',
+                  'is_published', 'is_featured', 'published_at',
+                  'meta_title', 'meta_description', 'read_time',
+                  'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
-
+    
     def get_category(self, obj):
         if obj.category_id:
             try:
@@ -66,5 +63,10 @@ class BlogPostDetailSerializer(serializers.ModelSerializer):
             except BlogCategory.DoesNotExist:
                 return None
         return None
-
-
+    
+    def get_read_time(self, obj):
+        """Calculate estimated read time in minutes"""
+        words_per_minute = 200
+        word_count = len(obj.content.split())
+        read_time = max(1, round(word_count / words_per_minute))
+        return f"{read_time} min read"
