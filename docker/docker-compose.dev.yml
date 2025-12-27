@@ -12,6 +12,9 @@ services:
     env_file:
       - ../.env
     command: python manage.py runserver 0.0.0.0:8000
+	@echo "Pentorax Monorepo Commands"
+	@echo "=========================="
+	@echo "dev                - Start development environment"
 
   frontend:
     build:
