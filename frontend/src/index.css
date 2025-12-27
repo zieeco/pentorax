@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 body {
-  font-family: 'Figtree', serif;
+  font-family: 'Quicksand', sans-serif;
   font-optical-sizing: auto;
   font-weight: normal;
   font-style: normal;
@@ -14,8 +14,8 @@ body {
 @layer base {
   :root {
     /* BRAND COLORS (Pentorax) */
-    --primary: 199 82% 52%; /* Blue (#29ABE2) */
-    --secondary: 43 94% 64%; /* Yellow (#F9C74F) */
+    --primary: 214 100% 40%; /* Deep Corporate Blue (#0052CC) */
+    --secondary: 193 100% 50%; /* Bright Energy Cyan (#00D1FF) */
     --accent: 158 45% 46%; /* Green (#43AA8B) */
     --muted: 231 77% 59%; /* Indigo (#4361EE) */
     --foreground: 228 7% 18%; /* Dark (#2D2D2D) */

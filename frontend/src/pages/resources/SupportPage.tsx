@@ -12,25 +12,47 @@ import {
   UserCheck
 } from 'lucide-react';
 import SEO from '@/components/SEO';
+import { useCheckWarranty, useSubmitTicket } from '@/hooks/useApi';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const SupportPage: React.FC = () => {
   const [warrantyId, setWarrantyId] = useState('');
-  const [warrantyStatus, setWarrantyStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>('idle');
+  const [ticketData, setTicketData] = useState({
+    subject: '',
+    category: 'Inverter Performance',
+    description: '',
+    customer_name: '',
+    customer_email: '',
+    customer_phone: ''
+  });
+
+  const { mutate: checkWarranty, data: warrantyData, isPending: isCheckingWarranty, isSuccess: warrantySuccess, isError: warrantyError } = useCheckWarranty();
+  const { mutate: submitTicket, isPending: isSubmittingTicket, isSuccess: ticketSuccess, isError: ticketError } = useSubmitTicket();
 
   const handleCheckWarranty = (e: React.FormEvent) => {
     e.preventDefault();
     if (!warrantyId) return;
-    setWarrantyStatus('checking');
-    // TODO: Replace with actual API call
-    setTimeout(() => {
-      setWarrantyStatus(warrantyId.length > 5 ? 'valid' : 'invalid');
-    }, 1500);
+    checkWarranty(warrantyId);
   };
 
   const handleTicketSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement ticket submission to backend
-    console.log('Ticket submitted');
+    submitTicket(ticketData, {
+      onSuccess: () => {
+        setTicketData({
+          subject: '',
+          category: 'Inverter Performance',
+          description: '',
+          customer_name: '',
+          customer_email: '',
+          customer_phone: ''
+        });
+      }
+    });
+  };
+
+  const handleTicketChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setTicketData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
@@ -112,28 +134,39 @@ const SupportPage: React.FC = () => {
                   </div>
                   <button 
                     type="submit"
-                    disabled={warrantyStatus === 'checking'}
-                    className="w-full bg-gray-900 text-white font-bold py-4 rounded-xl hover:bg-primary transition-all disabled:opacity-50"
+                    disabled={isCheckingWarranty}
+                    className="w-full bg-gray-900 text-white font-bold py-4 rounded-xl hover:bg-primary transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                   >
-                    {warrantyStatus === 'checking' ? 'Verifying...' : 'Check Status'}
+                    {isCheckingWarranty ? (
+                      <>
+                        <LoadingSpinner size="sm" />
+                        <span>Verifying...</span>
+                      </>
+                    ) : 'Check Status'}
                   </button>
                 </form>
 
-                {warrantyStatus === 'valid' && (
+                {warrantySuccess && warrantyData && (
                   <div className="mt-6 p-4 bg-green-50 border border-green-100 rounded-2xl flex items-center space-x-3 animate-in slide-in-from-top-4">
                     <CheckCircle2 className="h-5 w-5 text-green-600" />
                     <div>
                       <p className="text-xs font-black text-green-800 uppercase">Active Coverage</p>
-                      <p className="text-[10px] text-green-700">Expires: Oct 2029 • Platinum Support</p>
+                      <p className="text-[10px] text-green-700">{warrantyData.data?.warranty_status || 'Valid Warranty'}</p>
                     </div>
                   </div>
                 )}
-                {warrantyStatus === 'invalid' && (
+                {warrantyError && (
                   <div className="mt-6 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center space-x-3 animate-in slide-in-from-top-4">
                     <AlertCircle className="h-5 w-5 text-red-600" />
                     <p className="text-[10px] text-red-700 font-bold uppercase tracking-wider">
                       ID Not Recognized. Please check and try again.
                     </p>
+                  </div>
+                )}
+                {ticketSuccess && (
+                  <div className="mt-6 p-4 bg-green-50 border border-green-100 rounded-2xl flex items-center space-x-3">
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                    <p className="text-xs font-bold text-green-800">Ticket submitted successfully!</p>
                   </div>
                 )}
               </div>
@@ -159,7 +192,12 @@ const SupportPage: React.FC = () => {
                         <label className="text-[10px] font-black uppercase tracking-widest text-white/40 ml-1">
                           Issue Category
                         </label>
-                        <select className="w-full bg-white/5 border border-white/10 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all appearance-none text-sm font-bold">
+                        <select 
+                          name="category"
+                          value={ticketData.category}
+                          onChange={handleTicketChange}
+                          className="w-full bg-white/5 border border-white/10 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all appearance-none text-sm font-bold"
+                        >
                           <option className="bg-gray-800">Inverter Performance</option>
                           <option className="bg-gray-800">Battery Discharge Level</option>
                           <option className="bg-gray-800">App Connectivity</option>
@@ -168,22 +206,58 @@ const SupportPage: React.FC = () => {
                       </div>
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black uppercase tracking-widest text-white/40 ml-1">
-                          System Serial Number
+                          Your Name
                         </label>
                         <input 
                           type="text" 
+                          name="customer_name"
+                          value={ticketData.customer_name}
+                          onChange={handleTicketChange}
+                          required
                           className="w-full bg-white/5 border border-white/10 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all text-sm font-bold" 
-                          placeholder="Required for dispatch" 
+                          placeholder="John Doe" 
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-white/40 ml-1">
+                          Email Address
+                        </label>
+                        <input 
+                          type="email" 
+                          name="customer_email"
+                          value={ticketData.customer_email}
+                          onChange={handleTicketChange}
+                          required
+                          className="w-full bg-white/5 border border-white/10 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all text-sm font-bold" 
+                          placeholder="john@example.com" 
                         />
                       </div>
                     </div>
                     <div className="space-y-4">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black uppercase tracking-widest text-white/40 ml-1">
+                          Subject
+                        </label>
+                        <input 
+                          type="text" 
+                          name="subject"
+                          value={ticketData.subject}
+                          onChange={handleTicketChange}
+                          required
+                          className="w-full bg-white/5 border border-white/10 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all text-sm font-bold" 
+                          placeholder="Brief description" 
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-white/40 ml-1">
                           Fault Description
                         </label>
                         <textarea 
-                          rows={4} 
+                          rows={6} 
+                          name="description"
+                          value={ticketData.description}
+                          onChange={handleTicketChange}
+                          required
                           className="w-full bg-white/5 border border-white/10 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all text-sm font-bold" 
                           placeholder="Details of the anomaly..."
                         ></textarea>
@@ -192,10 +266,20 @@ const SupportPage: React.FC = () => {
                     <div className="md:col-span-2 pt-4">
                       <button 
                         type="submit" 
-                        className="w-full bg-primary text-white font-black py-5 rounded-2xl hover:bg-blue-600 transition-all shadow-xl shadow-primary/20 flex items-center justify-center space-x-3"
+                        disabled={isSubmittingTicket}
+                        className="w-full bg-primary text-white font-black py-5 rounded-2xl hover:bg-blue-600 transition-all shadow-xl shadow-primary/20 flex items-center justify-center space-x-3 disabled:opacity-50"
                       >
-                        <span>Generate Service Ticket</span>
-                        <ChevronRight className="h-5 w-5" />
+                        {isSubmittingTicket ? (
+                          <>
+                            <LoadingSpinner size="sm" />
+                            <span>Submitting...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>Generate Service Ticket</span>
+                            <ChevronRight className="h-5 w-5" />
+                          </>
+                        )}
                       </button>
                       <p className="text-center text-[10px] text-white/30 mt-4 uppercase tracking-[0.2em] font-bold">
                         Standard response time: &lt; 24 Working Hours

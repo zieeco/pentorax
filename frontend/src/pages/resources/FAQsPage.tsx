@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { HelpCircle, ChevronDown, BookOpen, Headset, FileText } from 'lucide-react';
 import SEO from '@/components/SEO';
+import { useFAQs } from '@/hooks/useApi';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ErrorMessage from '@/components/ui/ErrorMessage';
 
 const FAQItem: React.FC<{ q: string; a: string }> = ({ q, a }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,21 +24,25 @@ const FAQItem: React.FC<{ q: string; a: string }> = ({ q, a }) => {
 
 const FAQsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  
+  const { data: apiFaqs = [], isLoading, error } = useFAQs({ search: searchQuery });
 
-  // TODO: Replace with API call - useQuery('faqs', fetchFAQs)
-  const faqs = [
-    { q: "How much does a solar installation cost?", a: "Costs vary depending on system size and storage capacity. Residential systems start at roughly $4,500, with financing options available for as low as $99/month." },
-    { q: "Do solar panels work on cloudy days?", a: "Yes, modern mono-PERC panels used by PentoraX can generate up to 25-40% of their capacity even in overcast conditions." },
-    { q: "What is the lifespan of the battery system?", a: "Our LiFePO4 batteries are rated for 6,000+ cycles, which typically equates to 15-20 years of daily use." },
-    { q: "How much space do I need for panels?", a: "For a typical home, you'll need about 20-40 square meters of roof space, depending on your energy usage." },
-    { q: "Can I expand my system later?", a: "Yes! Our modular systems are designed to be expandable. You can add more panels, batteries, or upgrade your inverter as your energy needs grow." },
-    { q: "What maintenance is required?", a: "Solar systems require minimal maintenance. We recommend cleaning panels twice a year and annual professional inspections to ensure optimal performance." },
+  // Fallback mock data if API returns empty
+  const mockFaqs = [
+    { question: "How much does a solar installation cost?", answer: "Costs vary depending on system size and storage capacity. Residential systems start at roughly $4,500, with financing options available for as low as $99/month." },
+    { question: "Do solar panels work on cloudy days?", answer: "Yes, modern mono-PERC panels used by PentoraX can generate up to 25-40% of their capacity even in overcast conditions." },
+    { question: "What is the lifespan of the battery system?", answer: "Our LiFePO4 batteries are rated for 6,000+ cycles, which typically equates to 15-20 years of daily use." },
+    { question: "How much space do I need for panels?", answer: "For a typical home, you'll need about 20-40 square meters of roof space, depending on your energy usage." },
+    { question: "Can I expand my system later?", answer: "Yes! Our modular systems are designed to be expandable. You can add more panels, batteries, or upgrade your inverter as your energy needs grow." },
+    { question: "What maintenance is required?", answer: "Solar systems require minimal maintenance. We recommend cleaning panels twice a year and annual professional inspections to ensure optimal performance." },
   ];
 
+  const faqs = apiFaqs.length > 0 ? apiFaqs : mockFaqs;
+  
   const filteredFAQs = searchQuery 
-    ? faqs.filter(faq => 
-        faq.q.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        faq.a.toLowerCase().includes(searchQuery.toLowerCase())
+    ? faqs.filter((faq: any) => 
+        faq.question.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : faqs;
 
@@ -117,8 +124,14 @@ const FAQsPage: React.FC = () => {
                 <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
               </div>
               <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
-                {filteredFAQs.length > 0 ? (
-                  filteredFAQs.map((f, i) => <FAQItem key={i} q={f.q} a={f.a} />)
+                {isLoading ? (
+                  <div className="py-12">
+                    <LoadingSpinner size="lg" />
+                  </div>
+                ) : error ? (
+                  <ErrorMessage message="Failed to load FAQs. Showing cached questions." />
+                ) : filteredFAQs.length > 0 ? (
+                  filteredFAQs.map((f: any, i: number) => <FAQItem key={i} q={f.question} a={f.answer} />)
                 ) : (
                   <p className="text-center text-gray-500 py-8">
                     No FAQs found matching "{searchQuery}"

@@ -2,29 +2,54 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Linkedin, ArrowLeft } from 'lucide-react';
 import SEO from '@/components/SEO';
+import { useTeam } from '@/hooks/useApi';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ErrorMessage from '@/components/ui/ErrorMessage';
 
 interface TeamMember {
+  id: string;
   name: string;
   role: string;
   department: string;
-  image: string;
+  image_url: string;
   bio: string;
-  email?: string;
-  linkedin?: string;
+  linkedin_url?: string;
+  twitter_url?: string;
+  order: number;
 }
 
 const TeamPage: React.FC = () => {
-  // TODO: Replace with API call - useQuery('team', fetchAllTeamMembers)
-  const teamMembers: TeamMember[] = [
+  const { data: teamMembers = [], isLoading, error } = useTeam();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <ErrorMessage message="Failed to load team members. Please try again later." />
+      </div>
+    );
+  }
+
+  // Fallback mock data if API returns empty
+  const displayMembers: TeamMember[] = teamMembers.length > 0 ? teamMembers : [
     // Leadership
     {
+      id: '1',
       name: 'Dr. Sarah Chen',
       role: 'CEO & Founder',
       department: 'Leadership',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
+      image_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
       bio: '15+ years in renewable energy. PhD in Electrical Engineering from MIT.',
-      email: 'sarah.chen@pentorax.com',
-      linkedin: '#'
+      linkedin_url: '#',
+      twitter_url: '',
+      order: 1
     },
     {
       name: 'Marcus Adebayo',
@@ -121,7 +146,8 @@ const TeamPage: React.FC = () => {
     },
   ];
 
-  const departments = ['Leadership', 'Engineering', 'Operations'];
+  // Get unique departments from displayMembers
+  const departments = Array.from(new Set(displayMembers.map((m: TeamMember) => m.department)));
 
   return (
     <>
@@ -161,33 +187,24 @@ const TeamPage: React.FC = () => {
               </h2>
               
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {teamMembers
-                  .filter(member => member.department === dept)
-                  .map((member, i) => (
+                {displayMembers
+                  .filter((member: TeamMember) => member.department === dept)
+                  .map((member: TeamMember, i: number) => (
                     <div 
                       key={i} 
                       className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all border border-gray-100"
                     >
                       <div className="h-72 overflow-hidden relative">
                         <img 
-                          src={member.image} 
+                          src={member.image_url} 
                           alt={member.name} 
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                           <div className="flex gap-3">
-                            {member.email && (
+                            {member.linkedin_url && (
                               <a 
-                                href={`mailto:${member.email}`}
-                                className="p-2 bg-white/90 rounded-lg hover:bg-white transition-colors"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <Mail className="h-4 w-4 text-gray-900" />
-                              </a>
-                            )}
-                            {member.linkedin && (
-                              <a 
-                                href={member.linkedin}
+                                href={member.linkedin_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="p-2 bg-white/90 rounded-lg hover:bg-white transition-colors"

@@ -2,10 +2,10 @@
  * ProductDetailPage - Single product view
  */
 import { useParams, useNavigate } from 'react-router-dom';
-import { useProduct, useAddToCart, useReviews } from '../hooks/useApi';
-import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
-import { Skeleton } from '../components/ui/skeleton';
+import { useProduct, useAddToCart, useReviews } from '@/hooks/useApi';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ShoppingCart, Star, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';

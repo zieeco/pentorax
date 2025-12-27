@@ -1,10 +1,10 @@
 /**
  * CartPage - Shopping cart view
  */
-import { useCart, useUpdateCartItem, useRemoveFromCart } from '../hooks/useApi';
-import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
-import { Skeleton } from '../components/ui/skeleton';
+import { useCart, useUpdateCartItem, useRemoveFromCart } from '@/hooks/useApi';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';

@@ -2,10 +2,10 @@
  * ShopPage - Product catalog with filtering
  */
 import { useState } from 'react';
-import { useProducts, useCategories } from '../hooks/useApi';
-import { ProductGrid } from '../components/shop/ProductGrid';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
+import { useProducts, useCategories } from '@/hooks/useApi';
+import { ProductGrid } from '@/components/shop/ProductGrid';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Search, Filter } from 'lucide-react';
 
 export default function ShopPage() {

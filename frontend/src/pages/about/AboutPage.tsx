@@ -2,10 +2,23 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Target, Users, Zap, ShieldCheck, Award } from 'lucide-react';
 import SEO from '@/components/SEO';
+import { useTeam } from '@/hooks/useApi';
 
 const AboutPage: React.FC = () => {
-  // TODO: Replace with API call - useQuery('team', fetchTeamMembers)
-  const teamMembers = [
+  const { data: allTeamMembers = [] } = useTeam();
+  
+  // Show only leadership team members on about page
+  const teamMembers = allTeamMembers
+    .filter((m: any) => m.department === 'Leadership' || m.department === 'leadership')
+    .slice(0, 4)
+    .map((m: any) => ({
+      name: m.name,
+      role: m.role,
+      img: m.image_url
+    }));
+  
+  // Fallback mock data if API returns empty
+  const displayMembers = teamMembers.length > 0 ? teamMembers : [
     { name: 'Dr. Sarah Chen', role: 'CEO & Founder', img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80' },
     { name: 'Marcus Adebayo', role: 'Chief Tech Officer', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80' },
     { name: 'Elena Rodriguez', role: 'Head of Operations', img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80' },
@@ -85,7 +98,7 @@ const AboutPage: React.FC = () => {
             <p className="text-gray-600 mb-16">The experts behind the PentoraX energy revolution.</p>
             
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {teamMembers.map((member, i) => (
+              {displayMembers.map((member: any, i: number) => (
                 <div key={i} className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all border border-gray-100">
                   <div className="h-72 overflow-hidden">
                     <img 

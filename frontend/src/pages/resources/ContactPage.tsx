@@ -1,8 +1,33 @@
 
-import React from 'react';
-import { Mail, Phone, MapPin, Send, MessageSquare, Clock } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mail, Phone, MapPin, Send, MessageSquare, Clock, CheckCircle } from 'lucide-react';
+import { useSubmitContact } from '@/hooks/useApi';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const ContactPage: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: 'Residential Solar',
+    message: ''
+  });
+  
+  const { mutate: submitContact, isPending, isSuccess, isError } = useSubmitContact();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submitContact(formData, {
+      onSuccess: () => {
+        setFormData({ name: '', email: '', phone: '', subject: 'Residential Solar', message: '' });
+      }
+    });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   return (
     <div className="bg-white animate-in fade-in duration-700">
       {/* Header */}
@@ -20,20 +45,66 @@ const ContactPage: React.FC = () => {
             <div className="lg:w-3/5">
                 <div className="bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-xl shadow-gray-200/40">
                     <h2 className="text-3xl font-bold mb-8">Send a Message</h2>
-                    <form className="space-y-6">
+                    
+                    {isSuccess && (
+                      <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3">
+                        <CheckCircle className="h-5 w-5 text-green-600" />
+                        <p className="text-green-800 font-semibold">Message sent successfully! We'll get back to you soon.</p>
+                      </div>
+                    )}
+                    
+                    {isError && (
+                      <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                        <p className="text-red-800 font-semibold">Failed to send message. Please try again.</p>
+                      </div>
+                    )}
+                    
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid md:grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-700">Full Name</label>
-                                <input type="text" className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all" placeholder="John Doe" />
+                                <input 
+                                  type="text" 
+                                  name="name"
+                                  value={formData.name}
+                                  onChange={handleChange}
+                                  required
+                                  className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all" 
+                                  placeholder="John Doe" 
+                                />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-700">Email Address</label>
-                                <input type="email" className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all" placeholder="john@company.com" />
+                                <input 
+                                  type="email" 
+                                  name="email"
+                                  value={formData.email}
+                                  onChange={handleChange}
+                                  required
+                                  className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all" 
+                                  placeholder="john@company.com" 
+                                />
                             </div>
                         </div>
                         <div className="space-y-2">
+                            <label className="text-sm font-bold text-gray-700">Phone (Optional)</label>
+                            <input 
+                              type="tel" 
+                              name="phone"
+                              value={formData.phone}
+                              onChange={handleChange}
+                              className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all" 
+                              placeholder="+234 808 159 8604" 
+                            />
+                        </div>
+                        <div className="space-y-2">
                             <label className="text-sm font-bold text-gray-700">Interested In</label>
-                            <select className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all appearance-none">
+                            <select 
+                              name="subject"
+                              value={formData.subject}
+                              onChange={handleChange}
+                              className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all appearance-none"
+                            >
                                 <option>Residential Solar</option>
                                 <option>Commercial Scale</option>
                                 <option>Industrial Power</option>
@@ -42,11 +113,32 @@ const ContactPage: React.FC = () => {
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm font-bold text-gray-700">Your Message</label>
-                            <textarea rows={5} className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all" placeholder="Tell us about your project..."></textarea>
+                            <textarea 
+                              rows={5} 
+                              name="message"
+                              value={formData.message}
+                              onChange={handleChange}
+                              required
+                              className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-primary outline-none transition-all" 
+                              placeholder="Tell us about your project..."
+                            ></textarea>
                         </div>
-                        <button className="w-full bg-primary text-white font-bold py-5 rounded-xl hover:bg-blue-700 transition-all shadow-xl shadow-primary/20 flex items-center justify-center space-x-3">
-                            <span>Send Inquiry</span>
-                            <Send className="h-5 w-5" />
+                        <button 
+                          type="submit"
+                          disabled={isPending}
+                          className="w-full bg-primary text-white font-bold py-5 rounded-xl hover:bg-blue-700 transition-all shadow-xl shadow-primary/20 flex items-center justify-center space-x-3 disabled:opacity-50"
+                        >
+                            {isPending ? (
+                              <>
+                                <LoadingSpinner size="sm" />
+                                <span>Sending...</span>
+                              </>
+                            ) : (
+                              <>
+                                <span>Send Inquiry</span>
+                                <Send className="h-5 w-5" />
+                              </>
+                            )}
                         </button>
                     </form>
                 </div>
@@ -109,3 +201,4 @@ const ContactPage: React.FC = () => {
 };
 
 export default ContactPage;
+

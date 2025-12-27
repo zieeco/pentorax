@@ -3,12 +3,12 @@
  */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart, useCreateOrder, useInitializePayment } from '../hooks/useApi';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Card } from '../components/ui/card';
-import { Skeleton } from '../components/ui/skeleton';
+import { useCart, useCreateOrder, useInitializePayment } from '@/hooks/useApi';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 
 export default function CheckoutPage() {

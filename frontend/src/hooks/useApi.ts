@@ -2,7 +2,7 @@
  * React Query hooks for API calls
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { productsApi, cartApi, ordersApi, paymentsApi, reviewsApi, quotesApi, blogApi } from '../services/api';
+import { productsApi, cartApi, ordersApi, paymentsApi, reviewsApi, quotesApi, blogApi, coreApi } from '../services/api';
 import type { Product, Cart, Order } from '../types';
 
 // Products hooks
@@ -210,3 +210,66 @@ export const useBlogCategories = () => {
     },
   });
 };
+
+// Core App hooks
+export const useTeam = () => {
+  return useQuery({
+    queryKey: ['team'],
+    queryFn: async () => {
+      const response = await coreApi.team();
+      return response.data.results || response.data;
+    },
+  });
+};
+
+export const useFAQs = (params?: { category?: string; search?: string }) => {
+  return useQuery({
+    queryKey: ['faqs', params],
+    queryFn: async () => {
+      const response = await coreApi.faqs(params);
+      return response.data.results || response.data;
+    },
+  });
+};
+
+export const useCaseStudies = () => {
+  return useQuery({
+    queryKey: ['case-studies'],
+    queryFn: async () => {
+      const response = await coreApi.caseStudies();
+      return response.data.results || response.data;
+    },
+  });
+};
+
+export const useSubmitContact = () => {
+  return useMutation({
+    mutationFn: (data: {
+      name: string;
+      email: string;
+      phone?: string;
+      subject: string;
+      message: string;
+    }) => coreApi.submitContact(data),
+  });
+};
+
+export const useSubmitTicket = () => {
+  return useMutation({
+    mutationFn: (data: {
+      subject: string;
+      category: string;
+      description: string;
+      customer_name: string;
+      customer_email: string;
+      customer_phone?: string;
+    }) => coreApi.submitTicket(data),
+  });
+};
+
+export const useCheckWarranty = () => {
+  return useMutation({
+    mutationFn: (serialNumber: string) => coreApi.checkWarranty(serialNumber),
+  });
+};
+
