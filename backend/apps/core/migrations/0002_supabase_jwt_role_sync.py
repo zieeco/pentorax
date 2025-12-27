@@ -1,15 +1,10 @@
-# Generated migration for Supabase JWT and role sync
-# Adapted from SkillForge pattern for Pentorax
-# Includes first-user-as-admin logic
-# Roles: admin, staff, customer
-
 from django.db import migrations
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_initial'),
+        ("core", "0001_initial"),
     ]
 
     operations = [
@@ -17,8 +12,7 @@ class Migration(migrations.Migration):
             sql="""
             -- ============================================
             -- PENTORAX: JWT CUSTOM CLAIMS WITH AUTO ROLE SYNC
-            -- Adapted from SkillForge pattern
-            -- Includes first-user-as-admin functionality
+            -- FIXED VERSION: Handles nullable fields properly
             -- Roles: admin, staff, customer
             -- ============================================
 
@@ -87,7 +81,7 @@ class Migration(migrations.Migration):
 
             COMMENT ON FUNCTION public.custom_access_token_hook(jsonb) IS 'Supabase Auth JWT Hook: Adds user role from core_userprofile to JWT claims. Roles: admin, staff, customer';
 
-            -- PART 3: Auto-create profile when user signs up (first user becomes admin)
+            -- PART 3: FIXED Auto-create profile (handles nullable fields properly)
             CREATE OR REPLACE FUNCTION public.handle_new_user()
             RETURNS trigger
             LANGUAGE plpgsql
@@ -99,47 +93,51 @@ class Migration(migrations.Migration):
                 v_role text;
                 v_user_count integer;
             BEGIN
+                RAISE NOTICE '=== handle_new_user triggered for: % ===', NEW.email;
+                
                 -- Count existing users in core_userprofile table
                 SELECT COUNT(*) INTO v_user_count FROM public.core_userprofile;
+                RAISE NOTICE 'Existing user count: %', v_user_count;
                 
-                -- Determine role: first user is admin, others are customer
-                -- Roles can be: admin, staff, customer
+                -- First user = admin, others = customer
                 IF v_user_count = 0 THEN
                     v_role := 'admin';
+                    RAISE NOTICE 'First user - assigning admin role';
                 ELSE
                     v_role := 'customer';
+                    RAISE NOTICE 'Assigning customer role';
                 END IF;
 
-                -- Extract name from metadata
+                -- Extract name from metadata (with better fallback)
                 v_name := COALESCE(
                     NEW.raw_user_meta_data->>'name',
                     NEW.raw_user_meta_data->>'full_name',
-                    NEW.email
+                    SPLIT_PART(NEW.email, '@', 1)
                 );
+                RAISE NOTICE 'Extracted name: %', v_name;
 
-                -- Create user profile in core_userprofile
+                -- FIXED: Only insert required fields, let defaults handle the rest
                 INSERT INTO public.core_userprofile (
-                    id,
                     supabase_id,
                     email,
                     name,
                     role,
                     email_verified,
-                    is_active,
-                    created_at,
-                    updated_at
+                    is_active
                 ) VALUES (
-                    gen_random_uuid(),
                     NEW.id,
                     NEW.email,
                     v_name,
                     v_role,
-                    NEW.email_confirmed_at IS NOT NULL,
-                    true,
-                    NOW(),
-                    NOW()
+                    (NEW.email_confirmed_at IS NOT NULL),
+                    true
                 )
-                ON CONFLICT (supabase_id) DO NOTHING;
+                ON CONFLICT (supabase_id) DO UPDATE SET
+                    email = EXCLUDED.email,
+                    email_verified = EXCLUDED.email_verified,
+                    updated_at = NOW();
+
+                RAISE NOTICE 'Profile created successfully!';
 
                 -- Sync role to auth.users for JWT hook
                 UPDATE auth.users
@@ -147,11 +145,17 @@ class Migration(migrations.Migration):
                     jsonb_build_object('role', v_role)
                 WHERE id = NEW.id;
 
+                RAISE NOTICE 'Role synced to JWT';
+                RAISE NOTICE '=== COMPLETED ===';
+
                 RETURN NEW;
             EXCEPTION
                 WHEN OTHERS THEN
-                    RAISE WARNING '[handle_new_user] Error for user %: %', NEW.id, SQLERRM;
-                    RETURN NEW;  -- Don't fail user signup
+                    RAISE WARNING '!!! ERROR creating profile for % !!!', NEW.email;
+                    RAISE WARNING 'SQLSTATE: %', SQLSTATE;
+                    RAISE WARNING 'SQLERRM: %', SQLERRM;
+                    RAISE WARNING 'Context: name=%, role=%', v_name, v_role;
+                    RETURN NEW;  -- Don't block user signup
             END;
             $$;
 
