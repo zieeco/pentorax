@@ -1,39 +1,51 @@
+import uuid
+
 from django.db import models
-from apps.core.models import TimeStampedModel
-from apps.products.models import Product
+
+
+class TimeStampedModel(models.Model):
+    """Abstract base model with timestamps"""
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
 
 
 class Cart(TimeStampedModel):
-    """Shopping cart"""
-    user_id = models.CharField(max_length=255, db_index=True, help_text="Supabase user ID or session ID")
-    
+    """Shopping cart - one per user"""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_id = models.UUIDField(unique=True, db_index=True)
+
     class Meta:
-        ordering = ['-updated_at']
-    
+        db_table = "cart_cart"
+        verbose_name = "Cart"
+        verbose_name_plural = "Carts"
+
     def __str__(self):
-        return f"Cart {self.id}"
-    
-    @property
-    def total(self):
-        return sum(item.subtotal for item in self.items.all())
-    
-    @property
-    def item_count(self):
-        return sum(item.quantity for item in self.items.all())
+        return f"Cart for user {self.user_id}"
 
 
 class CartItem(TimeStampedModel):
     """Items in shopping cart"""
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    cart_id = models.UUIDField(db_index=True)
+    product_id = models.UUIDField(db_index=True)
     quantity = models.PositiveIntegerField(default=1)
-    
+
     class Meta:
-        unique_together = ['cart', 'product']
-    
+        db_table = "cart_cartitem"
+        verbose_name = "Cart Item"
+        verbose_name_plural = "Cart Items"
+        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["cart_id", "product_id"], name="unique_cart_product"
+            )
+        ]
+
     def __str__(self):
-        return f"{self.product.name} x{self.quantity}"
-    
-    @property
-    def subtotal(self):
-        return self.product.price * self.quantity
+        return f"CartItem {self.id}"

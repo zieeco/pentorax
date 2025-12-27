@@ -1,13 +1,15 @@
 """
 URL configuration for cart app
 """
+
+
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import CartViewSet
 
 router = DefaultRouter()
-router.register(r'', CartViewSet, basename='cart')
+router.register(r"cart", CartViewSet, basename="cart")
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]

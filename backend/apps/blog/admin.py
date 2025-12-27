@@ -1,6 +1,7 @@
 """
 Admin configuration for blog app
 """
+
 from django.contrib import admin
 from .models import BlogCategory, BlogPost
 
@@ -14,15 +15,16 @@ class BlogCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'author_id', 'is_published', 'published_at', 'created_at']
-    list_filter = ['is_published', 'category', 'published_at', 'created_at']
+    list_display = ['title', 'category_id', 'author_id', 'is_published', 
+                    'published_at', 'created_at']
+    list_filter = ['is_published', 'published_at', 'created_at']
     search_fields = ['title', 'content']
     prepopulated_fields = {'slug': ('title',)}
     readonly_fields = ['created_at', 'updated_at']
     
     fieldsets = (
         ('Post Information', {
-            'fields': ('title', 'slug', 'category', 'author_id')
+            'fields': ('title', 'slug', 'category_id', 'author_id')
         }),
         ('Content', {
             'fields': ('excerpt', 'content', 'featured_image')

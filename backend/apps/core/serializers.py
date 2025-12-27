@@ -1,64 +1,79 @@
 """
 Serializers for core app
 """
+
 from rest_framework import serializers
-from .models import TeamMember, FAQ, CaseStudy, ContactSubmission, SupportTicket, WarrantyCheck
+
+from .models import FAQ, CaseStudy, TeamMember, UserProfile
 
 
-class TeamMemberSerializer(serializers.ModelSerializer):
-    """Serializer for team members"""
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TeamMember
-        fields = ['id', 'name', 'role', 'department', 'bio', 'image', 'email', 'linkedin', 'order', 'created_at']
-        read_only_fields = ['id', 'created_at']
-
-
-class FAQSerializer(serializers.ModelSerializer):
-    """Serializer for FAQs"""
-    class Meta:
-        model = FAQ
-        fields = ['id', 'question', 'answer', 'category', 'order', 'created_at']
-        read_only_fields = ['id', 'created_at']
+        model = UserProfile
+        fields = [
+            "id",
+            "supabase_id",
+            "email",
+            "name",
+            "phone",
+            "role",
+            "avatar_url",
+            "bio",
+            "is_active",
+            "email_verified",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["id", "supabase_id", "created_at", "updated_at"]
 
 
 class CaseStudySerializer(serializers.ModelSerializer):
-    """Serializer for case studies"""
     class Meta:
         model = CaseStudy
         fields = [
-            'id', 'title', 'description', 'image', 'location',
-            'capacity', 'savings', 'project_date', 'is_featured', 'created_at'
+            "id",
+            "title",
+            "description",
+            "image",
+            "location",
+            "capacity",
+            "savings",
+            "project_date",
+            "is_featured",
+            "is_active",
+            "created_at",
         ]
-        read_only_fields = ['id', 'created_at']
+        read_only_fields = ["id", "created_at"]
 
 
-class ContactSubmissionSerializer(serializers.ModelSerializer):
-    """Serializer for contact form submissions"""
+class FAQSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ContactSubmission
-        fields = ['id', 'name', 'email', 'phone', 'subject', 'message', 'created_at']
-        read_only_fields = ['id', 'created_at']
-
-
-class SupportTicketSerializer(serializers.ModelSerializer):
-    """Serializer for support tickets"""
-    class Meta:
-        model = SupportTicket
+        model = FAQ
         fields = [
-            'id', 'category', 'serial_number', 'description',
-            'status', 'user_email', 'created_at'
+            "id",
+            "question",
+            "answer",
+            "category",
+            "order",
+            "is_active",
+            "created_at",
         ]
-        read_only_fields = ['id', 'status', 'created_at']
+        read_only_fields = ["id", "created_at"]
 
 
-class WarrantyCheckSerializer(serializers.Serializer):
-    """Serializer for warranty check requests"""
-    serial = serializers.CharField(max_length=100)
-
-
-class WarrantyCheckResponseSerializer(serializers.ModelSerializer):
-    """Serializer for warranty check responses"""
+class TeamMemberSerializer(serializers.ModelSerializer):
     class Meta:
-        model = WarrantyCheck
-        fields = ['serial_number', 'is_valid', 'expiry_date', 'support_level', 'product_name']
-        read_only_fields = ['serial_number', 'is_valid', 'expiry_date', 'support_level', 'product_name']
+        model = TeamMember
+        fields = [
+            "id",
+            "name",
+            "role",
+            "department",
+            "bio",
+            "image",
+            "email",
+            "linkedin",
+            "order",
+            "is_active",
+        ]
+        read_only_fields = ["id", "created_at"]

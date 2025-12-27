@@ -1,70 +1,124 @@
 """
 Serializers for products app
 """
+
 from rest_framework import serializers
+
 from .models import Category, Product, ProductImage, ProductSpecification
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    """Serializer for product categories"""
-    children = serializers.SerializerMethodField()
-    
+    product_count = serializers.SerializerMethodField()
+    parent_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ['id', 'name', 'slug', 'description', 'image', 'parent', 'children', 'created_at']
-        read_only_fields = ['id', 'created_at']
-    
-    def get_children(self, obj):
-        if obj.children.exists():
-            return CategorySerializer(obj.children.all(), many=True).data
-        return []
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "description",
+            "image",
+            "parent_id",
+            "parent_name",
+            "product_count",
+            "created_at",
+        ]
+        read_only_fields = ["id", "created_at"]
+
+    def get_product_count(self, obj):
+        return Product.objects.filter(category_id=obj.id, is_active=True).count()
+
+    def get_parent_name(self, obj):
+        if obj.parent_id:
+            try:
+                parent = Category.objects.get(id=obj.parent_id)
+                return parent.name
+            except Category.DoesNotExist:
+                return None
+        return None
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
-    """Serializer for product images"""
     class Meta:
         model = ProductImage
-        fields = ['id', 'image_url', 'alt_text', 'position']
-        read_only_fields = ['id']
+        fields = ["id", "image_url", "alt_text", "position"]
 
 
 class ProductSpecificationSerializer(serializers.ModelSerializer):
-    """Serializer for product specifications"""
     class Meta:
         model = ProductSpecification
-        fields = ['id', 'key', 'value', 'position']
-        read_only_fields = ['id']
+        fields = ["id", "key", "value", "position"]
 
 
 class ProductListSerializer(serializers.ModelSerializer):
-    """Lightweight serializer for product lists"""
-    category_name = serializers.CharField(source='category.name', read_only=True)
-    discount_percentage = serializers.IntegerField(read_only=True)
-    
+    category_name = serializers.SerializerMethodField()
+    discount_percentage = serializers.ReadOnlyField()
+
     class Meta:
         model = Product
         fields = [
-            'id', 'name', 'slug', 'short_description', 'category_name',
-            'price', 'compare_at_price', 'discount_percentage',
-            'featured_image', 'is_featured', 'created_at'
+            "id",
+            "name",
+            "slug",
+            "short_description",
+            "price",
+            "compare_at_price",
+            "discount_percentage",
+            "featured_image",
+            "category_name",
+            "is_featured",
+            "created_at",
         ]
-        read_only_fields = ['id', 'created_at']
+
+    def get_category_name(self, obj):
+        try:
+            category = Category.objects.get(id=obj.category_id)
+            return category.name
+        except Category.DoesNotExist:
+            return None
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
-    """Detailed serializer for single product view"""
-    category = CategorySerializer(read_only=True)
-    images = ProductImageSerializer(many=True, read_only=True)
-    specifications = ProductSpecificationSerializer(many=True, read_only=True)
-    discount_percentage = serializers.IntegerField(read_only=True)
-    
+    category = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()
+    specifications = serializers.SerializerMethodField()
+    discount_percentage = serializers.ReadOnlyField()
+
     class Meta:
         model = Product
         fields = [
-            'id', 'name', 'slug', 'description', 'short_description',
-            'category', 'price', 'compare_at_price', 'discount_percentage',
-            'is_active', 'is_featured', 'featured_image', 'images',
-            'specifications', 'meta_title', 'meta_description',
-            'created_at', 'updated_at'
+            "id",
+            "name",
+            "slug",
+            "description",
+            "short_description",
+            "price",
+            "compare_at_price",
+            "discount_percentage",
+            "is_active",
+            "is_featured",
+            "featured_image",
+            "category",
+            "images",
+            "specifications",
+            "meta_title",
+            "meta_description",
+            "created_at",
+            "updated_at",
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
+
+    def get_category(self, obj):
+        try:
+            category = Category.objects.get(id=obj.category_id)
+            return CategorySerializer(category).data
+        except Category.DoesNotExist:
+            return None
+
+    def get_images(self, obj):
+        images = ProductImage.objects.filter(product_id=obj.id)
+        return ProductImageSerializer(images, many=True).data
+
+    def get_specifications(self, obj):
+        specs = ProductSpecification.objects.filter(product_id=obj.id)
+        return ProductSpecificationSerializer(specs, many=True).data

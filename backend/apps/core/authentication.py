@@ -2,10 +2,16 @@
 Supabase JWT authentication for Django REST Framework
 """
 from rest_framework import authentication, exceptions
-from django.contrib.auth.models import AnonymousUser
 from .supabase_client import get_supabase_client
 import jwt
 from django.conf import settings
+
+
+class AnonymousUser:
+    """Custom anonymous user (no Django auth)"""
+    id = None
+    is_authenticated = False
+    is_anonymous = True
 
 
 class SupabaseUser:

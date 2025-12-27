@@ -2,8 +2,7 @@
 Middleware for Supabase authentication
 """
 from django.utils.deprecation import MiddlewareMixin
-from .authentication import SupabaseAuthentication
-from django.contrib.auth.models import AnonymousUser
+from .authentication import SupabaseAuthentication, AnonymousUser
 
 
 class SupabaseAuthMiddleware(MiddlewareMixin):

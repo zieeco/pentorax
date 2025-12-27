@@ -1,9 +1,15 @@
 """
 Views for blog app
 """
+
 from rest_framework import viewsets, filters
+from rest_framework.permissions import AllowAny
 from .models import BlogCategory, BlogPost
-from .serializers import BlogCategorySerializer, BlogPostListSerializer, BlogPostDetailSerializer
+from .serializers import (
+    BlogCategorySerializer,
+    BlogPostListSerializer,
+    BlogPostDetailSerializer
+)
 
 
 class BlogCategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -25,6 +31,8 @@ class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['published_at', 'created_at']
     ordering = ['-published_at']
     lookup_field = 'slug'
+    permission_classes = [AllowAny]
+
     
     def get_serializer_class(self):
         if self.action == 'retrieve':
@@ -37,6 +45,10 @@ class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
         # Filter by category
         category_slug = self.request.query_params.get('category')
         if category_slug:
-            queryset = queryset.filter(category__slug=category_slug)
+            try:
+                category = BlogCategory.objects.get(slug=category_slug)
+                queryset = queryset.filter(category_id=category.id)
+            except BlogCategory.DoesNotExist:
+                pass
         
         return queryset

@@ -1,30 +1,84 @@
 """
 Serializers for cart app
 """
+
+from django.db import connection
 from rest_framework import serializers
+
 from .models import Cart, CartItem
-from apps.products.serializers import ProductListSerializer
 
 
 class CartItemSerializer(serializers.ModelSerializer):
-    """Serializer for cart items"""
-    product = ProductListSerializer(read_only=True)
-    product_id = serializers.UUIDField(write_only=True)
-    subtotal = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    
+    product_details = serializers.SerializerMethodField()
+    subtotal = serializers.SerializerMethodField()
+
     class Meta:
         model = CartItem
-        fields = ['id', 'product', 'product_id', 'quantity', 'subtotal', 'created_at']
-        read_only_fields = ['id', 'created_at']
+        fields = [
+            "id",
+            "cart_id",
+            "product_id",
+            "quantity",
+            "product_details",
+            "subtotal",
+            "created_at",
+        ]
+        read_only_fields = ["id", "cart_id", "created_at"]
+
+    def get_product_details(self, obj):
+        """Fetch product details"""
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT id, name, slug, featured_image, price, 
+                       compare_at_price, is_active
+                FROM public.products_product
+                WHERE id = %s
+            """,
+                [str(obj.product_id)],
+            )
+
+            row = cursor.fetchone()
+            if row:
+                return {
+                    "id": str(row[0]),
+                    "name": row[1],
+                    "slug": row[2],
+                    "featured_image": row[3],
+                    "price": float(row[4]),
+                    "compare_at_price": float(row[5]) if row[5] else None,
+                    "is_active": row[6],
+                }
+        return None
+
+    def get_subtotal(self, obj):
+        """Calculate subtotal for this item"""
+        product = self.get_product_details(obj)
+        if product:
+            return float(product["price"]) * obj.quantity
+        return 0
 
 
-class CartSerializer(serializers.ModelSerializer):
-    """Serializer for shopping cart"""
-    items = CartItemSerializer(many=True, read_only=True)
-    total = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    item_count = serializers.IntegerField(read_only=True)
-    
-    class Meta:
-        model = Cart
-        fields = ['id', 'user_id', 'items', 'total', 'item_count', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']
+class AddToCartSerializer(serializers.Serializer):
+    product_id = serializers.UUIDField(required=True)
+    quantity = serializers.IntegerField(default=1, min_value=1)
+
+    def validate_product_id(self, value):
+        """Verify product exists and is active"""
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT id FROM public.products_product 
+                WHERE id = %s AND is_active = true
+            """,
+                [str(value)],
+            )
+
+            if not cursor.fetchone():
+                raise serializers.ValidationError("Product not found or not available")
+
+        return value
+
+
+class UpdateCartItemSerializer(serializers.Serializer):
+    quantity = serializers.IntegerField(min_value=1, required=True)

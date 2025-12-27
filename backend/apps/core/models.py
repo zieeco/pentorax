@@ -1,146 +1,129 @@
 """
 Base models for all apps
 """
-from django.db import models
+
 import uuid
+
+from django.db import models
 
 
 class TimeStampedModel(models.Model):
-    """
-    Abstract base model with created_at and updated_at fields
-    """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    """Abstract base model with timestamps"""
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
         abstract = True
-        ordering = ['-created_at']
 
 
-class TeamMember(TimeStampedModel):
-    """Team member model"""
-    DEPARTMENT_CHOICES = [
-        ('leadership', 'Leadership'),
-        ('engineering', 'Engineering'),
-        ('operations', 'Operations'),
+class UserProfile(TimeStampedModel):
+    """Extended user profile linked to Supabase auth"""
+
+    ROLE_CHOICES = [
+        ("admin", "Admin"),
+        ("staff", "Staff"),
+        ("customer", "Customer"),
     ]
-    
-    name = models.CharField(max_length=200)
-    role = models.CharField(max_length=200)
-    department = models.CharField(max_length=50, choices=DEPARTMENT_CHOICES)
-    bio = models.TextField()
-    image = models.URLField(max_length=500, help_text="Supabase Storage URL")
-    email = models.EmailField(blank=True, null=True)
-    linkedin = models.URLField(max_length=500, blank=True, null=True)
-    order = models.IntegerField(default=0, help_text="Display order")
-    is_active = models.BooleanField(default=True)
-    
-    class Meta:
-        ordering = ['department', 'order', 'name']
-    
-    def __str__(self):
-        return f"{self.name} - {self.role}"
 
-
-class FAQ(TimeStampedModel):
-    """Frequently Asked Questions"""
-    question = models.CharField(max_length=500)
-    answer = models.TextField()
-    category = models.CharField(max_length=100, blank=True)
-    order = models.IntegerField(default=0, help_text="Display order")
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    supabase_id = models.UUIDField(unique=True, db_index=True)
+    email = models.EmailField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=50, blank=True)
+    role = models.CharField(max_length=50, choices=ROLE_CHOICES, default="customer")
+    avatar_url = models.URLField(blank=True, help_text="Supabase Storage URL")
+    bio = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
-    
-    class Meta:
-        ordering = ['order', 'question']
-        verbose_name = "FAQ"
-        verbose_name_plural = "FAQs"
-    
+    email_verified = models.BooleanField(default=False)
+
+    class Meta(TimeStampedModel.Meta):
+        db_table = "core_userprofile"
+        ordering = ["-created_at"]
+        # Indexes managed manually in Supabase SQL
+
     def __str__(self):
-        return self.question
+        return f"{self.name} ({self.email}) - {self.role}"
+
+    @property
+    def is_admin(self):
+        """Check if user has admin role"""
+        return self.role == "admin"
+
+    @property
+    def is_staff_member(self):
+        """Check if user has staff or admin role"""
+        return self.role in ["staff", "admin"]
 
 
 class CaseStudy(TimeStampedModel):
-    """Case studies / project showcases"""
-    title = models.CharField(max_length=200)
+    """Solar installation case studies"""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
     description = models.TextField()
-    image = models.URLField(max_length=500, help_text="Supabase Storage URL")
-    location = models.CharField(max_length=200)
+    image = models.URLField()
+    location = models.CharField(max_length=255)
     capacity = models.CharField(max_length=100, help_text="e.g., 250kW")
-    savings = models.CharField(max_length=200, help_text="e.g., 65% reduction in energy costs")
-    project_date = models.DateField(blank=True, null=True)
+    savings = models.CharField(
+        max_length=200, help_text="e.g., 65% reduction in energy costs"
+    )
+    project_date = models.DateField(null=True, blank=True)
     is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    
-    class Meta:
-        ordering = ['-is_featured', '-project_date']
+
+    class Meta(TimeStampedModel.Meta):
+        db_table = "core_casestudy"
+        ordering = ["-project_date", "-is_featured"]
         verbose_name_plural = "Case Studies"
-    
+
     def __str__(self):
         return self.title
 
 
-class ContactSubmission(TimeStampedModel):
-    """Contact form submissions"""
-    name = models.CharField(max_length=200)
-    email = models.EmailField()
-    phone = models.CharField(max_length=50, blank=True)
-    subject = models.CharField(max_length=200, blank=True)
-    message = models.TextField()
-    is_read = models.BooleanField(default=False)
-    
-    class Meta:
-        ordering = ['-created_at']
-    
-    def __str__(self):
-        return f"Contact from {self.name} - {self.created_at.strftime('%Y-%m-%d')}"
+class FAQ(TimeStampedModel):
+    """Frequently Asked Questions"""
 
-
-class SupportTicket(TimeStampedModel):
-    """Support ticket submissions"""
-    STATUS_CHOICES = [
-        ('open', 'Open'),
-        ('in_progress', 'In Progress'),
-        ('resolved', 'Resolved'),
-        ('closed', 'Closed'),
-    ]
-    
-    CATEGORY_CHOICES = [
-        ('inverter', 'Inverter Performance'),
-        ('battery', 'Battery Discharge Level'),
-        ('connectivity', 'App Connectivity'),
-        ('installation', 'New Hardware Install'),
-        ('other', 'Other'),
-    ]
-    
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
-    serial_number = models.CharField(max_length=100)
-    description = models.TextField()
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
-    user_email = models.EmailField(blank=True, null=True)
-    assigned_to = models.CharField(max_length=200, blank=True, null=True)
-    resolution_notes = models.TextField(blank=True)
-    
-    class Meta:
-        ordering = ['-created_at']
-    
-    def __str__(self):
-        return f"Ticket #{str(self.id)[:8]} - {self.category} - {self.status}"
-
-
-class WarrantyCheck(models.Model):
-    """Warranty check records"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    serial_number = models.CharField(max_length=100, unique=True, db_index=True)
-    is_valid = models.BooleanField(default=True)
-    expiry_date = models.DateField()
-    support_level = models.CharField(max_length=50, default='Standard')
-    product_name = models.CharField(max_length=200, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        ordering = ['-created_at']
-    
+    question = models.CharField(max_length=500)
+    answer = models.TextField()
+    category = models.CharField(max_length=100)
+    order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta(TimeStampedModel.Meta):
+        db_table = "core_faq"
+        ordering = ["order", "category", "question"]
+        verbose_name = "FAQ"
+        verbose_name_plural = "FAQs"
+
     def __str__(self):
-        return f"{self.serial_number} - Valid: {self.is_valid}"
+        return self.question
+
+
+class TeamMember(TimeStampedModel):
+    """Team members model"""
+
+    DEPARTMENT_CHOICES = [
+        ("leadership", "Leadership"),
+        ("engineering", "Engineering"),
+        ("operations", "Operations"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    role = models.CharField(max_length=255)
+    department = models.CharField(max_length=50, choices=DEPARTMENT_CHOICES)
+    bio = models.TextField(blank=True)
+    image = models.URLField(max_length=500, help_text="Supabase Storage URL")
+    email = models.EmailField(max_length=255, blank=True)
+    linkedin = models.URLField(blank=True)
+    order = models.IntegerField(default=0, help_text="Display order")
+    is_active = models.BooleanField(default=True)
+
+    class Meta(TimeStampedModel.Meta):
+        db_table = "core_teammember"
+        ordering = ["order"]
+
+    def __str__(self):
+        return f"{self.name} - {self.role}"

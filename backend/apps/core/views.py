@@ -1,129 +1,105 @@
 """
 Views for core app
 """
-from rest_framework import viewsets, filters, status
-from rest_framework.decorators import api_view
+
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from .models import TeamMember, FAQ, CaseStudy, ContactSubmission, SupportTicket, WarrantyCheck
+
+from .models import FAQ, CaseStudy, TeamMember, UserProfile
 from .serializers import (
-    TeamMemberSerializer,
-    FAQSerializer,
     CaseStudySerializer,
-    ContactSubmissionSerializer,
-    SupportTicketSerializer,
-    WarrantyCheckSerializer,
-    WarrantyCheckResponseSerializer
+    FAQSerializer,
+    TeamMemberSerializer,
+    UserProfileSerializer,
 )
 
 
-class TeamMemberViewSet(viewsets.ReadOnlyModelViewSet):
+class UserProfileViewSet(viewsets.ModelViewSet):
     """
-    ViewSet for team members (read-only)
-    """
-    queryset = TeamMember.objects.filter(is_active=True)
-    serializer_class = TeamMemberSerializer
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['department', 'order', 'name']
-    ordering = ['department', 'order']
+    ViewSet for managing user profiles.
 
+    Permissions: IsAuthenticated
+    """
 
-class FAQViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    ViewSet for FAQs (read-only with search)
-    """
-    queryset = FAQ.objects.filter(is_active=True)
-    serializer_class = FAQSerializer
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['question', 'answer']
-    ordering_fields = ['order', 'created_at']
-    ordering = ['order']
-    
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        
-        # Filter by category
-        category = self.request.query_params.get('category')
-        if category:
-            queryset = queryset.filter(category=category)
-        
-        return queryset
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=False, methods=["get"])
+    def me(self, request):
+        """Get current user's profile"""
+        try:
+            profile = UserProfile.objects.get(supabase_id=request.user.id)
+            serializer = self.get_serializer(profile)
+            return Response(serializer.data)
+        except UserProfile.DoesNotExist:
+            return Response(
+                {"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
+            )
 
 
 class CaseStudyViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    ViewSet for case studies (read-only)
+    ViewSet for viewing case studies.
+
+    Permissions: AllowAny (public read-only)
     """
+
     queryset = CaseStudy.objects.filter(is_active=True)
     serializer_class = CaseStudySerializer
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['project_date', 'created_at']
-    ordering = ['-is_featured', '-project_date']
+    permission_classes = [AllowAny]
+
+    @action(detail=False, methods=["get"])
+    def featured(self, request):
+        """Get featured case studies"""
+        featured = self.queryset.filter(is_featured=True)
+        serializer = self.get_serializer(featured, many=True)
+        return Response(serializer.data)
 
 
-class ContactSubmissionViewSet(viewsets.ModelViewSet):
+class FAQViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    ViewSet for contact form submissions (create-only for public)
+    ViewSet for viewing FAQs.
+
+    Permissions: AllowAny (public read-only)
     """
-    queryset = ContactSubmission.objects.all()
-    serializer_class = ContactSubmissionSerializer
-    http_method_names = ['post']
-    
-    def create(self, request, *args, **kwargs):
-        """Create contact submission"""
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        contact = serializer.save()
-        
-        # TODO: Send email notification to admin
-        
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED
-        )
+
+    queryset = FAQ.objects.filter(is_active=True)
+    serializer_class = FAQSerializer
+    permission_classes = [AllowAny]
+
+    @action(detail=False, methods=["get"])
+    def by_category(self, request):
+        """Get FAQs grouped by category"""
+        category = request.query_params.get("category")
+        if category:
+            faqs = self.queryset.filter(category=category)
+        else:
+            faqs = self.queryset
+        serializer = self.get_serializer(faqs, many=True)
+        return Response(serializer.data)
 
 
-class SupportTicketViewSet(viewsets.ModelViewSet):
+class TeamMemberViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    ViewSet for support tickets (create-only for public)
-    """
-    queryset = SupportTicket.objects.all()
-    serializer_class = SupportTicketSerializer
-    http_method_names = ['post']
-    
-    def create(self, request, *args, **kwargs):
-        """Create support ticket"""
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        ticket = serializer.save()
-        
-        # TODO: Send email notification to support team
-        
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED
-        )
+    ViewSet for viewing team members.
 
+    Permissions: AllowAny (public read-only)
+    """
 
-@api_view(['POST'])
-def warranty_check(request):
-    """
-    Check warranty status by serial number
-    """
-    serializer = WarrantyCheckSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    
-    serial = serializer.validated_data['serial']
-    
-    try:
-        warranty = WarrantyCheck.objects.get(serial_number=serial)
-        response_serializer = WarrantyCheckResponseSerializer(warranty)
-        return Response(response_serializer.data)
-    except WarrantyCheck.DoesNotExist:
-        return Response(
-            {
-                'error': 'Serial number not found',
-                'serial': serial
-            },
-            status=status.HTTP_404_NOT_FOUND
-        )
+    queryset = TeamMember.objects.filter(is_active=True)
+    serializer_class = TeamMemberSerializer
+    permission_classes = [AllowAny]
+
+    @action(detail=False, methods=["get"])
+    def by_department(self, request):
+        """Get team members by department"""
+        department = request.query_params.get("department")
+        if department:
+            members = self.queryset.filter(department=department)
+        else:
+            members = self.queryset
+        serializer = self.get_serializer(members, many=True)
+        return Response(serializer.data)
