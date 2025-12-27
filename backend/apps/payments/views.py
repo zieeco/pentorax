@@ -14,9 +14,9 @@ from rest_framework.response import Response
 
 from .models import Payment
 from .serializers import (
-    InitializePaymentSerializer,
+    PaymentInitializeSerializer,
     PaymentSerializer,
-    VerifyPaymentSerializer,
+    PaymentVerifySerializer,
 )
 
 
@@ -49,7 +49,7 @@ class PaymentViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=["post"])
     def initialize(self, request):
         """Initialize payment with Paystack"""
-        serializer = InitializePaymentSerializer(data=request.data)
+        serializer = PaymentInitializeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         order_id = serializer.validated_data["order_id"]
@@ -136,7 +136,7 @@ class PaymentViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=["post"])
     def verify(self, request):
         """Verify payment with Paystack"""
-        serializer = VerifyPaymentSerializer(data=request.data)
+        serializer = PaymentVerifySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         reference = serializer.validated_data["reference"]

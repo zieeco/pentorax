@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'apps.products',
     'apps.quotes',
     'apps.reviews',
-    'apps.support'
+    'apps.support',
     'apps.warranty',
 ]
 

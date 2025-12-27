@@ -1,7 +1,7 @@
 import resend
 from django.conf import settings
 
-from .models import OrderItem
+from ..models import OrderItem
 
 
 def send_order_confirmation(order):
