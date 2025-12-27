@@ -222,4 +222,47 @@ class Migration(migrations.Migration):
                 "ordering": ["position"],
             },
         ),
+        # CRITICAL FIX: Add DEFAULT values at database level
+        # Django's default=uuid.uuid4 and auto_now_add=True don't create SQL DEFAULT
+        # This causes NOT NULL constraint violations when triggers insert data
+        migrations.RunSQL(
+            sql="""
+            -- Fix products_category table
+            ALTER TABLE products_category ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE products_category ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE products_category ALTER COLUMN updated_at SET DEFAULT NOW();
+
+            -- Fix products_product table
+            ALTER TABLE products_product ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE products_product ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE products_product ALTER COLUMN updated_at SET DEFAULT NOW();
+
+            -- Fix products_productimage table
+            ALTER TABLE products_productimage ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE products_productimage ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE products_productimage ALTER COLUMN updated_at SET DEFAULT NOW();
+
+            -- Fix products_productspecification table
+            ALTER TABLE products_productspecification ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE products_productspecification ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE products_productspecification ALTER COLUMN updated_at SET DEFAULT NOW();
+            """,
+            reverse_sql="""
+            ALTER TABLE products_category ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE products_category ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE products_category ALTER COLUMN updated_at DROP DEFAULT;
+
+            ALTER TABLE products_product ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE products_product ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE products_product ALTER COLUMN updated_at DROP DEFAULT;
+
+            ALTER TABLE products_productimage ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE products_productimage ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE products_productimage ALTER COLUMN updated_at DROP DEFAULT;
+
+            ALTER TABLE products_productspecification ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE products_productspecification ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE products_productspecification ALTER COLUMN updated_at DROP DEFAULT;
+            """,
+        ),
     ]

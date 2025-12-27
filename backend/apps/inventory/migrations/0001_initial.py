@@ -62,4 +62,20 @@ class Migration(migrations.Migration):
                 check=models.Q(reserved__gte=0), name="inventory_stock_reserved_check"
             ),
         ),
+        # CRITICAL FIX: Add DEFAULT values at database level
+        # Django's default=uuid.uuid4 and auto_now_add=True don't create SQL DEFAULT
+        # This causes NOT NULL constraint violations when triggers insert data
+        migrations.RunSQL(
+            sql="""
+            -- Fix inventory_stock table
+            ALTER TABLE inventory_stock ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE inventory_stock ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE inventory_stock ALTER COLUMN updated_at SET DEFAULT NOW();
+            """,
+            reverse_sql="""
+            ALTER TABLE inventory_stock ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE inventory_stock ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE inventory_stock ALTER COLUMN updated_at DROP DEFAULT;
+            """,
+        ),
     ]

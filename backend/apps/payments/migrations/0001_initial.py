@@ -70,4 +70,20 @@ class Migration(migrations.Migration):
                 ],
             },
         ),
+        # CRITICAL FIX: Add DEFAULT values at database level
+        # Django's default=uuid.uuid4 and auto_now_add=True don't create SQL DEFAULT
+        # This causes NOT NULL constraint violations when triggers insert data
+        migrations.RunSQL(
+            sql="""
+            -- Fix payments_payment table
+            ALTER TABLE payments_payment ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE payments_payment ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE payments_payment ALTER COLUMN updated_at SET DEFAULT NOW();
+            """,
+            reverse_sql="""
+            ALTER TABLE payments_payment ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE payments_payment ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE payments_payment ALTER COLUMN updated_at DROP DEFAULT;
+            """,
+        ),
     ]

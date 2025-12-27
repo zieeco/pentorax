@@ -182,4 +182,75 @@ class Migration(migrations.Migration):
                 "ordering": ["order", "name", "role", "department"],
             },
         ),
+        # CRITICAL FIX: Add DEFAULT values at database level
+        # Django's default=uuid.uuid4 and auto_now_add=True don't create SQL DEFAULT
+        # This causes NOT NULL constraint violations when triggers insert data
+        migrations.RunSQL(
+            sql="""
+            -- Fix UserProfile table
+            ALTER TABLE core_userprofile ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE core_userprofile ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE core_userprofile ALTER COLUMN updated_at SET DEFAULT NOW();
+            
+            -- Fix CaseStudy table
+            ALTER TABLE core_casestudy ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE core_casestudy ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE core_casestudy ALTER COLUMN updated_at SET DEFAULT NOW();
+            
+            -- Fix ContactSubmission table
+            ALTER TABLE core_contactsubmission ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE core_contactsubmission ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE core_contactsubmission ALTER COLUMN updated_at SET DEFAULT NOW();
+            
+            -- Fix FAQ table
+            ALTER TABLE core_faq ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE core_faq ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE core_faq ALTER COLUMN updated_at SET DEFAULT NOW();
+            
+            -- Fix SupportTicket table
+            ALTER TABLE core_supportticket ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE core_supportticket ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE core_supportticket ALTER COLUMN updated_at SET DEFAULT NOW();
+            
+            -- Fix WarrantyCheck table
+            ALTER TABLE core_warrantycheck ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE core_warrantycheck ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE core_warrantycheck ALTER COLUMN updated_at SET DEFAULT NOW();
+            
+            -- Fix TeamMember table
+            ALTER TABLE core_teammember ALTER COLUMN id SET DEFAULT gen_random_uuid();
+            ALTER TABLE core_teammember ALTER COLUMN created_at SET DEFAULT NOW();
+            ALTER TABLE core_teammember ALTER COLUMN updated_at SET DEFAULT NOW();
+            """,
+            reverse_sql="""
+            -- Reverse: Remove DEFAULT values
+            ALTER TABLE core_userprofile ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE core_userprofile ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE core_userprofile ALTER COLUMN updated_at DROP DEFAULT;
+            
+            ALTER TABLE core_casestudy ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE core_casestudy ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE core_casestudy ALTER COLUMN updated_at DROP DEFAULT;
+            
+            ALTER TABLE core_contactsubmission ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE core_contactsubmission ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE core_contactsubmission ALTER COLUMN updated_at DROP DEFAULT;
+            
+            ALTER TABLE core_faq ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE core_faq ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE core_faq ALTER COLUMN updated_at DROP DEFAULT;
+            
+            ALTER TABLE core_supportticket ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE core_supportticket ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE core_supportticket ALTER COLUMN updated_at DROP DEFAULT;
+            
+            ALTER TABLE core_warrantycheck ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE core_warrantycheck ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE core_warrantycheck ALTER COLUMN updated_at DROP DEFAULT;
+            
+            ALTER TABLE core_teammember ALTER COLUMN id DROP DEFAULT;
+            ALTER TABLE core_teammember ALTER COLUMN created_at DROP DEFAULT;
+            ALTER TABLE core_teammember ALTER COLUMN updated_at DROP DEFAULT;
+            """,
+        ),
     ]
