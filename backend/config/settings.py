@@ -21,11 +21,7 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split('
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
+    # Django core (minimal)
     'django.contrib.staticfiles',
     
     # Third-party apps
@@ -33,25 +29,25 @@ INSTALLED_APPS = [
     'corsheaders',
     
     # Custom apps
-    'apps.core',
-    'apps.products',
+    'apps.blog',
     'apps.cart',
+    'apps.contacts',
+    'apps.core',
+    'apps.inventory',
     'apps.orders',
     'apps.payments',
-    'apps.reviews',
+    'apps.products',
     'apps.quotes',
-    'apps.blog',
-    'apps.inventory',
+    'apps.reviews',
+    'apps.support'
+    'apps.warranty',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'apps.core.middleware.SupabaseAuthMiddleware',
 ]
@@ -67,8 +63,6 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
             ],
         },
     },
@@ -153,6 +147,13 @@ SUPABASE_SERVICE_ROLE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY', '')
 # Paystack Configuration
 PAYSTACK_SECRET_KEY = os.getenv('PAYSTACK_SECRET_KEY', '')
 PAYSTACK_PUBLIC_KEY = os.getenv('PAYSTACK_PUBLIC_KEY', '')
+
+# Resend Configuration
+RESEND_API_KEY = os.getenv('RESEND_API_KEY', '')
+
+
+# Frontend URL for password reset redirects
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')
 
 # Session Configuration
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
