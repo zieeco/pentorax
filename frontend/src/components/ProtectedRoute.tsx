@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuthStore } from '@/stores/auth';
+import { useIsAuthenticated, useIsLoading, useIsAdmin, useIsStaff } from '@/stores/auth';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 interface ProtectedRouteProps {
@@ -14,12 +14,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requireAdmin = false,
   requireStaff = false 
 }) => {
-  const { isAuthenticated, isLoading, isAdmin, isStaff } = useAuthStore((state) => ({
-    isAuthenticated: state.isAuthenticated,
-    isLoading: state.isLoading,
-    isAdmin: state.isAdmin(),
-    isStaff: state.isStaff(),
-  }));
+  const isAuthenticated = useIsAuthenticated();
+  const isLoading = useIsLoading();
+  const isAdmin = useIsAdmin();
+  const isStaff = useIsStaff();
 
   // Wait for auth to initialize
   if (isLoading) {
@@ -30,14 +28,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
+  // Redirect to login if not authenticated
   if (!isAuthenticated) {
-    return <Navigate to="/dashboard/login" replace />;
+    return <Navigate to="/auth/login" replace />;
   }
 
+  // Redirect to customer dashboard if admin access required but user is not admin
   if (requireAdmin && !isAdmin) {
     return <Navigate to="/dashboard" replace />;
   }
 
+  // Redirect to customer dashboard if staff access required but user is not staff
   if (requireStaff && !isStaff) {
     return <Navigate to="/dashboard" replace />;
   }

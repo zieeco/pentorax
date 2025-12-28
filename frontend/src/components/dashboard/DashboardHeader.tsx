@@ -1,12 +1,14 @@
 import React from 'react';
-import { useAuthStore } from '@/stores/auth';
+import { useRole, useUser } from '@/stores/auth';
+import { getRoleDisplayName } from '@/utils/authHelpers';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Bell, Search } from 'lucide-react';
 
 const DashboardHeader: React.FC = () => {
-  const user = useAuthStore((state) => state.user);
+  const user = useUser();
+  const role = useRole();
 
   return (
     <header className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-8">
@@ -33,14 +35,16 @@ const DashboardHeader: React.FC = () => {
         {/* User Profile */}
         <div className="flex items-center space-x-3 pl-6 border-l border-gray-100">
           <div className="text-right">
-            <p className="text-sm font-bold text-gray-900 leading-none">{user?.name}</p>
+            <p className="text-sm font-bold text-gray-900 leading-none">
+              {user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'}
+            </p>
             <p className="text-[10px] text-primary font-black uppercase mt-1">
-              {user?.role === 'admin' ? 'Administrator' : user?.role === 'staff' ? 'Staff Member' : 'Customer'}
+              {getRoleDisplayName(role)}
             </p>
           </div>
           <Avatar className="h-10 w-10 rounded-xl ring-2 ring-primary/10">
             <AvatarFallback className="bg-primary text-white rounded-xl font-bold">
-              {user?.name?.charAt(0).toUpperCase() || 'U'}
+              {user?.user_metadata?.name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
             </AvatarFallback>
           </Avatar>
         </div>

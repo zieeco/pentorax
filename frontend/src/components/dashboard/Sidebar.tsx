@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuthStore } from '@/stores/auth';
+import { useIsAdmin, useIsStaff, useSignOut } from '@/stores/auth';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import {
   LayoutDashboard,
   Package,
@@ -23,7 +22,9 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const location = useLocation();
-  const { isAdmin, isStaff, logout } = useAuthStore();
+  const isAdmin = useIsAdmin();
+  const isStaff = useIsStaff();
+  const signOut = useSignOut();
 
   const navItems = [
     { icon: LayoutDashboard, label: 'Overview', path: '/dashboard', roles: ['admin', 'staff', 'customer'] },
@@ -85,7 +86,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
             <Settings className="h-5 w-5" />
           </Link>
           <button
-            onClick={logout}
+            onClick={signOut}
             className="w-full flex items-center justify-center p-3 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-all"
             title="Sign Out"
           >
@@ -147,7 +148,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
           <span className="font-bold">Settings</span>
         </Link>
         <button
-          onClick={logout}
+          onClick={signOut}
           className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-all"
         >
           <LogOut className="h-5 w-5" />
