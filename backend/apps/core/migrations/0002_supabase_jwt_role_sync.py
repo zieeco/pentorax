@@ -95,6 +95,25 @@ class Migration(migrations.Migration):
             BEGIN
                 RAISE NOTICE '=== handle_new_user triggered for: % ===', NEW.email;
                 
+                -- If this is an UPDATE (email verification), just sync email_verified
+                IF TG_OP = 'UPDATE' THEN
+                    -- Only update if email_confirmed_at changed
+                    IF NEW.email_confirmed_at IS NOT NULL AND 
+                       (OLD.email_confirmed_at IS NULL OR OLD.email_confirmed_at != NEW.email_confirmed_at) THEN
+                        
+                        UPDATE public.core_userprofile
+                        SET 
+                            email_verified = true,
+                            updated_at = NOW()
+                        WHERE supabase_id = NEW.id;
+                        
+                        RAISE NOTICE 'Email verified status synced for user: %', NEW.email;
+                    END IF;
+                    
+                    RETURN NEW;
+                END IF;
+                
+                -- Below is for INSERT only (new user signup)
                 -- Count existing users in core_userprofile table
                 SELECT COUNT(*) INTO v_user_count FROM public.core_userprofile;
                 RAISE NOTICE 'Existing user count: %', v_user_count;
@@ -159,7 +178,7 @@ class Migration(migrations.Migration):
             END;
             $$;
 
-            COMMENT ON FUNCTION public.handle_new_user() IS 'Creates core_userprofile (first user as admin, others as customer) and syncs role to auth.users for JWT hook. Roles: admin, staff, customer';
+            COMMENT ON FUNCTION public.handle_new_user() IS 'Creates core_userprofile (first user as admin, others as customer) and syncs role to auth.users for JWT hook. Also syncs email_verified on UPDATE. Roles: admin, staff, customer';
 
             -- PART 4: Auto role sync (when role changes in core_userprofile)
             CREATE OR REPLACE FUNCTION public.sync_role_to_auth_users()
@@ -194,7 +213,7 @@ class Migration(migrations.Migration):
             -- PART 5: Create triggers
             DROP TRIGGER IF EXISTS trigger_handle_new_user ON auth.users;
             CREATE TRIGGER trigger_handle_new_user
-                AFTER INSERT ON auth.users
+                AFTER INSERT OR UPDATE ON auth.users
                 FOR EACH ROW
                 EXECUTE FUNCTION public.handle_new_user();
 
@@ -204,15 +223,52 @@ class Migration(migrations.Migration):
                 FOR EACH ROW
                 EXECUTE FUNCTION public.sync_role_to_auth_users();
 
-            -- PART 6: Grant permissions
+            -- PART 6: Handle user deletion (delete profile when auth user is deleted)
+            CREATE OR REPLACE FUNCTION public.handle_user_deletion()
+            RETURNS trigger
+            LANGUAGE plpgsql
+            SECURITY DEFINER
+            SET search_path = public
+            AS $$
+            BEGIN
+                RAISE NOTICE '=== handle_user_deletion triggered for: % ===', OLD.email;
+                
+                -- Delete the user profile when auth.users record is deleted
+                DELETE FROM public.core_userprofile
+                WHERE supabase_id = OLD.id;
+                
+                RAISE NOTICE 'User profile deleted for: %', OLD.email;
+                RAISE NOTICE '=== COMPLETED ===';
+                
+                RETURN OLD;
+            EXCEPTION
+                WHEN OTHERS THEN
+                    RAISE WARNING '!!! ERROR deleting profile for % !!!', OLD.email;
+                    RAISE WARNING 'SQLSTATE: %', SQLSTATE;
+                    RAISE WARNING 'SQLERRM: %', SQLERRM;
+                    RETURN OLD;  -- Don't block the deletion
+            END;
+            $$;
+
+            COMMENT ON FUNCTION public.handle_user_deletion() IS 'Deletes core_userprofile when auth.users record is deleted to maintain data consistency';
+
+            DROP TRIGGER IF EXISTS trigger_handle_user_deletion ON auth.users;
+            CREATE TRIGGER trigger_handle_user_deletion
+                AFTER DELETE ON auth.users
+                FOR EACH ROW
+                EXECUTE FUNCTION public.handle_user_deletion();
+
+            -- PART 7: Grant permissions
             GRANT EXECUTE ON FUNCTION public.fetch_user_role(uuid) TO authenticated;
             GRANT EXECUTE ON FUNCTION public.custom_access_token_hook(jsonb) TO supabase_auth_admin;
             GRANT SELECT (supabase_id, role) ON public.core_userprofile TO supabase_auth_admin;
             GRANT EXECUTE ON FUNCTION public.sync_role_to_auth_users() TO authenticated;
             """,
             reverse_sql="""
+            DROP TRIGGER IF EXISTS trigger_handle_user_deletion ON auth.users;
             DROP TRIGGER IF EXISTS trigger_sync_role_to_auth ON public.core_userprofile;
             DROP TRIGGER IF EXISTS trigger_handle_new_user ON auth.users;
+            DROP FUNCTION IF EXISTS public.handle_user_deletion();
             DROP FUNCTION IF EXISTS public.sync_role_to_auth_users();
             DROP FUNCTION IF EXISTS public.handle_new_user();
             DROP FUNCTION IF EXISTS public.custom_access_token_hook(jsonb);
