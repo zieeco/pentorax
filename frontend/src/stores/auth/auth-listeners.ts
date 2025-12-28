@@ -16,6 +16,8 @@ export const setupAuthStateListener = (set: AuthStoreSetter) => {
         session,
         user,
         role: metadata.role,
+        isAuthenticated: !!session, // CRITICAL: Set isAuthenticated
+        isLoading: false,
       });
 
       if (session) {
@@ -28,6 +30,8 @@ export const setupAuthStateListener = (set: AuthStoreSetter) => {
         session: null,
         user: null,
         role: null,
+        isAuthenticated: false, // CRITICAL: Set isAuthenticated to false
+        isLoading: false,
       });
 
       clearPersistedSession();
@@ -50,6 +54,7 @@ export const setupCrossTabSync = (set: AuthStoreSetter) => {
           session,
           user: session.user,
           role: metadata.role,
+          isAuthenticated: true, // CRITICAL: Set isAuthenticated
         });
 
         console.log('[AuthStore] Session synced from another tab');
@@ -58,6 +63,7 @@ export const setupCrossTabSync = (set: AuthStoreSetter) => {
           session: null,
           user: null,
           role: null,
+          isAuthenticated: false, // CRITICAL: Set isAuthenticated to false
         });
 
         console.log('[AuthStore] Sign out synced from another tab');

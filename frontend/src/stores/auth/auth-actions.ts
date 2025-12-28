@@ -26,6 +26,7 @@ export const createSignInAction = (set: AuthStoreSetter) => async (
         session: data.session,
         user: data.user,
         role: metadata.role,
+        isAuthenticated: true, // CRITICAL: Set isAuthenticated
         isLoading: false,
       });
 
@@ -61,7 +62,7 @@ export const createSignUpAction = (set: AuthStoreSetter) => async (
           full_name: fullName,
           ...metadata,
         },
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${window.location.origin}/auth/confirmation?type=email-verified`,
       },
     });
 
@@ -171,7 +172,12 @@ export const createSignOutAction = (set: AuthStoreSetter) => async (): Promise<v
       throw error;
     }
 
-    set({ session: null, user: null, role: null });
+    set({ 
+      session: null, 
+      user: null, 
+      role: null,
+      isAuthenticated: false, // CRITICAL: Set isAuthenticated to false
+    });
     toast.success('Signed out successfully');
     clearPersistedSession();
   } catch (error) {
@@ -199,7 +205,12 @@ export const createCheckUserAction = (set: AuthStoreSetter) => async () => {
     const metadata = extractUserMetadata(user);
     role = metadata.role;
 
-    set({ session, user, role });
+    set({ 
+      session, 
+      user, 
+      role,
+      isAuthenticated: !!session, // CRITICAL: Set isAuthenticated based on session
+    });
 
     if (session) {
       persistSession(session);
@@ -236,6 +247,7 @@ export const createRefreshSessionAction = (set: AuthStoreSetter) => async (): Pr
         session: data.session,
         user: data.session.user,
         role: metadata.role,
+        isAuthenticated: true, // CRITICAL: Set isAuthenticated
       });
 
       persistSession(data.session);
