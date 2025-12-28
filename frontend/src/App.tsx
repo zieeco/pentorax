@@ -84,7 +84,29 @@ const App: React.FC = () => {
                 </ProtectedRoute>
               }
             >
+              {/* Customer Dashboard (default) */}
               <Route index element={<DashboardPage />} />
+              
+              {/* Admin Dashboard */}
+              <Route 
+                path="admin" 
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <DashboardPage />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Staff Dashboard */}
+              <Route 
+                path="staff" 
+                element={
+                  <ProtectedRoute requireStaff>
+                    <DashboardPage />
+                  </ProtectedRoute>
+                } 
+              />
+              
               {/* More dashboard routes will be added here */}
             </Route>
 
