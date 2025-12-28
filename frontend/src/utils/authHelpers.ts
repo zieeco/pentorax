@@ -153,3 +153,20 @@ export const getRoleDisplayName = (role: UserRole | null): string => {
   if (role === 'staff') return 'Staff Member';
   return 'Customer';
 };
+
+/**
+ * Get role-based redirect path after login/signup
+ * @param role - User role
+ * @returns Path to redirect to based on role
+ */
+export const getRoleBasedRedirect = (role: UserRole | null): string => {
+  if (isAdminRole(role)) {
+    return '/dashboard/admin';
+  }
+  if (isStaffRole(role)) {
+    return '/dashboard/staff';
+  }
+  // Default for customers and null roles
+  return '/dashboard';
+};
+
