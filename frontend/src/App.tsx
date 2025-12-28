@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/sonner';
 import Layout from '@/components/Layout';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import AuthRedirect from '@/components/AuthRedirect';
 
 // Landing
 import LandingPage from '@/pages/LandingPage';
@@ -68,11 +69,11 @@ const App: React.FC = () => {
       <QueryClientProvider client={queryClient}>
         <Router>
           <Routes>
-            {/* Auth Routes (No Layout) */}
-            <Route path="/auth/login" element={<LoginPage />} />
-            <Route path="/auth/signup" element={<SignupPage />} />
-            <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+            {/* Auth Routes (No Layout) - Redirect if already logged in */}
+            <Route path="/auth/login" element={<AuthRedirect><LoginPage /></AuthRedirect>} />
+            <Route path="/auth/signup" element={<AuthRedirect><SignupPage /></AuthRedirect>} />
+            <Route path="/auth/forgot-password" element={<AuthRedirect><ForgotPasswordPage /></AuthRedirect>} />
+            <Route path="/auth/reset-password" element={<AuthRedirect><ResetPasswordPage /></AuthRedirect>} />
             <Route path="/auth/confirmation" element={<AuthConfirmationPage />} />
             
             {/* Protected Dashboard Routes */}
