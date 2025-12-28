@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '@/stores/auth';
+import { getRoleBasedRedirect } from '@/utils/authHelpers';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -32,7 +33,7 @@ const FloatingBadge: React.FC<{ name: string; className?: string; style?: React.
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { signIn, isLoading } = useAuthStore();
+  const { signIn, isLoading, role } = useAuthStore();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -41,7 +42,12 @@ const LoginPage: React.FC = () => {
 
   const onSubmit = async (values: LoginFormValues) => {
     const { data, error } = await signIn(values.email, values.password);
-    if (!error && data) navigate('/dashboard');
+    if (!error && data) {
+      // Get the role from the auth store after successful login
+      const userRole = useAuthStore.getState().role;
+      const redirectPath = getRoleBasedRedirect(userRole);
+      navigate(redirectPath);
+    }
   };
 
   return (
