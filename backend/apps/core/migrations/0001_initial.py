@@ -197,25 +197,10 @@ class Migration(migrations.Migration):
             ALTER TABLE core_casestudy ALTER COLUMN created_at SET DEFAULT NOW();
             ALTER TABLE core_casestudy ALTER COLUMN updated_at SET DEFAULT NOW();
             
-            -- Fix ContactSubmission table
-            ALTER TABLE core_contactsubmission ALTER COLUMN id SET DEFAULT gen_random_uuid();
-            ALTER TABLE core_contactsubmission ALTER COLUMN created_at SET DEFAULT NOW();
-            ALTER TABLE core_contactsubmission ALTER COLUMN updated_at SET DEFAULT NOW();
-            
             -- Fix FAQ table
             ALTER TABLE core_faq ALTER COLUMN id SET DEFAULT gen_random_uuid();
             ALTER TABLE core_faq ALTER COLUMN created_at SET DEFAULT NOW();
             ALTER TABLE core_faq ALTER COLUMN updated_at SET DEFAULT NOW();
-            
-            -- Fix SupportTicket table
-            ALTER TABLE core_supportticket ALTER COLUMN id SET DEFAULT gen_random_uuid();
-            ALTER TABLE core_supportticket ALTER COLUMN created_at SET DEFAULT NOW();
-            ALTER TABLE core_supportticket ALTER COLUMN updated_at SET DEFAULT NOW();
-            
-            -- Fix WarrantyCheck table
-            ALTER TABLE core_warrantycheck ALTER COLUMN id SET DEFAULT gen_random_uuid();
-            ALTER TABLE core_warrantycheck ALTER COLUMN created_at SET DEFAULT NOW();
-            ALTER TABLE core_warrantycheck ALTER COLUMN updated_at SET DEFAULT NOW();
             
             -- Fix TeamMember table
             ALTER TABLE core_teammember ALTER COLUMN id SET DEFAULT gen_random_uuid();
@@ -232,21 +217,9 @@ class Migration(migrations.Migration):
             ALTER TABLE core_casestudy ALTER COLUMN created_at DROP DEFAULT;
             ALTER TABLE core_casestudy ALTER COLUMN updated_at DROP DEFAULT;
             
-            ALTER TABLE core_contactsubmission ALTER COLUMN id DROP DEFAULT;
-            ALTER TABLE core_contactsubmission ALTER COLUMN created_at DROP DEFAULT;
-            ALTER TABLE core_contactsubmission ALTER COLUMN updated_at DROP DEFAULT;
-            
             ALTER TABLE core_faq ALTER COLUMN id DROP DEFAULT;
             ALTER TABLE core_faq ALTER COLUMN created_at DROP DEFAULT;
             ALTER TABLE core_faq ALTER COLUMN updated_at DROP DEFAULT;
-            
-            ALTER TABLE core_supportticket ALTER COLUMN id DROP DEFAULT;
-            ALTER TABLE core_supportticket ALTER COLUMN created_at DROP DEFAULT;
-            ALTER TABLE core_supportticket ALTER COLUMN updated_at DROP DEFAULT;
-            
-            ALTER TABLE core_warrantycheck ALTER COLUMN id DROP DEFAULT;
-            ALTER TABLE core_warrantycheck ALTER COLUMN created_at DROP DEFAULT;
-            ALTER TABLE core_warrantycheck ALTER COLUMN updated_at DROP DEFAULT;
             
             ALTER TABLE core_teammember ALTER COLUMN id DROP DEFAULT;
             ALTER TABLE core_teammember ALTER COLUMN created_at DROP DEFAULT;
