@@ -6,14 +6,21 @@ import { useProduct, useAddToCart, useReviews } from '@/hooks/useApi';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ShoppingCart, Star, ArrowLeft } from 'lucide-react';
+import { ShoppingCart, Star, ArrowLeft, Check, Truck } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
+
+// Helper to format price (API returns string)
+const formatPrice = (price: string | number) => {
+  const num = typeof price === 'string' ? parseFloat(price) : price;
+  return num.toLocaleString('en-NG');
+};
 
 export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const { data: product, isLoading } = useProduct(slug!);
   const { data: reviews = [] } = useReviews(product?.id);
@@ -58,8 +65,16 @@ export default function ProductDetailPage() {
   }
 
   const averageRating = reviews.length > 0
-    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    ? reviews.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / reviews.length
     : 0;
+
+  // Combine featured image with additional images
+  const allImages = [
+    { image_url: product.featured_image, alt_text: product.name },
+    ...(product.images || [])
+  ].filter(img => img.image_url);
+  
+  const currentImage = allImages[selectedImageIndex]?.image_url || product.featured_image;
 
   return (
     <div className="min-h-screen bg-background">
@@ -74,13 +89,37 @@ export default function ProductDetailPage() {
         </Button>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {/* Product Image */}
-          <div className="aspect-square rounded-lg overflow-hidden bg-muted">
-            <img
-              src={product.featured_image || '/placeholder-product.png'}
-              alt={product.name}
-              className="w-full h-full object-cover"
-            />
+          {/* Product Images - Gallery */}
+          <div className="space-y-4">
+            <div className="aspect-square rounded-lg overflow-hidden bg-muted border">
+              <img
+                src={currentImage || '/placeholder-product.png'}
+                alt={product.name}
+                className="w-full h-full object-cover transition-all duration-300 hover:scale-105"
+              />
+            </div>
+            {/* Thumbnail Gallery */}
+            {allImages.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                {allImages.map((img, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImageIndex(index)}
+                    className={`w-20 h-20 rounded-md overflow-hidden flex-shrink-0 border-2 transition-all ${
+                      selectedImageIndex === index
+                        ? 'border-primary ring-2 ring-primary/20'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <img
+                      src={img.image_url}
+                      alt={img.alt_text || `${product.name} view ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Product Info */}
@@ -111,14 +150,30 @@ export default function ProductDetailPage() {
               </span>
             </div>
 
+            {/* Stock Status */}
+            <div className="flex items-center gap-4">
+              {product.in_stock ? (
+                <div className="flex items-center gap-2 text-green-600">
+                  <Check className="h-5 w-5" />
+                  <span className="font-medium">In Stock</span>
+                </div>
+              ) : (
+                <span className="text-red-500 font-medium">Out of Stock</span>
+              )}
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Truck className="h-4 w-4" />
+                <span className="text-sm">Free shipping on orders over ₦100,000</span>
+              </div>
+            </div>
+
             <div className="flex items-baseline gap-3">
               <span className="text-4xl font-bold text-primary">
-                ₦{product.price.toLocaleString()}
+                ₦{formatPrice(product.price)}
               </span>
-              {product.compare_at_price && product.compare_at_price > product.price && (
+              {product.compare_at_price && parseFloat(product.compare_at_price) > parseFloat(product.price) && (
                 <>
                   <span className="text-xl text-muted-foreground line-through">
-                    ₦{product.compare_at_price.toLocaleString()}
+                    ₦{formatPrice(product.compare_at_price)}
                   </span>
                   <Badge variant="destructive">
                     Save {product.discount_percentage}%

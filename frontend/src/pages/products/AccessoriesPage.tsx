@@ -1,72 +1,31 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Star, Zap } from 'lucide-react';
+import { ShoppingCart, Wrench, Loader2 } from 'lucide-react';
 import SEO from '@/components/SEO';
+import { useProducts, useAddToCart } from '@/hooks/useApi';
+import { toast } from 'sonner';
+
+// Helper to format price (API returns string)
+const formatPrice = (price: string | number) => {
+  const num = typeof price === 'string' ? parseFloat(price) : price;
+  return num.toLocaleString('en-NG');
+};
 
 const AccessoriesPage: React.FC = () => {
-  // TODO: Replace with API call - useQuery('accessories', fetchAccessories)
-  const products = [
-    {
-      id: 1,
-      name: 'Smart Energy Optimizer',
-      slug: 'smart-energy-optimizer',
-      price: 199.00,
-      rating: 4.8,
-      image: 'https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80',
-      specs: 'Real-time AI balancing',
-      inStock: true
-    },
-    {
-      id: 2,
-      name: 'Solar Monitoring System',
-      slug: 'solar-monitoring-system',
-      price: 149.00,
-      rating: 4.9,
-      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80',
-      specs: 'WiFi + Mobile App Control',
-      inStock: true
-    },
-    {
-      id: 3,
-      name: 'MC4 Connector Kit',
-      slug: 'mc4-connector-kit',
-      price: 29.00,
-      rating: 4.7,
-      image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=600&q=80',
-      specs: '10 Pairs, IP67 Rated',
-      inStock: true
-    },
-    {
-      id: 4,
-      name: 'Solar Cable 6mm²',
-      slug: 'solar-cable-6mm',
-      price: 3.50,
-      rating: 4.6,
-      image: 'https://images.unsplash.com/photo-1473186578172-c141e6798cf4?auto=format&fit=crop&w=600&q=80',
-      specs: 'Per Meter, UV Resistant',
-      inStock: true
-    },
-    {
-      id: 5,
-      name: 'Mounting Brackets Set',
-      slug: 'mounting-brackets-set',
-      price: 89.00,
-      rating: 4.8,
-      image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=600&q=80',
-      specs: 'For 4 Panels, Aluminum',
-      inStock: true
-    },
-    {
-      id: 6,
-      name: 'Surge Protection Device',
-      slug: 'surge-protection-device',
-      price: 120.00,
-      rating: 5,
-      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80',
-      specs: 'Type 2, 40kA Protection',
-      inStock: true
-    },
-  ];
+  // Fetch products from accessories category
+  const { data: products = [], isLoading, isError } = useProducts({ category: 'accessories' });
+  const addToCart = useAddToCart();
+
+  const handleAddToCart = (e: React.MouseEvent, productId: string, productName: string) => {
+    e.preventDefault();
+    addToCart.mutate(
+      { productId, quantity: 1 },
+      {
+        onSuccess: () => toast.success(`${productName} added to cart`),
+        onError: () => toast.error('Failed to add to cart'),
+      }
+    );
+  };
 
   return (
     <>
@@ -82,7 +41,7 @@ const AccessoriesPage: React.FC = () => {
           {/* Header */}
           <div className="mb-16">
             <div className="flex items-center gap-3 mb-4">
-              <Zap className="h-10 w-10 text-primary" />
+              <Wrench className="h-10 w-10 text-primary" />
               <h1 className="text-4xl font-extrabold text-gray-900">
                 Solar <span className="text-primary">Accessories</span>
               </h1>
@@ -92,51 +51,81 @@ const AccessoriesPage: React.FC = () => {
             </p>
           </div>
 
+          {/* Loading State */}
+          {isLoading && (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <span className="ml-3 text-gray-600">Loading products...</span>
+            </div>
+          )}
+
+          {/* Error State */}
+          {isError && (
+            <div className="text-center py-20">
+              <p className="text-red-500 mb-4">Failed to load products. Please try again.</p>
+              <Link to="/shop" className="text-primary hover:underline">
+                Browse all products
+              </Link>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!isLoading && !isError && products.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-gray-500 mb-4">No accessories available at the moment.</p>
+              <Link to="/shop" className="text-primary hover:underline">
+                Browse all products
+              </Link>
+            </div>
+          )}
+
           {/* Products Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {products.map((product) => (
-              <div key={product.id} className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all border border-gray-100 group">
-                <Link to={`/shop/${product.slug}`} className="block">
-                  <div className="h-64 overflow-hidden relative">
-                    <img 
-                      src={product.image} 
-                      alt={product.name} 
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                    />
-                    {product.inStock && (
-                      <div className="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                        In Stock
+          {!isLoading && products.length > 0 && (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+              {products.map((product) => (
+                <div key={product.id} className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all border border-gray-100 group">
+                  <Link to={`/shop/${product.slug}`} className="block">
+                    <div className="h-64 overflow-hidden relative">
+                      <img 
+                        src={product.featured_image || 'https://via.placeholder.com/400x300?text=Accessory'} 
+                        alt={product.name} 
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                      />
+                      {product.in_stock && (
+                        <div className="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                          In Stock
+                        </div>
+                      )}
+                      {product.discount_percentage > 0 && (
+                        <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                          -{product.discount_percentage}%
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-8">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h3>
+                      <p className="text-gray-500 text-sm mb-6 line-clamp-2">{product.short_description}</p>
+                      <div className="flex items-center justify-between mt-auto">
+                        <div className="flex flex-col">
+                          <span className="text-2xl font-black text-primary">₦{formatPrice(product.price)}</span>
+                          {product.compare_at_price && parseFloat(String(product.compare_at_price)) > parseFloat(String(product.price)) && (
+                            <span className="text-sm text-gray-400 line-through">₦{formatPrice(product.compare_at_price)}</span>
+                          )}
+                        </div>
+                        <button 
+                          onClick={(e) => handleAddToCart(e, product.id, product.name)}
+                          disabled={addToCart.isPending}
+                          className="p-3 bg-gray-900 text-white rounded-xl hover:bg-primary transition-colors shadow-lg shadow-black/5 active:scale-90 disabled:opacity-50"
+                        >
+                          <ShoppingCart className="h-5 w-5" />
+                        </button>
                       </div>
-                    )}
-                  </div>
-                  <div className="p-8">
-                    <div className="flex mb-2">
-                      {[...Array(5)].map((_, idx) => (
-                        <Star 
-                          key={idx} 
-                          className={`h-4 w-4 ${idx < Math.floor(product.rating) ? 'text-amber-400 fill-amber-400' : 'text-gray-200'}`} 
-                        />
-                      ))}
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h3>
-                    <p className="text-gray-500 text-sm mb-6">{product.specs}</p>
-                    <div className="flex items-center justify-between mt-auto">
-                      <span className="text-2xl font-black text-primary">${product.price.toFixed(2)}</span>
-                      <button 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // TODO: Add to cart
-                        }}
-                        className="p-3 bg-gray-900 text-white rounded-xl hover:bg-primary transition-colors shadow-lg shadow-black/5 active:scale-90"
-                      >
-                        <ShoppingCart className="h-5 w-5" />
-                      </button>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* CTA Section */}
           <div className="bg-gradient-to-r from-primary to-blue-700 rounded-3xl p-12 text-center text-white">

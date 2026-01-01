@@ -1,9 +1,9 @@
 /**
  * ProductFormPage - Create/Edit product form
- * Uses existing UI components: Input, Textarea, Select, Switch, Button, Label
+ * Fixed layout and Switch component
  */
 import { useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { 
   useProduct, 
@@ -16,8 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -41,7 +40,10 @@ import {
   Save, 
   Trash2, 
   Loader2,
-  Package
+  Package,
+  Zap,
+  Image as ImageIcon,
+  Sparkles
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -63,6 +65,22 @@ interface Category {
   name: string;
   slug: string;
 }
+
+// Custom Switch component to avoid Radix UI layout issues
+const CustomSwitch: React.FC<{ 
+  checked: boolean; 
+  onCheckedChange: (checked: boolean) => void;
+  id?: string;
+}> = ({ checked, onCheckedChange, id }) => (
+  <button
+    type="button"
+    id={id}
+    onClick={() => onCheckedChange(!checked)}
+    className={`w-11 h-6 rounded-full transition-all relative flex-shrink-0 ${checked ? 'bg-primary' : 'bg-gray-200'}`}
+  >
+    <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all shadow-sm ${checked ? 'left-6' : 'left-1'}`}></div>
+  </button>
+);
 
 // Helper to generate slug from name
 const generateSlug = (name: string) => {
@@ -195,250 +213,289 @@ export default function ProductFormPage() {
   }
 
   return (
-    <div className="space-y-6 makx-w-4xl">
+    <div className="max-w-4xl mx-auto space-y-8 animate-in slide-in-from-bottom-6 duration-500">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
-            <Link to="/dashboard/products">
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
+        <div className="flex items-center space-x-4">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => navigate('/dashboard/products')}
+            className="hover:bg-gray-200 rounded-xl transition-colors"
+          >
+            <ArrowLeft className="h-6 w-6 text-gray-600" />
           </Button>
           <div>
-            <h1 className="text-3xl font-black text-gray-900 flex items-center gap-3">
-              <Package className="h-8 w-8 text-primary" />
-              {isEditMode ? 'Edit Product' : 'New Product'}
-            </h1>
-            <p className="text-gray-500 mt-1">
-              {isEditMode ? `Editing: ${product?.name}` : 'Create a new product for your catalog'}
-            </p>
+            <h1 className="text-3xl font-black text-gray-900">{isEditMode ? 'Edit Product' : 'New Product'}</h1>
+            <p className="text-gray-500 font-medium">Create a new product for your catalog</p>
           </div>
         </div>
-
-        {isEditMode && (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive" disabled={isDeleting}>
-                {isDeleting ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Trash2 className="mr-2 h-4 w-4" />
-                )}
-                Delete
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Delete Product</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to delete "{product?.name}"? This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
+        <Button 
+          onClick={handleSubmit(onSubmit)}
+          disabled={isSubmitting || !isDirty}
+          className="font-black px-8 py-6 rounded-[1.25rem] shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+        >
+          {isSubmitting ? (
+            <Loader2 className="h-5 w-5 animate-spin mr-2" />
+          ) : (
+            <Save className="h-5 w-5 mr-2" />
+          )}
+          <span>Save Product</span>
+        </Button>
       </div>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Basic Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Basic Information</CardTitle>
-            <CardDescription>Product name, description, and identifiers</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="name">Product Name *</Label>
-                <Input
-                  id="name"
-                  placeholder="e.g., Solar Panel 300W"
-                  {...register('name', { required: 'Name is required' })}
-                />
-                {errors.name && (
-                  <p className="text-sm text-red-500">{errors.name.message}</p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="slug">Slug</Label>
-                <Input
-                  id="slug"
-                  placeholder="auto-generated-from-name"
-                  {...register('slug')}
-                  disabled={isEditMode}
-                  className={isEditMode ? 'bg-gray-50' : ''}
-                />
-                <p className="text-xs text-gray-400">URL-friendly identifier</p>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="short_description">Short Description</Label>
-              <Input
-                id="short_description"
-                placeholder="Brief product summary (shown in cards)"
-                {...register('short_description')}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">Full Description *</Label>
-              <Textarea
-                id="description"
-                placeholder="Detailed product description..."
-                rows={4}
-                {...register('description', { required: 'Description is required' })}
-              />
-              {errors.description && (
-                <p className="text-sm text-red-500">{errors.description.message}</p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Pricing & Category */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Pricing & Category</CardTitle>
-            <CardDescription>Set product pricing and categorization</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="space-y-2">
-                <Label htmlFor="price">Price (₦) *</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0.00"
-                  {...register('price', { required: 'Price is required' })}
-                />
-                {errors.price && (
-                  <p className="text-sm text-red-500">{errors.price.message}</p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="compare_at_price">Compare at Price (₦)</Label>
-                <Input
-                  id="compare_at_price"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0.00"
-                  {...register('compare_at_price')}
-                />
-                <p className="text-xs text-gray-400">Original price (for discounts)</p>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="category_id">Category *</Label>
-                <Select 
-                  value={watch('category_id')}
-                  onValueChange={(value) => setValue('category_id', value, { shouldDirty: true })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {(categories as Category[]).map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Image */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Product Image</CardTitle>
-            <CardDescription>Featured image URL for the product</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="featured_image">Image URL</Label>
-              <Input
-                id="featured_image"
-                type="url"
-                placeholder="https://example.com/image.jpg"
-                {...register('featured_image')}
-              />
-            </div>
-            {watch('featured_image') && (
-              <div className="mt-4">
-                <p className="text-sm text-gray-500 mb-2">Preview:</p>
-                <div className="h-40 w-40 rounded-lg overflow-hidden bg-gray-100">
-                  <img 
-                    src={watch('featured_image')} 
-                    alt="Preview" 
-                    className="h-full w-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '';
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
+      {/* Form - Grid Layout */}
+      <form onSubmit={handleSubmit(onSubmit)} className="grid lg:grid-cols-3 gap-8">
+        {/* Left Column - 2 columns wide */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Basic Info Card */}
+          <Card className="rounded-[2rem] border-gray-100 shadow-sm">
+            <CardHeader className="p-8">
+              <CardTitle className="text-lg font-black text-gray-900 flex items-center space-x-2">
+                <Package className="h-5 w-5 text-primary" />
+                <span>Basic Information</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 pt-0 space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-1.5">
+                  <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                    Product Name
+                  </Label>
+                  <Input
+                    placeholder="e.g., PX-550 Mono Panel"
+                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                    {...register('name', { required: 'Name is required' })}
+                  />
+                  {errors.name && (
+                    <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
+                  )}
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                    Slug
+                  </Label>
+                  <Input
+                    placeholder="auto-generated-slug"
+                    disabled={isEditMode}
+                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm disabled:opacity-50"
+                    {...register('slug')}
                   />
                 </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
 
-        {/* Status */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Status</CardTitle>
-            <CardDescription>Control product visibility and featuring</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label htmlFor="is_active" className="text-base">Active</Label>
-                <p className="text-sm text-gray-500">Product is visible on the storefront</p>
+              <div className="space-y-1.5">
+                <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                  Short Summary
+                </Label>
+                <Input
+                  placeholder="Brief summary for catalog cards"
+                  className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                  {...register('short_description')}
+                />
               </div>
-              <Switch
-                id="is_active"
-                checked={watch('is_active')}
-                onCheckedChange={(checked) => setValue('is_active', checked, { shouldDirty: true })}
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <Label htmlFor="is_featured" className="text-base">Featured</Label>
-                <p className="text-sm text-gray-500">Show in featured products section</p>
-              </div>
-              <Switch
-                id="is_featured"
-                checked={watch('is_featured')}
-                onCheckedChange={(checked) => setValue('is_featured', checked, { shouldDirty: true })}
-              />
-            </div>
-          </CardContent>
-        </Card>
 
-        {/* Actions */}
-        <div className="flex items-center justify-between pt-4">
-          <Button variant="outline" type="button" asChild>
-            <Link to="/dashboard/products">Cancel</Link>
-          </Button>
-          <Button type="submit" disabled={isSubmitting || !isDirty}>
-            {isSubmitting ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : ( 
-              <Save className="mr-2 h-4 w-4" />
-            )}
-            {isEditMode ? 'Update Product' : 'Create Product'}
-          </Button>
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                    Full Description
+                  </Label>
+                  <button 
+                    type="button"
+                    className="text-[10px] font-black uppercase text-primary flex items-center space-x-1 hover:underline"
+                  >
+                    <Sparkles className="h-3 w-3" />
+                    <span>AI Refine</span>
+                  </button>
+                </div>
+                <Textarea
+                  rows={5}
+                  placeholder="Enter detailed technical specifications and benefits..."
+                  className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm resize-none"
+                  {...register('description', { required: 'Description is required' })}
+                />
+                {errors.description && (
+                  <p className="text-sm text-red-500 mt-1">{errors.description.message}</p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Pricing & Category Card */}
+          <Card className="rounded-[2rem] border-gray-100 shadow-sm">
+            <CardHeader className="p-8">
+              <CardTitle className="text-lg font-black text-gray-900 flex items-center space-x-2">
+                <Zap className="h-5 w-5 text-primary" />
+                <span>Pricing & Category</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 pt-0">
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="space-y-1.5">
+                  <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                    Retail Price (₦)
+                  </Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="0.00"
+                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                    {...register('price', { required: 'Price is required' })}
+                  />
+                  {errors.price && (
+                    <p className="text-sm text-red-500 mt-1">{errors.price.message}</p>
+                  )}
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                    Compare Price (₦)
+                  </Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="0.00"
+                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                    {...register('compare_at_price')}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                    Category
+                  </Label>
+                  <Select 
+                    value={watch('category_id')}
+                    onValueChange={(value) => setValue('category_id', value, { shouldDirty: true })}
+                  >
+                    <SelectTrigger className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm">
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(categories as Category[]).map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Column - Sidebar */}
+        <div className="space-y-8">
+          {/* Status & Visibility Card */}
+          <Card className="rounded-[2rem] border-gray-100 shadow-sm">
+            <CardHeader className="p-8">
+              <CardTitle className="text-lg font-black text-gray-900">Categorization</CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 pt-0 space-y-6">
+              <div className="space-y-4 pt-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-bold text-gray-900">Active Status</p>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Visible to customers</p>
+                  </div>
+                  <CustomSwitch
+                    id="is_active"
+                    checked={watch('is_active')}
+                    onCheckedChange={(checked) => setValue('is_active', checked, { shouldDirty: true })}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-bold text-gray-900">Featured</p>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Top of catalog</p>
+                  </div>
+                  <CustomSwitch
+                    id="is_featured"
+                    checked={watch('is_featured')}
+                    onCheckedChange={(checked) => setValue('is_featured', checked, { shouldDirty: true })}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Image & Media Card */}
+          <Card className="rounded-[2rem] border-gray-100 shadow-sm">
+            <CardHeader className="p-8">
+              <CardTitle className="text-lg font-black text-gray-900 flex items-center justify-between">
+                <span>Visuals</span>
+                <ImageIcon className="h-5 w-5 text-gray-300" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 pt-0 space-y-6">
+              <div className="space-y-1.5">
+                <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                  Featured Image URL
+                </Label>
+                <Input
+                  type="url"
+                  placeholder="https://..."
+                  className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                  {...register('featured_image')}
+                />
+              </div>
+
+              <div className="aspect-square bg-gray-50 rounded-3xl overflow-hidden border border-gray-100 flex items-center justify-center relative group">
+                {watch('featured_image') ? (
+                  <img 
+                    src={watch('featured_image')} 
+                    className="w-full h-full object-cover transition-transform group-hover:scale-105" 
+                    alt="Preview"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <div className="text-center p-6">
+                    <ImageIcon className="h-10 w-10 text-gray-200 mx-auto mb-2" />
+                    <p className="text-[10px] font-bold text-gray-300 uppercase">Image Preview</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Delete Button */}
+          {isEditMode && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button 
+                  type="button"
+                  variant="destructive"
+                  disabled={isDeleting}
+                  className="w-full rounded-xl py-6"
+                >
+                  {isDeleting ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="mr-2 h-4 w-4" />
+                  )}
+                  Delete Product
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete Product</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete "{product?.name}"? This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </div>
       </form>
     </div>
