@@ -7,17 +7,17 @@ const DashboardLayout: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <div className="h-screen w-full flex">
+    <div className="flex h-screen bg-gray-50 overflow-hidden font-sand">
       {/* LEFT - Sidebar with overflow-y-scroll */}
       <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
       
       {/* RIGHT - Main content with overflow-scroll */}
-      <div className="flex-1 overflow-scroll flex flex-col bg-gray-50">
+      <main className="flex-1 flex flex-col overflow-hidden bg-gray-50">
         <DashboardHeader />
-        <div className="p-6">
+        <div className="flex-1 overflow-y-auto p-8">
           <Outlet />
         </div>
-      </div>
+      </main>
     </div>
   );
 };

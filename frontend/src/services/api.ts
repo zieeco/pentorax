@@ -1,26 +1,7 @@
 /**
  * API client for Pentorax backend
  */
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
-
-// Create axios instance
-export const apiClient = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Add auth token interceptor
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('supabase_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+import { apiClient } from '@/lib/axiosInstance';
 
 // Products API
 export const productsApi = {
@@ -30,6 +11,11 @@ export const productsApi = {
     max_price?: number;
     search?: string;
     featured?: boolean;
+    in_stock?: boolean;
+    page?: number;
+    per_page?: number;
+    sort?: string;
+    order?: 'asc' | 'desc';
   }) => apiClient.get('/products/', { params }),
   
   get: (slug: string) => apiClient.get(`/products/${slug}/`),
@@ -37,6 +23,38 @@ export const productsApi = {
   featured: () => apiClient.get('/products/featured/'),
   
   categories: () => apiClient.get('/products/categories/'),
+  
+  category: (slug: string) => apiClient.get(`/products/categories/${slug}/`),
+
+  // Admin CRUD operations
+  create: (data: {
+    name: string;
+    slug?: string;
+    description: string;
+    short_description?: string;
+    price: string;
+    compare_at_price?: string;
+    category_id: string;
+    featured_image?: string;
+    is_active?: boolean;
+    is_featured?: boolean;
+  }) => apiClient.post('/products/', data),
+
+  update: (slug: string, data: Partial<{
+    name: string;
+    description: string;
+    short_description: string;
+    price: string;
+    compare_at_price: string;
+    category_id: string;
+    featured_image: string;
+    is_active: boolean;
+    is_featured: boolean;
+  }>) => apiClient.patch(`/products/${slug}/`, data),
+
+  delete: (slug: string) => apiClient.delete(`/products/${slug}/`),
+
+  duplicate: (slug: string) => apiClient.post(`/products/${slug}/duplicate/`),
 };
 
 // Cart API
@@ -72,10 +90,10 @@ export const paymentsApi = {
 
 // Reviews API
 export const reviewsApi = {
-  list: (productId: string) => apiClient.get(`/products/${productId}/reviews/`),
+  list: (productId: string) => apiClient.get('/reviews/', { params: { product_id: productId } }),
   
   create: (productId: string, data: { rating: number; comment: string }) =>
-    apiClient.post(`/products/${productId}/reviews/`, data),
+    apiClient.post('/reviews/', { product_id: productId, ...data }),
 };
 
 // Quotes API

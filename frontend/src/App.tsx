@@ -53,6 +53,7 @@ import AuthConfirmationPage from '@/pages/auth/AuthConfirmationPage';
 
 // Dashboard
 import DashboardPage from '@/pages/dashboard/DashboardPage';
+import { ProductsPage as AdminProductsPage, ProductFormPage } from '@/pages/dashboard/products';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -108,7 +109,31 @@ const App: React.FC = () => {
                 } 
               />
               
-              {/* More dashboard routes will be added here */}
+              {/* Product Management (Admin/Staff) */}
+              <Route 
+                path="products" 
+                element={
+                  <ProtectedRoute requireStaff>
+                    <AdminProductsPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="products/new" 
+                element={
+                  <ProtectedRoute requireStaff>
+                    <ProductFormPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="products/:slug/edit" 
+                element={
+                  <ProtectedRoute requireStaff>
+                    <ProductFormPage />
+                  </ProtectedRoute>
+                } 
+              />
             </Route>
 
             {/* Customer-facing Routes (With Layout) */}

@@ -16,6 +16,42 @@ export const useProducts = (params?: { category?: string; search?: string; min_p
   });
 };
 
+// Paginated products hook for admin dashboard
+// Follows ecommerce standard: page, per_page, sort, order
+export const useProductsPaginated = (params?: { 
+  category?: string; 
+  search?: string; 
+  min_price?: number; 
+  max_price?: number; 
+  featured?: boolean;
+  in_stock?: boolean;
+  page?: number;
+  per_page?: number;
+  sort?: string;
+  order?: 'asc' | 'desc';
+}) => {
+  return useQuery({
+    queryKey: ['products-paginated', params],
+    queryFn: async () => {
+      const response = await productsApi.list(params);
+      const data = response.data;
+      const perPage = params?.per_page || 20;
+      const currentPage = params?.page || 1;
+      const totalCount = data.count || data.results?.length || 0;
+      const totalPages = Math.ceil(totalCount / perPage);
+      
+      return {
+        results: data.results || [],
+        count: totalCount,
+        page: currentPage,
+        totalPages,
+        hasNext: !!data.next,
+        hasPrevious: !!data.previous,
+      };
+    },
+  });
+};
+
 export const useProduct = (slug: string) => {
   return useQuery({
     queryKey: ['product', slug],
@@ -32,7 +68,8 @@ export const useFeaturedProducts = () => {
     queryKey: ['products', 'featured'],
     queryFn: async () => {
       const response = await productsApi.featured();
-      return response.data;
+      // API returns paginated response or array
+      return response.data.results || response.data || [];
     },
   });
 };
@@ -42,7 +79,75 @@ export const useCategories = () => {
     queryKey: ['categories'],
     queryFn: async () => {
       const response = await productsApi.categories();
-      return response.data;
+      // API returns paginated response {results: [...]}
+      return response.data.results || response.data || [];
+    },
+  });
+};
+
+// Admin Product Mutations
+export const useCreateProduct = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (data: {
+      name: string;
+      slug?: string;
+      description: string;
+      short_description?: string;
+      price: string;
+      compare_at_price?: string;
+      category_id: string;
+      featured_image?: string;
+      is_active?: boolean;
+      is_featured?: boolean;
+    }) => productsApi.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+  });
+};
+
+export const useUpdateProduct = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ slug, data }: { slug: string; data: Partial<{
+      name: string;
+      description: string;
+      short_description: string;
+      price: string;
+      compare_at_price: string;
+      category_id: string;
+      featured_image: string;
+      is_active: boolean;
+      is_featured: boolean;
+    }> }) => productsApi.update(slug, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['product', variables.slug] });
+    },
+  });
+};
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (slug: string) => productsApi.delete(slug),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+  });
+};
+
+export const useDuplicateProduct = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (slug: string) => productsApi.duplicate(slug),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
     },
   });
 };
@@ -153,7 +258,8 @@ export const useReviews = (productId: string) => {
     queryKey: ['reviews', productId],
     queryFn: async () => {
       const response = await reviewsApi.list(productId);
-      return response.data;
+      // API returns paginated response {results: [...]}
+      return response.data.results || response.data || [];
     },
     enabled: !!productId,
   });

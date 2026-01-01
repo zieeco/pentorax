@@ -7,11 +7,11 @@ import type {
 } from 'axios';
 import { toast } from 'sonner';
 import { supabase } from '../utils/supabaseClient';
-import useAuthStore from '@/store/auth-store';
 import { extractUserMetadata, type UserRole } from '@/utils/authHelpers';
+import { useAuthStore } from '@/stores/auth';
 
 // --- Configuration ---
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 // Environment-aware configuration
 console.log('🌍 Environment:', import.meta.env.MODE);
@@ -138,12 +138,11 @@ axiosInstance.interceptors.response.use(
 
         if (refreshedSession?.access_token) {
           // Update auth store with fresh data
-          const { role, schoolId } = extractUserMetadata(refreshedSession.user);
+          const { role } = extractUserMetadata(refreshedSession.user);
           useAuthStore.setState({
             session: refreshedSession,
             user: refreshedSession.user,
             role: role as UserRole | null,
-            schoolId,
           });
 
           // Persist to localStorage for cross-tab sync
@@ -167,7 +166,6 @@ axiosInstance.interceptors.response.use(
         session: null,
         user: null,
         role: null,
-        schoolId: null,
       });
       localStorage.removeItem('WW-auth');
 
@@ -285,5 +283,8 @@ export const isHttpError = (error: unknown): error is AxiosError => {
 export const isHttpStatus = (error: unknown, status: number): boolean => {
   return isHttpError(error) && error.response?.status === status;
 };
+
+// Export as apiClient for consistency
+export const apiClient = axiosInstance;
 
 export default axiosInstance;
