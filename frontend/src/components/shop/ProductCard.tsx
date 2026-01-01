@@ -10,6 +10,12 @@ import { useAddToCart } from '../../hooks/useApi';
 import { toast } from 'sonner';
 import type { Product } from '../../types';
 
+// Helper to format price (API returns string)
+const formatPrice = (price: string | number) => {
+  const num = typeof price === 'string' ? parseFloat(price) : price;
+  return num.toLocaleString('en-NG');
+};
+
 interface ProductCardProps {
   product: Product;
 }
@@ -62,11 +68,11 @@ export function ProductCard({ product }: ProductCardProps) {
           </p>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold text-primary">
-              ₦{product.price.toLocaleString()}
+              ₦{formatPrice(product.price)}
             </span>
-            {product.compare_at_price && product.compare_at_price > product.price && (
+            {product.compare_at_price && parseFloat(String(product.compare_at_price)) > parseFloat(String(product.price)) && (
               <span className="text-sm text-muted-foreground line-through">
-                ₦{product.compare_at_price.toLocaleString()}
+                ₦{formatPrice(product.compare_at_price)}
               </span>
             )}
           </div>

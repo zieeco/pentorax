@@ -44,7 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
 
   if (collapsed) {
     return (
-      <aside className="w-20 bg-gray-900 text-white flex flex-col">
+      <aside className="w-20 bg-gray-900 text-white flex flex-col shrink-0">
         {/* Collapsed Logo */}
         <div className="p-4 flex justify-center">
           <div className="h-10 w-10 bg-primary rounded-lg flex items-center justify-center">
