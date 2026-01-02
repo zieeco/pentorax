@@ -25,6 +25,12 @@ class SupabaseUser:
         self.is_anonymous = False
         self.user_metadata = user_data.get('user_metadata', {})
     
+    @property
+    def is_staff(self):
+        """Check if user has staff/admin role from Supabase user_metadata"""
+        role = self.user_metadata.get('role', 'customer')
+        return role in ('staff', 'admin')
+    
     def __str__(self):
         return f"SupabaseUser({self.email})"
 

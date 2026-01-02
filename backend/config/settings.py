@@ -22,6 +22,8 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split('
 # Application definition
 INSTALLED_APPS = [
     # Django core (minimal)
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     
     # Third-party apps
@@ -124,7 +126,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'apps.core.pagination.StandardResultsSetPagination',
     'PAGE_SIZE': 20,
     'DEFAULT_FILTER_BACKENDS': [
         'rest_framework.filters.SearchFilter',
