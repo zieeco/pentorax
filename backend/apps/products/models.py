@@ -23,9 +23,16 @@ class Category(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, max_length=255)
-    description = models.TextField(blank=True)
-    image = models.URLField(blank=True)
-    parent_id = models.UUIDField(null=True, blank=True, db_index=True)
+    description = models.TextField(blank=True, null=True, default="")
+    image = models.URLField(blank=True, null=True, default="")
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="subcategories",
+        db_column="parent_id",
+    )
 
     class Meta(TimeStampedModel.Meta):
         db_table = "products_category"
@@ -43,17 +50,27 @@ class Product(TimeStampedModel):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, max_length=255)
     description = models.TextField()
-    short_description = models.CharField(max_length=500, blank=True)
+    short_description = models.CharField(max_length=500, blank=True, null=True, default="")
     price = models.DecimalField(max_digits=10, decimal_places=2)
     compare_at_price = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True
     )
     is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
-    featured_image = models.URLField(blank=True)
-    meta_title = models.CharField(max_length=255, blank=True)
-    meta_description = models.CharField(max_length=500, blank=True)
-    category_id = models.UUIDField(db_index=True)
+    featured_image = models.URLField(blank=True, null=True, default="")
+    meta_title = models.CharField(max_length=255, blank=True, null=True, default="")
+    meta_description = models.CharField(max_length=500, blank=True, null=True, default="")
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.RESTRICT,
+        related_name="products",
+        db_column="category_id",
+    )
+    
+    # Inventory management fields
+    sku = models.CharField(max_length=100, blank=True, unique=True, null=True)
+    stock_quantity = models.PositiveIntegerField(default=0)
+    low_stock_threshold = models.PositiveIntegerField(default=5)
 
     class Meta(TimeStampedModel.Meta):
         db_table = "products_product"
@@ -73,15 +90,30 @@ class Product(TimeStampedModel):
             )
         return 0
 
+    @property
+    def in_stock(self):
+        """Check if product is in stock"""
+        return self.stock_quantity > 0
+
+    @property
+    def is_low_stock(self):
+        """Check if product is at or below low stock threshold"""
+        return self.stock_quantity <= self.low_stock_threshold
+
 
 class ProductImage(TimeStampedModel):
     """Additional product images"""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image_url = models.URLField()
-    alt_text = models.CharField(max_length=255, blank=True)
+    alt_text = models.CharField(max_length=255, blank=True, null=True, default="")
     position = models.PositiveIntegerField(default=0)
-    product_id = models.UUIDField(db_index=True)
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="images",
+        db_column="product_id",
+    )
 
     class Meta(TimeStampedModel.Meta):
         db_table = "products_productimage"
@@ -100,7 +132,12 @@ class ProductSpecification(TimeStampedModel):
     key = models.CharField(max_length=255)
     value = models.CharField(max_length=500)
     position = models.PositiveIntegerField(default=0)
-    product_id = models.UUIDField(db_index=True)
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="specifications",
+        db_column="product_id",
+    )
 
     class Meta(TimeStampedModel.Meta):
         db_table = "products_productspecification"

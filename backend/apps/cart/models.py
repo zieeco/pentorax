@@ -32,8 +32,18 @@ class CartItem(TimeStampedModel):
     """Items in shopping cart"""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    cart_id = models.UUIDField(db_index=True)
-    product_id = models.UUIDField(db_index=True)
+    cart = models.ForeignKey(
+        Cart,
+        on_delete=models.CASCADE,
+        related_name="items",
+        db_column="cart_id",
+    )
+    product = models.ForeignKey(
+        'products.Product',
+        on_delete=models.CASCADE,
+        related_name="cart_items",
+        db_column="product_id",
+    )
     quantity = models.PositiveIntegerField(default=1)
 
     class Meta:
@@ -43,7 +53,7 @@ class CartItem(TimeStampedModel):
         ordering = ["-created_at"]
         constraints = [
             models.UniqueConstraint(
-                fields=["cart_id", "product_id"], name="unique_cart_product"
+                fields=["cart", "product"], name="unique_cart_product"
             )
         ]
 

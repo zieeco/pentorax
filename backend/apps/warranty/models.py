@@ -35,9 +35,9 @@ class WarrantyCheck(TimeStampedModel):
     support_level = models.CharField(
         max_length=50, choices=SUPPORT_LEVEL_CHOICES, default="standard"
     )
-    customer_name = models.CharField(max_length=255, blank=True)
-    customer_email = models.EmailField(max_length=255, blank=True)
-    notes = models.TextField(blank=True)
+    customer_name = models.CharField(max_length=255, blank=True, null=True, default="")
+    customer_email = models.EmailField(max_length=255, blank=True, null=True, default="")
+    notes = models.TextField(blank=True, null=True, default="")
 
     class Meta(TimeStampedModel.Meta):
         db_table = "warranty_warrantycheck"

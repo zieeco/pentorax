@@ -17,7 +17,12 @@ class Stock(TimeStampedModel):
     """Product stock/inventory management"""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    product_id = models.UUIDField(unique=True, db_index=True)
+    product = models.OneToOneField(
+        'products.Product',
+        on_delete=models.CASCADE,
+        related_name="stock",
+        db_column="product_id",
+    )
     quantity = models.IntegerField(default=0)
     reserved = models.IntegerField(default=0)
 

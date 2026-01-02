@@ -7,7 +7,27 @@ from rest_framework import serializers
 from .models import Category, Product, ProductImage, ProductSpecification
 
 
+class CategoryListSerializer(serializers.ModelSerializer):
+    """Lightweight serializer for category lists and dropdowns"""
+    product_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "image",
+            "product_count",
+        ]
+        read_only_fields = ["id"]
+
+    def get_product_count(self, obj):
+        return Product.objects.filter(category_id=obj.id, is_active=True).count()
+
+
 class CategorySerializer(serializers.ModelSerializer):
+    """Full category serializer with parent info"""
     product_count = serializers.SerializerMethodField()
     parent_name = serializers.SerializerMethodField()
 
@@ -23,8 +43,9 @@ class CategorySerializer(serializers.ModelSerializer):
             "parent_name",
             "product_count",
             "created_at",
+            "updated_at",
         ]
-        read_only_fields = ["id", "created_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
     def get_product_count(self, obj):
         return Product.objects.filter(category_id=obj.id, is_active=True).count()
@@ -42,18 +63,23 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ["id", "image_url", "alt_text", "position"]
+        fields = ["id", "image_url", "alt_text", "position", "created_at"]
+        read_only_fields = ["id", "created_at"]
 
 
 class ProductSpecificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductSpecification
-        fields = ["id", "key", "value", "position"]
+        fields = ["id", "key", "value", "position", "created_at"]
+        read_only_fields = ["id", "created_at"]
 
 
 class ProductListSerializer(serializers.ModelSerializer):
+    """Optimized serializer for product lists"""
     category_name = serializers.SerializerMethodField()
     discount_percentage = serializers.ReadOnlyField()
+    in_stock = serializers.ReadOnlyField()
+    is_low_stock = serializers.ReadOnlyField()
 
     class Meta:
         model = Product
@@ -68,6 +94,11 @@ class ProductListSerializer(serializers.ModelSerializer):
             "featured_image",
             "category_name",
             "is_featured",
+            "is_active",
+            "in_stock",
+            "is_low_stock",
+            "stock_quantity",
+            "sku",
             "created_at",
         ]
 
@@ -80,10 +111,13 @@ class ProductListSerializer(serializers.ModelSerializer):
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
+    """Full product details with nested images and specifications"""
     category = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
     specifications = serializers.SerializerMethodField()
     discount_percentage = serializers.ReadOnlyField()
+    in_stock = serializers.ReadOnlyField()
+    is_low_stock = serializers.ReadOnlyField()
 
     class Meta:
         model = Product
@@ -100,8 +134,14 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "is_featured",
             "featured_image",
             "category",
+            "category_id",
             "images",
             "specifications",
+            "in_stock",
+            "is_low_stock",
+            "stock_quantity",
+            "low_stock_threshold",
+            "sku",
             "meta_title",
             "meta_description",
             "created_at",
@@ -109,6 +149,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         ]
 
     def get_category(self, obj):
+        """Get category object for nested serializer"""
         try:
             category = Category.objects.get(id=obj.category_id)
             return CategorySerializer(category).data
@@ -116,9 +157,107 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             return None
 
     def get_images(self, obj):
-        images = ProductImage.objects.filter(product_id=obj.id)
+        images = ProductImage.objects.filter(product_id=obj.id).order_by('position')
         return ProductImageSerializer(images, many=True).data
 
     def get_specifications(self, obj):
-        specs = ProductSpecification.objects.filter(product_id=obj.id)
+        specs = ProductSpecification.objects.filter(product_id=obj.id).order_by('position')
         return ProductSpecificationSerializer(specs, many=True).data
+
+
+class ProductCreateUpdateSerializer(serializers.ModelSerializer):
+    """Serializer for creating and updating products (Admin/Staff only)"""
+    images = ProductImageSerializer(many=True, required=False)
+    specifications = ProductSpecificationSerializer(many=True, required=False)
+
+    class Meta:
+        model = Product
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "description",
+            "short_description",
+            "price",
+            "compare_at_price",
+            "is_active",
+            "is_featured",
+            "featured_image",
+            "category_id",
+            "images",
+            "specifications",
+            "meta_title",
+            "meta_description",
+            "stock_quantity",
+            "low_stock_threshold",
+            "sku",
+        ]
+        read_only_fields = ["id"]
+
+    def create(self, validated_data):
+        images_data = validated_data.pop('images', [])
+        specifications_data = validated_data.pop('specifications', [])
+
+        product = Product.objects.create(**validated_data)
+
+        # Create images
+        for image_data in images_data:
+            ProductImage.objects.create(product_id=product.id, **image_data)
+
+        # Create specifications
+        for spec_data in specifications_data:
+            ProductSpecification.objects.create(product_id=product.id, **spec_data)
+
+        return product
+
+    def update(self, instance, validated_data):
+        images_data = validated_data.pop('images', None)
+        specifications_data = validated_data.pop('specifications', None)
+
+        # Update product fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        # Update images if provided
+        if images_data is not None:
+            # Delete existing images
+            ProductImage.objects.filter(product_id=instance.id).delete()
+            # Create new images
+            for image_data in images_data:
+                ProductImage.objects.create(product_id=instance.id, **image_data)
+
+        # Update specifications if provided
+        if specifications_data is not None:
+            # Delete existing specifications
+            ProductSpecification.objects.filter(product_id=instance.id).delete()
+            # Create new specifications
+            for spec_data in specifications_data:
+                ProductSpecification.objects.create(product_id=instance.id, **spec_data)
+
+        return instance
+
+    def validate_slug(self, value):
+        """Ensure slug is unique"""
+        instance = self.instance
+        if instance and instance.slug == value:
+            return value
+        
+        if Product.objects.filter(slug=value).exists():
+            raise serializers.ValidationError("A product with this slug already exists.")
+        return value
+
+    def validate_price(self, value):
+        """Ensure price is positive"""
+        if value <= 0:
+            raise serializers.ValidationError("Price must be greater than zero.")
+        return value
+
+    def validate(self, data):
+        """Cross-field validation"""
+        if 'compare_at_price' in data and data.get('compare_at_price'):
+            if data['compare_at_price'] <= data.get('price', 0):
+                raise serializers.ValidationError({
+                    "compare_at_price": "Compare at price must be greater than the regular price."
+                })
+        return data

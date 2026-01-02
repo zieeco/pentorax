@@ -28,7 +28,12 @@ class Payment(TimeStampedModel):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="pending")
     paystack_response = models.JSONField(null=True, blank=True)
-    order_id = models.UUIDField(db_index=True)
+    order = models.ForeignKey(
+        'orders.Order',
+        on_delete=models.CASCADE,
+        related_name="payments",
+        db_column="order_id",
+    )
 
     class Meta:
         db_table = "payments_payment"

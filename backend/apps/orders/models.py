@@ -51,8 +51,18 @@ class OrderItem(TimeStampedModel):
     """Individual items in an order"""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    order_id = models.UUIDField(db_index=True)
-    product_id = models.UUIDField(db_index=True)
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name="items",
+        db_column="order_id",
+    )
+    product = models.ForeignKey(
+        'products.Product',
+        on_delete=models.RESTRICT,
+        related_name="order_items",
+        db_column="product_id",
+    )
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
 

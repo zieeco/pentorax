@@ -19,7 +19,12 @@ class Review(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_id = models.CharField(max_length=255, db_index=True)
     user_email = models.EmailField(max_length=255)
-    product_id = models.UUIDField(db_index=True)
+    product = models.ForeignKey(
+        'products.Product',
+        on_delete=models.CASCADE,
+        related_name="reviews",
+        db_column="product_id",
+    )
     rating = models.SmallIntegerField()
     comment = models.TextField()
     is_verified_purchase = models.BooleanField(default=False)
@@ -31,7 +36,7 @@ class Review(TimeStampedModel):
         ordering = ["-created_at"]
         constraints = [
             models.UniqueConstraint(
-                fields=["user_id", "product_id"], name="unique_user_product_review"
+                fields=["user_id", "product"], name="unique_user_product_review"
             )
         ]
 
