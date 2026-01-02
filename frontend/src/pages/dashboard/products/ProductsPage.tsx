@@ -245,11 +245,6 @@ export default function ProductsPage() {
       toast.error('Failed to deactivate products');
     }
   };
-
-  const handleClearSelection = () => {
-    setSelectedIds([]);
-  };
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     updateParams({ 

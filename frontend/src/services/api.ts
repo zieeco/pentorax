@@ -55,6 +55,25 @@ export const productsApi = {
   delete: (slug: string) => apiClient.delete(`/products/${slug}/`),
 
   duplicate: (slug: string) => apiClient.post(`/products/${slug}/duplicate/`),
+
+  // Image upload
+  uploadImage: (file: File) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    return apiClient.post('/products/upload_image/', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+  },
+
+  // Bulk operations
+  bulkDelete: (ids: string[]) => 
+    apiClient.post('/products/bulk_delete/', { ids }),
+
+  bulkActivate: (ids: string[]) => 
+    apiClient.post('/products/bulk_activate/', { ids }),
+
+  bulkDeactivate: (ids: string[]) => 
+    apiClient.post('/products/bulk_deactivate/', { ids }),
 };
 
 // Cart API

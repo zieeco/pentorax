@@ -1,6 +1,6 @@
 /**
  * ProductFormPage - Create/Edit product form
- * Fixed layout and Switch component
+ * Three-column layout: Inventory | Basic Information | Categorization & Visuals
  */
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -264,7 +264,7 @@ export default function ProductFormPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in slide-in-from-bottom-6 duration-500">
+    <div className="max-w-6xl mx-auto space-y-8 animate-in slide-in-from-bottom-6 duration-500">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
@@ -272,13 +272,13 @@ export default function ProductFormPage() {
             variant="ghost" 
             size="icon"
             onClick={() => navigate('/dashboard/products')}
-            className="hover:bg-gray-200 rounded-xl transition-colors"
+            className="hover:bg-gray-200 rounded-md transition-colors"
           >
             <ArrowLeft className="h-6 w-6 text-gray-600" />
           </Button>
           <div>
-            <h1 className="text-3xl font-black text-gray-900">{isEditMode ? 'Edit Product' : 'New Product'}</h1>
-            <p className="text-gray-500 font-medium">Create a new product for your catalog</p>
+            <h1 className="text-sm font-black text-gray-900">{isEditMode ? 'Edit Product' : 'New Product'}</h1>
+            <p className="text-xs font-medium text-gray-500">Create a new product for your catalog</p>
           </div>
         </div>
         <Button 
@@ -295,19 +295,113 @@ export default function ProductFormPage() {
         </Button>
       </div>
 
-      {/* Form - Grid Layout */}
-      <form onSubmit={handleSubmit(onSubmit)} className="grid lg:grid-cols-3 gap-8">
-        {/* Left Column - 2 columns wide */}
-        <div className="lg:col-span-2 space-y-6">
+      {/* Form - Three Column Grid Layout */}
+      <form onSubmit={handleSubmit(onSubmit)} className="grid xl:grid-cols-[380px_1fr_380px] lg:grid-cols-[320px_1fr_320px] md:grid-cols-1 gap-4">
+        
+        {/* LEFT COLUMN - Inventory */}
+        <div className="space-y-6">
+          <Card className="border-gray-100 shadow-sm">
+            <CardHeader className="p-4">
+              <CardTitle className="text-lg font-black text-gray-900 flex items-center space-x-2">
+                <Package className="h-5 w-5 text-primary" />
+                <span>Inventory</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 pt-0 space-y-6">
+              <div className="space-y-1.5">
+                <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                  SKU (Stock Keeping Unit)
+                </Label>
+                <Input
+                  placeholder="e.g., SP-500W-001"
+                  className="px-5 py-4 bg-gray-50 border-transparent focus:bg-white focus:border-primary shadow-sm"
+                  {...register('sku')}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                    Stock Qty
+                  </Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    placeholder="0"
+                    className="px-5 py-4 bg-gray-50 border-transparent  focus:bg-white focus:border-primary shadow-sm"
+                    {...register('stock_quantity')}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                    Low Alert
+                  </Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    placeholder="5"
+                    className="px-5 py-4 bg-gray-50 border-transparent focus:bg-white focus:border-primary shadow-sm"
+                    {...register('low_stock_threshold')}
+                  />
+                </div>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-100 rounded-md p-4">
+                <p className="text-xs text-blue-600 font-medium">
+                  <span className="font-bold">Tip:</span> Low stock alerts trigger when quantity reaches or falls below the threshold.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Delete Button */}
+          {isEditMode && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button 
+                  type="button"
+                  variant="destructive"
+                  disabled={isDeleting}
+                  className="w-full py-6"
+                >
+                  {isDeleting ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="mr-2 h-4 w-4" />
+                  )}
+                  Delete Product
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete Product</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete "{product?.name}"? This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+        </div>
+
+        {/* MIDDLE COLUMN - Basic Information & Pricing */}
+        <div className="space-y-6">
           {/* Basic Info Card */}
-          <Card className="rounded-[2rem] border-gray-100 shadow-sm">
-            <CardHeader className="p-8">
+          <Card className="border-gray-100 shadow-sm">
+            <CardHeader className="p-4">
               <CardTitle className="text-lg font-black text-gray-900 flex items-center space-x-2">
                 <Package className="h-5 w-5 text-primary" />
                 <span>Basic Information</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-8 pt-0 space-y-6">
+            <CardContent className="p-4 pt-0 space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-1.5">
                   <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
@@ -315,7 +409,7 @@ export default function ProductFormPage() {
                   </Label>
                   <Input
                     placeholder="e.g., PX-550 Mono Panel"
-                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                    className="px-5 py-4 bg-gray-50 border-transparent focus:bg-white focus:border-primary shadow-sm"
                     {...register('name', { required: 'Name is required' })}
                   />
                   {errors.name && (
@@ -329,7 +423,7 @@ export default function ProductFormPage() {
                   <Input
                     placeholder="auto-generated-slug"
                     disabled={isEditMode}
-                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm disabled:opacity-50"
+                    className="px-5 py-4 bg-gray-50 border-transparent focus:bg-white focus:border-primary shadow-sm disabled:opacity-50"
                     {...register('slug')}
                   />
                 </div>
@@ -341,7 +435,7 @@ export default function ProductFormPage() {
                 </Label>
                 <Input
                   placeholder="Brief summary for catalog cards"
-                  className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                  className="px-5 py-4 bg-gray-50 border-transparent focus:bg-white focus:border-primary shadow-sm"
                   {...register('short_description')}
                 />
               </div>
@@ -362,7 +456,7 @@ export default function ProductFormPage() {
                 <Textarea
                   rows={5}
                   placeholder="Enter detailed technical specifications and benefits..."
-                  className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm resize-none"
+                  className="px-5 py-4 bg-gray-50 border-transparent focus:bg-white focus:border-primary shadow-sm resize-none"
                   {...register('description', { required: 'Description is required' })}
                 />
                 {errors.description && (
@@ -373,14 +467,14 @@ export default function ProductFormPage() {
           </Card>
 
           {/* Pricing & Category Card */}
-          <Card className="rounded-[2rem] border-gray-100 shadow-sm">
-            <CardHeader className="p-8">
+          <Card className=" border-gray-100 shadow-sm">
+            <CardHeader className="p-4">
               <CardTitle className="text-lg font-black text-gray-900 flex items-center space-x-2">
                 <Zap className="h-5 w-5 text-primary" />
                 <span>Pricing & Category</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-8 pt-0">
+            <CardContent className="p-4 pt-0">
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="space-y-1.5">
                   <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
@@ -391,7 +485,7 @@ export default function ProductFormPage() {
                     step="0.01"
                     min="0"
                     placeholder="0.00"
-                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                    className="px-5 py-4 bg-gray-50 border-transparent focus:bg-white focus:border-primary shadow-sm"
                     {...register('price', { required: 'Price is required' })}
                   />
                   {errors.price && (
@@ -407,7 +501,7 @@ export default function ProductFormPage() {
                     step="0.01"
                     min="0"
                     placeholder="0.00"
-                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                    className="px-5 py-4 bg-gray-50 border-transparent focus:bg-white focus:border-primary shadow-sm"
                     {...register('compare_at_price')}
                   />
                 </div>
@@ -419,7 +513,7 @@ export default function ProductFormPage() {
                     value={watch('category_id')}
                     onValueChange={(value) => setValue('category_id', value, { shouldDirty: true })}
                   >
-                    <SelectTrigger className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm">
+                    <SelectTrigger className="px-5 py-4 bg-gray-50 border-transparent focus:bg-white focus:border-primary shadow-sm">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -436,14 +530,14 @@ export default function ProductFormPage() {
           </Card>
         </div>
 
-        {/* Right Column - Sidebar */}
-        <div className="space-y-8">
+        {/* RIGHT COLUMN - Categorization & Visuals */}
+        <div className="space-y-6">
           {/* Status & Visibility Card */}
-          <Card className="rounded-[2rem] border-gray-100 shadow-sm">
-            <CardHeader className="p-8">
+          <Card className=" border-gray-100 shadow-sm">
+            <CardHeader className="p-4">
               <CardTitle className="text-lg font-black text-gray-900">Categorization</CardTitle>
             </CardHeader>
-            <CardContent className="p-8 pt-0 space-y-6">
+            <CardContent className="p-4 pt-0 space-y-6">
               <div className="space-y-4 pt-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -473,31 +567,38 @@ export default function ProductFormPage() {
           </Card>
 
           {/* Image & Media Card */}
-          <Card className="rounded-[2rem] border-gray-100 shadow-sm">
-            <CardHeader className="p-8">
+          <Card className=" border-gray-100 shadow-sm">
+            <CardHeader className="p-4">
               <CardTitle className="text-lg font-black text-gray-900 flex items-center justify-between">
                 <span>Visuals</span>
                 <ImageIcon className="h-5 w-5 text-gray-300" />
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-8 pt-0 space-y-6">
+            <CardContent className="p-4 pt-0 space-y-6">
               <div className="space-y-1.5">
                 <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
                   Upload Image
                 </Label>
                 <div className="relative">
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    disabled={isUploading}
-                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
-                  />
-                  {isUploading && (
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                  <label className="block w-full cursor-pointer">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={isUploading}
+                      className="hidden"
+                    />
+                    <div className="rounded-md p-2 bg-primary text-white shadow-sm hover:bg-primary/90 transition-all text-center font-semibold">
+                      {isUploading ? (
+                        <span className="flex items-center justify-center">
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          Uploading...
+                        </span>
+                      ) : (
+                        'Browse'
+                      )}
                     </div>
-                  )}
+                  </label>
                 </div>
                 <p className="text-xs text-gray-400 ml-1">Max 5MB, JPG/PNG/WEBP</p>
               </div>
@@ -509,12 +610,12 @@ export default function ProductFormPage() {
                 <Input
                   type="url"
                   placeholder="https://..."
-                  className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                  className="px-5 py-4 bg-gray-50 border-transparent focus:bg-white focus:border-primary shadow-sm"
                   {...register('featured_image')}
                 />
               </div>
 
-              <div className="aspect-square bg-gray-50 rounded-3xl overflow-hidden border border-gray-100 flex items-center justify-center relative group">
+              <div className="aspect-square bg-gray-50 rounded-md overflow-hidden border border-gray-100 flex items-center justify-center relative group">
                 {(imagePreview || watch('featured_image')) ? (
                   <img 
                     src={imagePreview || watch('featured_image')} 
@@ -533,97 +634,6 @@ export default function ProductFormPage() {
               </div>
             </CardContent>
           </Card>
-
-          {/* Inventory Management Card */}
-          <Card className="rounded-[2rem] border-gray-100 shadow-sm">
-            <CardHeader className="p-8">
-              <CardTitle className="text-lg font-black text-gray-900 flex items-center space-x-2">
-                <Package className="h-5 w-5 text-primary" />
-                <span>Inventory</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-8 pt-0 space-y-6">
-              <div className="space-y-1.5">
-                <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
-                  SKU (Stock Keeping Unit)
-                </Label>
-                <Input
-                  placeholder="e.g., SP-500W-001"
-                  className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
-                  {...register('sku')}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
-                    Stock Qty
-                  </Label>
-                  <Input
-                    type="number"
-                    min="0"
-                    placeholder="0"
-                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
-                    {...register('stock_quantity')}
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
-                    Low Alert
-                  </Label>
-                  <Input
-                    type="number"
-                    min="0"
-                    placeholder="5"
-                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
-                    {...register('low_stock_threshold')}
-                  />
-                </div>
-              </div>
-
-              <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4">
-                <p className="text-xs text-blue-600 font-medium">
-                  <span className="font-bold">Tip:</span> Low stock alerts trigger when quantity reaches or falls below the threshold.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Delete Button */}
-          {isEditMode && (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button 
-                  type="button"
-                  variant="destructive"
-                  disabled={isDeleting}
-                  className="w-full rounded-xl py-6"
-                >
-                  {isDeleting ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Trash2 className="mr-2 h-4 w-4" />
-                  )}
-                  Delete Product
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete Product</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Are you sure you want to delete "{product?.name}"? This action cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          )}
         </div>
       </form>
     </div>
