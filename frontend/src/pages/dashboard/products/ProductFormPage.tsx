@@ -2,7 +2,7 @@
  * ProductFormPage - Create/Edit product form
  * Fixed layout and Switch component
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { 
@@ -10,7 +10,8 @@ import {
   useCategories, 
   useCreateProduct, 
   useUpdateProduct,
-  useDeleteProduct 
+  useDeleteProduct,
+  useUploadProductImage
 } from '@/hooks/useApi';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -58,6 +59,9 @@ interface ProductFormData {
   featured_image: string;
   is_active: boolean;
   is_featured: boolean;
+  sku: string;
+  stock_quantity: string;
+  low_stock_threshold: string;
 }
 
 interface Category {
@@ -117,6 +121,9 @@ export default function ProductFormPage() {
       featured_image: '',
       is_active: true,
       is_featured: false,
+      sku: '',
+      stock_quantity: '0',
+      low_stock_threshold: '5',
     }
   });
 
@@ -137,6 +144,9 @@ export default function ProductFormPage() {
         featured_image: product.featured_image || '',
         is_active: product.is_active ?? true,
         is_featured: product.is_featured ?? false,
+        sku: product.sku || '',
+        stock_quantity: product.stock_quantity?.toString() || '0',
+        low_stock_threshold: product.low_stock_threshold?.toString() || '5',
       });
     }
   }, [product, isEditMode, reset]);
@@ -164,6 +174,9 @@ export default function ProductFormPage() {
             featured_image: data.featured_image || undefined,
             is_active: data.is_active,
             is_featured: data.is_featured,
+            sku: data.sku || undefined,
+            stock_quantity: data.stock_quantity ? parseInt(data.stock_quantity) : undefined,
+            low_stock_threshold: data.low_stock_threshold ? parseInt(data.low_stock_threshold) : undefined,
           },
         });
         toast.success('Product updated successfully');
@@ -179,6 +192,9 @@ export default function ProductFormPage() {
           featured_image: data.featured_image || undefined,
           is_active: data.is_active,
           is_featured: data.is_featured,
+          sku: data.sku || undefined,
+          stock_quantity: data.stock_quantity ? parseInt(data.stock_quantity) : undefined,
+          low_stock_threshold: data.low_stock_threshold ? parseInt(data.low_stock_threshold) : undefined,
         });
         toast.success('Product created successfully');
       }
@@ -197,6 +213,41 @@ export default function ProductFormPage() {
       navigate('/dashboard/products');
     } catch (error) {
       toast.error('Failed to delete product');
+    }
+  };
+
+  // Image upload
+  const uploadImage = useUploadProductImage();
+  const [imagePreview, setImagePreview] = useState<string>('');
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be less than 5MB');
+      return;
+    }
+
+    try {
+      setIsUploading(true);
+      const response = await uploadImage.mutateAsync(file);
+      const imageUrl = response.data.url;
+      setValue('featured_image', imageUrl, { shouldDirty: true });
+      setImagePreview(imageUrl);
+      toast.success('Image uploaded successfully');
+    } catch (error: any) {
+      toast.error(error?.response?.data?.error || 'Failed to upload image');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -432,7 +483,28 @@ export default function ProductFormPage() {
             <CardContent className="p-8 pt-0 space-y-6">
               <div className="space-y-1.5">
                 <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
-                  Featured Image URL
+                  Upload Image
+                </Label>
+                <div className="relative">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={isUploading}
+                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
+                  />
+                  {isUploading && (
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-gray-400 ml-1">Max 5MB, JPG/PNG/WEBP</p>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                  Or Paste Image URL
                 </Label>
                 <Input
                   type="url"
@@ -443,9 +515,9 @@ export default function ProductFormPage() {
               </div>
 
               <div className="aspect-square bg-gray-50 rounded-3xl overflow-hidden border border-gray-100 flex items-center justify-center relative group">
-                {watch('featured_image') ? (
+                {(imagePreview || watch('featured_image')) ? (
                   <img 
-                    src={watch('featured_image')} 
+                    src={imagePreview || watch('featured_image')} 
                     className="w-full h-full object-cover transition-transform group-hover:scale-105" 
                     alt="Preview"
                     onError={(e) => {
@@ -458,6 +530,62 @@ export default function ProductFormPage() {
                     <p className="text-[10px] font-bold text-gray-300 uppercase">Image Preview</p>
                   </div>
                 )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Inventory Management Card */}
+          <Card className="rounded-[2rem] border-gray-100 shadow-sm">
+            <CardHeader className="p-8">
+              <CardTitle className="text-lg font-black text-gray-900 flex items-center space-x-2">
+                <Package className="h-5 w-5 text-primary" />
+                <span>Inventory</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 pt-0 space-y-6">
+              <div className="space-y-1.5">
+                <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                  SKU (Stock Keeping Unit)
+                </Label>
+                <Input
+                  placeholder="e.g., SP-500W-001"
+                  className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                  {...register('sku')}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                    Stock Qty
+                  </Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    placeholder="0"
+                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                    {...register('stock_quantity')}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                    Low Alert
+                  </Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    placeholder="5"
+                    className="px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:border-primary shadow-sm"
+                    {...register('low_stock_threshold')}
+                  />
+                </div>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4">
+                <p className="text-xs text-blue-600 font-medium">
+                  <span className="font-bold">Tip:</span> Low stock alerts trigger when quantity reaches or falls below the threshold.
+                </p>
               </div>
             </CardContent>
           </Card>

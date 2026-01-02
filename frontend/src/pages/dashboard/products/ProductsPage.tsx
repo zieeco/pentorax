@@ -8,7 +8,10 @@ import {
   useProductsPaginated, 
   useCategories, 
   useDeleteProduct, 
-  useDuplicateProduct 
+  useDuplicateProduct,
+  useBulkDeleteProducts,
+  useBulkActivateProducts,
+  useBulkDeactivateProducts
 } from '@/hooks/useApi';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -86,6 +89,9 @@ interface Product {
   is_featured: boolean;
   in_stock: boolean;
   created_at: string;
+  sku?: string;
+  stock_quantity?: number;
+  is_low_stock?: boolean;
 }
 
 interface Category {
@@ -139,6 +145,9 @@ export default function ProductsPage() {
   
   const deleteProduct = useDeleteProduct();
   const duplicateProduct = useDuplicateProduct();
+  const bulkDelete = useBulkDeleteProducts();
+  const bulkActivate = useBulkActivateProducts();
+  const bulkDeactivate = useBulkDeactivateProducts();
 
   // Handle row selection
   const handleSelectRow = (productId: string, checked: boolean) => {
@@ -205,13 +214,40 @@ export default function ProductsPage() {
   };
 
   const handleBulkDelete = async (ids: string[]) => {
-    const productsToDelete = (products as Product[]).filter(p => ids.includes(p.id));
-    for (const product of productsToDelete) {
-      await deleteProduct.mutateAsync(product.slug);
+    try {
+      await bulkDelete.mutateAsync(ids);
+      toast.success(`Deleted ${ids.length} product${ids.length > 1 ? 's' : ''}`);
+      setSelectedIds([]);
+      refetch();
+    } catch (error) {
+      toast.error('Failed to delete products');
     }
-    toast.success(`Deleted ${ids.length} products`);
+  };
+
+  const handleBulkActivate = async (ids: string[]) => {
+    try {
+      await bulkActivate.mutateAsync(ids);
+      toast.success(`Activated ${ids.length} product${ids.length > 1 ? 's' : ''}`);
+      setSelectedIds([]);
+      refetch();
+    } catch (error) {
+      toast.error('Failed to activate products');
+    }
+  };
+
+  const handleBulkDeactivate = async (ids: string[]) => {
+    try {
+      await bulkDeactivate.mutateAsync(ids);
+      toast.success(`Deactivated ${ids.length} product${ids.length > 1 ? 's' : ''}`);
+      setSelectedIds([]);
+      refetch();
+    } catch (error) {
+      toast.error('Failed to deactivate products');
+    }
+  };
+
+  const handleClearSelection = () => {
     setSelectedIds([]);
-    refetch();
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -230,6 +266,20 @@ export default function ProductsPage() {
       icon: Trash2,
       variant: 'destructive',
       onClick: handleBulkDelete,
+    },
+    {
+      id: 'activate',
+      label: 'Activate Selected',
+      icon: Package,
+      variant: 'default',
+      onClick: handleBulkActivate,
+    },
+    {
+      id: 'deactivate',
+      label: 'Deactivate Selected',
+      icon: Package,
+      variant: 'secondary',
+      onClick: handleBulkDeactivate,
     },
   ];
 
@@ -339,6 +389,7 @@ export default function ProductsPage() {
                 <TableHead>Product</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Price</TableHead>
+                <TableHead>Stock</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -391,6 +442,28 @@ export default function ProductsPage() {
                       <div className="text-xs text-gray-400 line-through">
                         ₦{formatPrice(product.compare_at_price)}
                       </div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {product.stock_quantity !== undefined ? (
+                      <Badge 
+                        variant={
+                          product.stock_quantity === 0 ? "destructive" :
+                          product.is_low_stock ? "outline" :
+                          "default"
+                        }
+                        className={
+                          product.stock_quantity === 0 ? "" :
+                          product.is_low_stock ? "border-orange-300 text-orange-700 bg-orange-50" :
+                          "bg-green-100 text-green-700 hover:bg-green-100"
+                        }
+                      >
+                        {product.stock_quantity === 0 ? 'Out of Stock' :
+                         product.is_low_stock ? `Low (${product.stock_quantity})` :
+                         `In Stock (${product.stock_quantity})`}
+                      </Badge>
+                    ) : (
+                      <span className="text-xs text-gray-400">N/A</span>
                     )}
                   </TableCell>
                   <TableCell>
