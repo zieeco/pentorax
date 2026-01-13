@@ -2,7 +2,7 @@
  * BlogPostPage - Single blog post view
  */
 import { useParams, useNavigate } from 'react-router-dom';
-import { useBlogPost } from '@/hooks/useApi';
+import { useBlogPost } from '@/hooks';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft, Calendar } from 'lucide-react';

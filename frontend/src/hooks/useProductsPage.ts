@@ -4,15 +4,8 @@
  */
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { 
-  useProductsPaginated, 
-  useCategories, 
-  useDeleteProduct, 
-  useDuplicateProduct,
-  useBulkDeleteProducts,
-  useBulkActivateProducts,
-  useBulkDeactivateProducts
-} from '@/hooks/useApi';
+
+import { useBulkActivateProducts, useBulkDeactivateProducts, useBulkDeleteProducts, useCategories, useDeleteProduct, useDuplicateProduct, useProductsPaginated } from './products.hooks';
 import { toast } from 'sonner';
 
 const DEFAULT_PAGE_SIZE = 20;

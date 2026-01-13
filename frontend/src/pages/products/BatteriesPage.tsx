@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, BatteryFull, Loader2 } from 'lucide-react';
 import SEO from '@/components/SEO';
-import { useProducts, useAddToCart } from '@/hooks/useApi';
+import { useProducts, useAddToCart } from '@/hooks';
 import { toast } from 'sonner';
 
 // Helper to format price (API returns string)

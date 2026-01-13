@@ -3,6 +3,20 @@
  * Centralized type definitions for product domain
  */
 
+export interface ProductImage {
+  id: string;
+  image_url: string;
+  alt_text: string;
+  position: number;
+}
+
+export interface ProductSpecification {
+  id: string;
+  key: string;
+  value: string;
+  position: number;
+}
+
 export interface Product {
   id: string;
   slug: string;
@@ -24,6 +38,8 @@ export interface Product {
   stock_quantity?: number;
   low_stock_threshold?: number;
   is_low_stock?: boolean;
+  images?: ProductImage[];
+  specifications?: ProductSpecification[];
 }
 
 export interface Category {
@@ -69,4 +85,37 @@ export interface ProductFormData {
   sku: string;
   stock_quantity: string;
   low_stock_threshold: string;
+  is_low_stock: boolean;
+  discount_percentage: number;
+}
+
+export interface CreateProductPayload {
+  name: string;
+  slug: string;
+  description: string;
+  short_description?: string;
+  price: string;
+  compare_at_price?: string;
+  category_id: string;
+  featured_image?: string;
+  is_active?: boolean;
+  is_featured?: boolean;
+  sku?: string;
+  stock_quantity?: number;
+  low_stock_threshold?: number;
+}
+
+export interface UpdateProductPayload {
+  name?: string;
+  description?: string;
+  short_description?: string;
+  price?: string;
+  compare_at_price?: string;
+  category_id?: string;
+  featured_image?: string;
+  is_active?: boolean;
+  is_featured?: boolean;
+  sku?: string;
+  stock_quantity?: number;
+  low_stock_threshold?: number;
 }

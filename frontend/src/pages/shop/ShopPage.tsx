@@ -2,7 +2,7 @@
  * ShopPage - Product catalog with filtering
  */
 import { useState } from 'react';
-import { useProducts, useCategories } from '@/hooks/useApi';
+import { useProducts, useCategories } from '@/hooks';
 import { ProductGrid } from '@/components/shop/ProductGrid';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

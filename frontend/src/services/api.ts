@@ -1,9 +1,12 @@
 /**
  * API client for Pentorax backend
+ * Comprehensive API service layer
  */
 import { apiClient } from '@/lib/axiosInstance';
 
+// ===========================
 // Products API
+// ===========================
 export const productsApi = {
   list: (params?: {
     category?: string;
@@ -38,6 +41,9 @@ export const productsApi = {
     featured_image?: string;
     is_active?: boolean;
     is_featured?: boolean;
+    sku?: string;
+    stock_quantity?: number;
+    low_stock_threshold?: number;
   }) => apiClient.post('/products/', data),
 
   update: (slug: string, data: Partial<{
@@ -50,6 +56,9 @@ export const productsApi = {
     featured_image: string;
     is_active: boolean;
     is_featured: boolean;
+    sku: string;
+    stock_quantity: number;
+    low_stock_threshold: number;
   }>) => apiClient.patch(`/products/${slug}/`, data),
 
   delete: (slug: string) => apiClient.delete(`/products/${slug}/`),
@@ -76,7 +85,9 @@ export const productsApi = {
     apiClient.post('/products/bulk_deactivate/', { ids }),
 };
 
+// ===========================
 // Cart API
+// ===========================
 export const cartApi = {
   get: () => apiClient.get('/cart/'),
   
@@ -86,19 +97,36 @@ export const cartApi = {
   updateItem: (itemId: string, quantity: number) =>
     apiClient.patch(`/cart/items/${itemId}/`, { quantity }),
   
-  removeItem: (itemId: string) => apiClient.delete(`/cart/items/${itemId}/`),
+  removeItem: (itemId: string) => 
+    apiClient.delete(`/cart/items/${itemId}/`),
+  
+  clear: () => 
+    apiClient.delete('/cart/clear/'),
 };
 
+// ===========================
 // Orders API
+// ===========================
 export const ordersApi = {
-  create: (data: any) => apiClient.post('/orders/', data),
+  create: (data: any) => 
+    apiClient.post('/orders/', data),
   
-  list: () => apiClient.get('/orders/'),
+  list: () => 
+    apiClient.get('/orders/'),
   
-  get: (id: string) => apiClient.get(`/orders/${id}/`),
+  get: (id: string) => 
+    apiClient.get(`/orders/${id}/`),
+  
+  updateStatus: (orderId: string, status: string) =>
+    apiClient.patch(`/orders/${orderId}/`, { status }),
+  
+  cancel: (orderId: string) =>
+    apiClient.post(`/orders/${orderId}/cancel/`),
 };
 
+// ===========================
 // Payments API
+// ===========================
 export const paymentsApi = {
   initialize: (orderId: string) =>
     apiClient.post('/payments/initialize/', { order_id: orderId }),
@@ -107,41 +135,69 @@ export const paymentsApi = {
     apiClient.post('/payments/verify/', { reference }),
 };
 
+// ===========================
 // Reviews API
+// ===========================
 export const reviewsApi = {
-  list: (productId: string) => apiClient.get('/reviews/', { params: { product_id: productId } }),
+  list: (productId: string) => 
+    apiClient.get('/reviews/', { params: { product_id: productId } }),
   
   create: (productId: string, data: { rating: number; comment: string }) =>
     apiClient.post('/reviews/', { product_id: productId, ...data }),
+  
+  update: (reviewId: string, data: { rating: number; comment: string }) =>
+    apiClient.patch(`/reviews/${reviewId}/`, data),
+  
+  delete: (reviewId: string) =>
+    apiClient.delete(`/reviews/${reviewId}/`),
 };
 
+// ===========================
 // Quotes API
+// ===========================
 export const quotesApi = {
-  create: (data: { name: string; email: string; phone: string; message: string }) =>
-    apiClient.post('/quotes/', data),
+  create: (data: { 
+    name: string; 
+    email: string; 
+    phone: string; 
+    message: string;
+    products?: string[];
+  }) => apiClient.post('/quotes/', data),
 };
 
+// ===========================
 // Blog API
+// ===========================
 export const blogApi = {
-  listPosts: (params?: { category?: string; page?: number }) =>
-    apiClient.get('/blog/posts/', { params }),
+  listPosts: (params?: { 
+    category?: string; 
+    page?: number;
+    per_page?: number;
+    search?: string;
+  }) => apiClient.get('/blog/posts/', { params }),
   
-  getPost: (slug: string) => apiClient.get(`/blog/posts/${slug}/`),
+  getPost: (slug: string) => 
+    apiClient.get(`/blog/posts/${slug}/`),
   
-  categories: () => apiClient.get('/blog/categories/'),
+  categories: () => 
+    apiClient.get('/blog/categories/'),
 };
 
+// ===========================
 // Core App API
+// ===========================
 export const coreApi = {
   // Team
-  team: () => apiClient.get('/team/'),
+  team: () => 
+    apiClient.get('/team/'),
   
   // FAQs
   faqs: (params?: { category?: string; search?: string }) =>
     apiClient.get('/faqs/', { params }),
   
   // Case Studies
-  caseStudies: () => apiClient.get('/case-studies/'),
+  caseStudies: () => 
+    apiClient.get('/case-studies/'),
   
   // Contact Form
   submitContact: (data: {
@@ -165,5 +221,8 @@ export const coreApi = {
   // Warranty Check
   checkWarranty: (serialNumber: string) =>
     apiClient.post('/support/warranty/check/', { serial_number: serialNumber }),
+  
+  // Newsletter Subscription
+  subscribeNewsletter: (email: string) =>
+    apiClient.post('/newsletter/subscribe/', { email }),
 };
-

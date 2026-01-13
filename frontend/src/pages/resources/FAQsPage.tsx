@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { HelpCircle, ChevronDown, BookOpen, Headset, FileText } from 'lucide-react';
 import SEO from '@/components/SEO';
-import { useFAQs } from '@/hooks/useApi';
+import { useFAQs } from '@/hooks';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 

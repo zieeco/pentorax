@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Plus, Package, Loader2 } from 'lucide-react';
 import { ProductsTable } from '@/components/products/ProductsTable';
+import { ProductTableSkeleton } from '@/components/products/ProductTableSkeleton';
 import { ProductsFilters } from '@/components/products/ProductsFilters';
 import { ProductsPagination } from '@/components/products/ProductsPagination';
 import { useProductsPage } from '@/hooks/useProductsPage';
@@ -72,12 +73,7 @@ export default function ProductsPage() {
 
       {/* Loading State */}
       {isLoading ? (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <span className="ml-3 text-gray-600">Loading products...</span>
-          </div>
-        </div>
+        <ProductTableSkeleton />
       ) : products.length === 0 ? (
         /* Empty State */
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">

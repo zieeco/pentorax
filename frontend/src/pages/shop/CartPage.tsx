@@ -1,7 +1,7 @@
 /**
  * CartPage - Shopping cart view
  */
-import { useCart, useUpdateCartItem, useRemoveFromCart } from '@/hooks/useApi';
+import { useCart, useUpdateCartItem, useRemoveFromCart } from '@/hooks';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';

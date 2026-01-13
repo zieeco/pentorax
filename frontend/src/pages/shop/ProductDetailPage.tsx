@@ -2,7 +2,7 @@
  * ProductDetailPage - Single product view
  */
 import { useParams, useNavigate } from 'react-router-dom';
-import { useProduct, useAddToCart, useReviews } from '@/hooks/useApi';
+import { useProduct, useAddToCart, useReviews } from '@/hooks';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,7 +23,7 @@ export default function ProductDetailPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const { data: product, isLoading } = useProduct(slug!);
-  const { data: reviews = [] } = useReviews(product?.id);
+  const { data: reviews = [] } = useReviews(product?.id || '', { enabled: !!product?.id });
   const addToCart = useAddToCart();
 
   const handleAddToCart = () => {

@@ -3,7 +3,7 @@
  */
 import { ProductCard } from './ProductCard';
 import { Skeleton } from '../ui/skeleton';
-import type { Product } from '../../types';
+import type { Product } from '@/types/product';
 
 interface ProductGridProps {
   products: Product[];

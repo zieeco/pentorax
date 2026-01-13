@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, User, ArrowRight } from 'lucide-react';
-import { useBlogPosts, useBlogCategories } from '@/hooks/useApi';
+import { useBlogPosts, useBlogCategories } from '@/hooks';
 import SEO from '@/components/SEO';
 
 const BlogPage: React.FC = () => {

@@ -12,7 +12,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import SEO from '@/components/SEO';
-import { useCheckWarranty, useSubmitTicket } from '@/hooks/useApi';
+import { useCheckWarranty, useSubmitTicket } from '@/hooks';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const SupportPage: React.FC = () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Linkedin, ArrowLeft } from 'lucide-react';
 import SEO from '@/components/SEO';
-import { useTeam } from '@/hooks/useApi';
+import { useTeam } from '@/hooks';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 
@@ -11,11 +11,12 @@ interface TeamMember {
   name: string;
   role: string;
   department: string;
-  image_url: string;
-  bio: string;
-  linkedin_url?: string;
-  twitter_url?: string;
+  image: string;
+  bio?: string;
+  email?: string;
+  linkedin?: string;
   order: number;
+  is_active?: boolean;
 }
 
 const TeamPage: React.FC = () => {
@@ -45,104 +46,138 @@ const TeamPage: React.FC = () => {
       name: 'Dr. Sarah Chen',
       role: 'CEO & Founder',
       department: 'Leadership',
-      image_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
+      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
       bio: '15+ years in renewable energy. PhD in Electrical Engineering from MIT.',
-      linkedin_url: '#',
-      twitter_url: '',
-      order: 1
+      linkedin: '#',
+      email: 'sarah.chen@pentorax.com',
+      order: 1,
+      is_active: true
     },
     {
+      id: '2',
       name: 'Marcus Adebayo',
       role: 'Chief Technology Officer',
       department: 'Leadership',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
       bio: 'Former Tesla engineer. Expert in battery management systems.',
       email: 'marcus.adebayo@pentorax.com',
-      linkedin: '#'
+      linkedin: '#',
+      order: 2,
+      is_active: true
     },
     {
+      id: '3',
       name: 'Elena Rodriguez',
       role: 'Head of Operations',
       department: 'Leadership',
       image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80',
       bio: 'MBA from Harvard. 10 years scaling clean-tech companies.',
       email: 'elena.rodriguez@pentorax.com',
-      linkedin: '#'
+      linkedin: '#',
+      order: 3,
+      is_active: true
     },
     {
+      id: '4',
       name: 'Julian Smith',
       role: 'Principal Engineer',
       department: 'Leadership',
       image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80',
       bio: 'Led solar projects across 15 countries. Stanford graduate.',
       email: 'julian.smith@pentorax.com',
-      linkedin: '#'
+      linkedin: '#',
+      order: 4,
+      is_active: true
     },
     // Engineering Team
     {
+      id: '5',
       name: 'Amara Okafor',
       role: 'Senior Software Engineer',
       department: 'Engineering',
       image: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=400&q=80',
       bio: 'Full-stack developer specializing in IoT and real-time systems.',
-      email: 'amara.okafor@pentorax.com'
+      email: 'amara.okafor@pentorax.com',
+      order: 5,
+      is_active: true
     },
     {
+      id: '6',
       name: 'David Kim',
       role: 'Hardware Engineer',
       department: 'Engineering',
       image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80',
       bio: 'Designs and tests solar inverters and power electronics.',
-      email: 'david.kim@pentorax.com'
+      email: 'david.kim@pentorax.com',
+      order: 6,
+      is_active: true
     },
     {
+      id: '7',
       name: 'Fatima Hassan',
       role: 'Data Scientist',
       department: 'Engineering',
       image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=400&q=80',
       bio: 'AI/ML expert optimizing energy consumption patterns.',
-      email: 'fatima.hassan@pentorax.com'
+      email: 'fatima.hassan@pentorax.com',
+      order: 7,
+      is_active: true
     },
     {
+      id: '8',
       name: 'Chen Wei',
       role: 'Quality Assurance Lead',
       department: 'Engineering',
       image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80',
       bio: 'Ensures every system meets international safety standards.',
-      email: 'chen.wei@pentorax.com'
+      email: 'chen.wei@pentorax.com',
+      order: 8,
+      is_active: true
     },
     // Operations Team
     {
+      id: '9',
       name: 'Chioma Nwosu',
       role: 'Installation Manager',
       department: 'Operations',
       image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=400&q=80',
       bio: 'Coordinates field teams across Nigeria. 500+ installations.',
-      email: 'chioma.nwosu@pentorax.com'
+      email: 'chioma.nwosu@pentorax.com',
+      order: 9,
+      is_active: true
     },
     {
+      id: '10',
       name: 'Ahmed Ibrahim',
       role: 'Customer Success Lead',
       department: 'Operations',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
       bio: 'Ensures customer satisfaction and handles technical support.',
-      email: 'ahmed.ibrahim@pentorax.com'
+      email: 'ahmed.ibrahim@pentorax.com',
+      order: 10,
+      is_active: true
     },
     {
+      id: '11',
       name: 'Lisa Martinez',
       role: 'Supply Chain Director',
       department: 'Operations',
       image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80',
       bio: 'Manages global supplier relationships and logistics.',
-      email: 'lisa.martinez@pentorax.com'
+      email: 'lisa.martinez@pentorax.com',
+      order: 11,
+      is_active: true
     },
     {
+      id: '12',
       name: 'Yusuf Musa',
       role: 'Field Technician Lead',
       department: 'Operations',
       image: 'https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=crop&w=400&q=80',
       bio: 'Trains and leads installation crews nationwide.',
-      email: 'yusuf.musa@pentorax.com'
+      email: 'yusuf.musa@pentorax.com',
+      order: 12,
+      is_active: true
     },
   ];
 
@@ -196,15 +231,15 @@ const TeamPage: React.FC = () => {
                     >
                       <div className="h-72 overflow-hidden relative">
                         <img 
-                          src={member.image_url} 
+                          src={member.image} 
                           alt={member.name} 
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                           <div className="flex gap-3">
-                            {member.linkedin_url && (
+                            {member.linkedin && (
                               <a 
-                                href={member.linkedin_url}
+                                href={member.linkedin}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="p-2 bg-white/90 rounded-lg hover:bg-white transition-colors"

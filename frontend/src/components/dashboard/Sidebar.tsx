@@ -42,6 +42,16 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     return item.roles.includes('customer');
   });
 
+  // Helper function to check if a route is active (including nested routes)
+  const isRouteActive = (path: string) => {
+    // Exact match for dashboard home
+    if (path === '/dashboard') {
+      return location.pathname === '/dashboard';
+    }
+    // For other routes, check if current path starts with the nav item path
+    return location.pathname.startsWith(path);
+  };
+
   if (collapsed) {
     return (
       <aside className="w-20 bg-gray-900 text-white flex flex-col shrink-0">
@@ -56,7 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         <nav className="flex-1 px-2 space-y-2 mt-4">
           {filteredNavItems.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname === item.path;
+            const isActive = isRouteActive(item.path);
 
             return (
               <Link
@@ -80,7 +90,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         <div className="p-2 mt-auto space-y-2">
           <Link
             to="/dashboard/settings"
-            className="flex items-center justify-center p-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all"
+            className={cn(
+              'flex items-center justify-center p-3 rounded-xl transition-all',
+              isRouteActive('/dashboard/settings')
+                ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                : 'text-gray-400 hover:bg-white/5 hover:text-white'
+            )}
             title="Settings"
           >
             <Settings className="h-5 w-5" />
@@ -118,7 +133,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       <nav className="flex-1 px-4 space-y-2 mt-4">
         {filteredNavItems.map((item) => {
           const Icon = item.icon;
-          const isActive = location.pathname === item.path;
+          const isActive = isRouteActive(item.path);
 
           return (
             <Link
@@ -142,7 +157,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       <div className="p-4 mt-auto space-y-2">
         <Link
           to="/dashboard/settings"
-          className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all"
+          className={cn(
+            'w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all',
+            isRouteActive('/dashboard/settings')
+              ? 'bg-primary text-white shadow-lg shadow-primary/20'
+              : 'text-gray-400 hover:bg-white/5 hover:text-white'
+          )}
         >
           <Settings className="h-5 w-5" />
           <span className="font-bold">Settings</span>

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, MessageSquare, Clock, CheckCircle } from 'lucide-react';
-import { useSubmitContact } from '@/hooks/useApi';
+import { Mail, Phone, MapPin, Send, Clock, CheckCircle } from 'lucide-react';
+import { useSubmitContact } from '@/hooks';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const ContactPage: React.FC = () => {

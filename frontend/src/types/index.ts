@@ -2,7 +2,15 @@
  * TypeScript types for Pentorax
  */
 
+// Import Category from product.ts to avoid duplicate definitions
+import type { Category } from './product';
+export type { Category } from './product';
+
 export interface Product {
+  category_id: string;
+  sku: string;
+  stock_quantity: number;
+  low_stock_threshold: number;
   id: string;
   name: string;
   slug: string;
@@ -19,16 +27,6 @@ export interface Product {
   specifications: ProductSpecification[];
   created_at: string;
   updated_at: string;
-}
-
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  image: string;
-  parent?: string;
-  children: Category[];
 }
 
 export interface ProductImage {

@@ -6,9 +6,9 @@ import { ShoppingCart } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardFooter } from '../ui/card';
 import { Badge } from '../ui/badge';
-import { useAddToCart } from '../../hooks/useApi';
+import { useAddToCart } from '@/hooks';
 import { toast } from 'sonner';
-import type { Product } from '../../types';
+import type { Product } from '@/types/product';
 
 // Helper to format price (API returns string)
 const formatPrice = (price: string | number) => {

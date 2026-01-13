@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Target, Users, Zap, ShieldCheck, Award } from 'lucide-react';
 import SEO from '@/components/SEO';
-import { useTeam } from '@/hooks/useApi';
+import { useTeam } from '@/hooks';
 
 const AboutPage: React.FC = () => {
   const { data: allTeamMembers = [] } = useTeam();
