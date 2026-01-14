@@ -1,6 +1,11 @@
+"""
+Product reviews models
+"""
+
 import uuid
 
 from django.db import models
+from .models_votes import ReviewVote
 
 
 class TimeStampedModel(models.Model):
@@ -25,11 +30,14 @@ class Review(TimeStampedModel):
         related_name="reviews",
         db_column="product_id",
     )
-    rating = models.SmallIntegerField()
+    rating = models.IntegerField()
     comment = models.TextField()
+    images = models.JSONField(default=list, blank=True)  # List of image URLs
     is_verified_purchase = models.BooleanField(default=False)
+    helpful_count = models.IntegerField(default=0)
+    not_helpful_count = models.IntegerField(default=0)
 
-    class Meta:
+    class Meta(TimeStampedModel.Meta):
         db_table = "reviews_review"
         verbose_name = "Review"
         verbose_name_plural = "Reviews"

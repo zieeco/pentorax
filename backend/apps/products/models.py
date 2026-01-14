@@ -6,6 +6,15 @@ import uuid
 
 from django.db import models
 
+# Import Q&A models
+from .models_qa import ProductQuestion, ProductAnswer, AnswerVote
+# Import video model
+from .models_video import ProductVideo
+# Import comparison model
+from .models_comparison import ProductComparison
+# Import chat models
+from .models_chat import ChatMessage, ChatSession
+
 
 class TimeStampedModel(models.Model):
     """Abstract base model with timestamps"""
@@ -203,3 +212,39 @@ class WishlistItem(TimeStampedModel):
         
     def __str__(self):
         return f"WishlistItem {self.id}"
+
+
+class StockNotification(TimeStampedModel):
+    """Stock notification requests for out-of-stock products"""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='stock_notifications',
+        db_column='product_id'
+    )
+    email = models.EmailField(max_length=255, db_index=True)
+    user_id = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    is_notified = models.BooleanField(default=False)
+    notified_at = models.DateTimeField(null=True, blank=True)
+    
+    # Admin management fields
+    is_read = models.BooleanField(default=False, db_index=True)
+    is_archived = models.BooleanField(default=False, db_index=True)
+    admin_notes = models.TextField(blank=True, default='')
+    
+    class Meta(TimeStampedModel.Meta):
+        db_table = 'stock_notifications'
+        verbose_name = 'Stock Notification'
+        verbose_name_plural = 'Stock Notifications'
+        ordering = ['-created_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['product', 'email'],
+                name='unique_product_email_notification'
+            )
+        ]
+        
+    def __str__(self):
+        return f"Stock notification for {self.email} - {self.product.name}"

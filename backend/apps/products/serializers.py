@@ -4,7 +4,8 @@ Serializers for products app
 
 from rest_framework import serializers
 
-from .models import Category, Product, ProductImage, ProductSpecification, Wishlist, WishlistItem
+from .models import Category, Product, ProductImage, ProductSpecification, Wishlist, WishlistItem, StockNotification
+from .models_qa import ProductQuestion, ProductAnswer, AnswerVote
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
@@ -297,3 +298,95 @@ class WishlistSerializer(serializers.ModelSerializer):
         model = Wishlist
         fields = ['id', 'items', 'items_count', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
+
+
+class StockNotificationSerializer(serializers.ModelSerializer):
+    """Serializer for stock notification requests"""
+    
+    product_id = serializers.UUIDField(write_only=True)
+    product_name = serializers.CharField(source='product.name', read_only=True)
+    product_slug = serializers.CharField(source='product.slug', read_only=True)
+    product_image = serializers.URLField(source='product.featured_image', read_only=True)
+    product_in_stock = serializers.BooleanField(source='product.in_stock', read_only=True)
+    
+    class Meta:
+        model = StockNotification
+        fields = [
+            'id', 'product_id', 'product_name', 'product_slug', 'product_image', 'product_in_stock',
+            'email', 'user_id', 'is_notified', 'notified_at',
+            'is_read', 'is_archived', 'admin_notes',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'user_id', 'is_notified', 'notified_at', 'created_at', 'updated_at']
+        
+    def validate_product_id(self, value):
+        """Ensure product exists"""
+        if not Product.objects.filter(pk=value).exists():
+            raise serializers.ValidationError("Product does not exist")
+        return value
+    
+    def validate_email(self, value):
+        """Validate email format"""
+        if not value or '@' not in value:
+            raise serializers.ValidationError("Valid email is required")
+        return value.lower()
+
+
+class CustomEmailSerializer(serializers.Serializer):
+    """Serializer for sending custom emails to subscribers"""
+    subject = serializers.CharField(max_length=255)
+    message = serializers.CharField()
+    
+    def validate_subject(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("Subject is required")
+        return value
+    
+    def validate_message(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("Message is required")
+        return value
+
+
+class ProductAnswerSerializer(serializers.ModelSerializer):
+    """Serializer for product answers"""
+    
+    question_id = serializers.UUIDField(write_only=True)
+    has_voted = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = ProductAnswer
+        fields = [
+            'id', 'question_id', 'user_name', 'answer', 'is_official',
+            'is_best_answer', 'helpful_count', 'has_voted', 'created_at'
+        ]
+        read_only_fields = ['id', 'is_official', 'helpful_count', 'created_at']
+        
+    def get_has_voted(self, obj):
+        """Check if current user has voted on this answer"""
+        request = self.context.get('request')
+        if not request or not hasattr(request, 'user'):
+            return False
+        
+        if isinstance(request.user, dict):
+            user_email = request.user.get('email', '')
+        else:
+            return False
+            
+        return AnswerVote.objects.filter(answer=obj, user_email=user_email).exists()
+
+
+class ProductQuestionSerializer(serializers.ModelSerializer):
+    """Serializer for product questions with nested answers"""
+    
+    product_id = serializers.UUIDField(write_only=True)
+    answers = ProductAnswerSerializer(many=True, read_only=True)
+    answers_count = serializers.ReadOnlyField()
+    
+    class Meta:
+        model = ProductQuestion
+        fields = [
+            'id', 'product_id', 'user_name', 'question',
+            'answers', 'answers_count', 'created_at'
+        ]
+        read_only_fields = ['id', 'created_at']

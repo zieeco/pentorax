@@ -161,4 +161,113 @@ Refined Description:"""
         import traceback
         traceback.print_exc()
         raise Exception(f"Failed to refine description: {str(e)}")
+
+
+def generate_notification_email(
+    product_name: str,
+    customer_email: str,
+    product_in_stock: bool,
+    is_bulk: bool = False,
+    product_names_list: list = None
+) -> dict:
+    """
+    Generate personalized email content for stock notification using Gemini AI.
+    
+    Args:
+        product_name: Name of the product
+        customer_email: Customer's email address
+        product_in_stock: Whether product is currently in stock
+        is_bulk: Whether this is for bulk email (multiple recipients)
+        product_names_list: List of product names for bulk emails
         
+    Returns:
+        dict: {'subject': str, 'message': str}
+    """
+    if not client:
+        raise ValueError("Gemini API key not configured")
+    
+    try:
+        if is_bulk and product_names_list:
+            # Bulk email prompt
+            products_text = ", ".join(product_names_list) if len(product_names_list) <= 3 else f"{len(product_names_list)} products"
+            prompt = f"""You are a professional customer service representative for Pentorax Solar Energy Solutions, a Nigerian company providing sustainable solar energy products.
+
+Generate a professional and friendly email to multiple customers who have subscribed to stock notifications.
+
+Context:
+- Products: {products_text}
+- This is a bulk email to multiple subscribers
+- Company: Pentorax Solar Energy Solutions
+
+Requirements:
+1. Create a compelling subject line (max 60 characters)
+2. Write a professional email body that:
+   - Greets customers warmly
+   - Provides updates about the products they're interested in
+   - Maintains a professional yet friendly tone
+   - Includes a call-to-action if appropriate
+   - Thanks them for their interest
+   - Keeps it concise (2-3 short paragraphs)
+3. Sign off professionally
+
+Return ONLY valid JSON in this exact format:
+{{"subject": "Your subject line", "message": "Your email body text"}}
+
+No additional text, explanations, or markdown formatting."""
+        else:
+            # Single email prompt
+            stock_status = "back in stock and available" if product_in_stock else "currently out of stock"
+            prompt = f"""You are a professional customer service representative for Pentorax Solar Energy Solutions, a Nigerian company providing sustainable solar energy products.
+
+Generate a personalized email for a customer who subscribed to stock notifications.
+
+Context:
+- Product: {product_name}
+- Stock Status: {stock_status}
+- Customer Email: {customer_email}
+- Company: Pentorax Solar Energy Solutions
+
+Requirements:
+1. Create a compelling subject line (max 60 characters)
+2. Write a professional email body that:
+   - Addresses the customer personally
+   - {'Informs them the product is back in stock with urgency' if product_in_stock else 'Provides an update about the product availability'}
+   - Maintains a professional yet friendly tone
+   - Includes product name naturally in the message
+   - Thanks them for their patience/interest
+   - Keeps it concise (2-3 short paragraphs)
+3. Sign off professionally
+
+Return ONLY valid JSON in this exact format:
+{{"subject": "Your subject line", "message": "Your email body text"}}
+
+No additional text, explanations, or markdown formatting."""
+
+        # Generate email using Gemini
+        result = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt
+        )
+        
+        if not result or not result.text:
+            raise ValueError("Empty response from Gemini")
+        
+        response_text = result.text.strip()
+        
+        # Extract JSON from response
+        json_match = re.search(r'\{[\s\S]*\}', response_text)
+        if not json_match:
+            raise ValueError("No JSON found in AI response")
+        
+        email_content = json.loads(json_match.group(0))
+        
+        # Validate response structure
+        if 'subject' not in email_content or 'message' not in email_content:
+            raise ValueError("Invalid email content structure from AI")
+        
+        return email_content
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise Exception(f"Failed to generate email: {str(e)}")
