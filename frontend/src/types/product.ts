@@ -4,14 +4,14 @@
  */
 
 export interface ProductImage {
-  id: string;
+  id?: string;  // Optional for new images
   image_url: string;
   alt_text: string;
   position: number;
 }
 
 export interface ProductSpecification {
-  id: string;
+  id?: string;  // Optional for new specifications
   key: string;
   value: string;
   position: number;

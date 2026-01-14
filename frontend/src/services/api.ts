@@ -83,6 +83,19 @@ export const productsApi = {
 
   bulkDeactivate: (ids: string[]) => 
     apiClient.post('/products/bulk_deactivate/', { ids }),
+  
+  // AI-powered specification generation
+  generateSpecifications: (data: {
+    image_url: string;
+    product_name?: string;
+    product_description?: string;
+  }) => apiClient.post('/products/generate_specifications/', data),
+  
+  // AI-powered description refinement
+  refineDescription: (data: {
+    description: string;
+    product_name?: string;
+  }) => apiClient.post('/products/refine_description/', data),
 };
 
 // ===========================
