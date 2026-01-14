@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Target, Users, Zap, ShieldCheck, Award } from 'lucide-react';
+import { Target, Zap, ShieldCheck } from 'lucide-react';
 
 const AboutUs: React.FC = () => {
   return (
