@@ -24,11 +24,18 @@ class SupabaseUser:
         self.is_authenticated = True
         self.is_anonymous = False
         self.user_metadata = user_data.get('user_metadata', {})
+        self.app_metadata = user_data.get('app_metadata', {})
     
     @property
     def is_staff(self):
-        """Check if user has staff/admin role from Supabase user_metadata"""
-        role = self.user_metadata.get('role', 'customer')
+        """Check if user has staff/admin role from Supabase metadata"""
+        # Primary: Check app_metadata (set by JWT hook)
+        role = self.app_metadata.get('role')
+        
+        # Fallback: Check user_metadata
+        if not role:
+            role = self.user_metadata.get('role', 'customer')
+        
         return role in ('staff', 'admin')
     
     def __str__(self):

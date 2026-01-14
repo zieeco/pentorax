@@ -169,6 +169,12 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
     """Serializer for creating and updating products (Admin/Staff only)"""
     images = ProductImageSerializer(many=True, required=False)
     specifications = ProductSpecificationSerializer(many=True, required=False)
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(),
+        source='category',
+        required=False,
+        allow_null=True
+    )
 
     class Meta:
         model = Product

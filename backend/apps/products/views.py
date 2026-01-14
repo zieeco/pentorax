@@ -288,7 +288,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         Accepts: {"ids": ["id1", "id2", ...]}
         Returns: {"updated": count}
         """
-        if not request.user.is_authenticated or not getattr(request.user, 'is_staff', False):
+        if not request.user.is_authenticated or not getattr(self.request.user, 'is_staff', False):
             return Response(
                 {"error": "Staff authentication required"},
                 status=status.HTTP_401_UNAUTHORIZED
@@ -307,4 +307,99 @@ class ProductViewSet(viewsets.ModelViewSet):
             "updated": updated,
             "message": f"Deactivated {updated} products"
         })
-
+    
+    @action(detail=False, methods=["post"])
+    def generate_specifications(self, request):
+        """
+        AI-powered specification generation from product image
+        POST /api/products/generate_specifications/
+       
+        Body:
+        {
+            "image_url": "https://...",
+            "product_name": "Optional product name",
+            "product_description": "Optional description"
+        }
+        """
+        from .ai_service import generate_specifications_from_image, is_ai_available
+        
+        if not is_ai_available():
+            return Response(
+                {"error": "AI features are not available. Please configure GEMINI_API_KEY."},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE
+            )
+        
+        image_url = request.data.get('image_url')
+        if not image_url:
+            return Response(
+                {"error": "image_url is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        product_name = request.data.get('product_name', '')
+        product_description = request.data.get('product_description', '')
+        
+        try:
+            specifications = generate_specifications_from_image(
+                image_url=image_url,
+                product_name=product_name,
+                product_description=product_description
+            )
+            
+            return Response({
+                "success": True,
+                "specifications": specifications,
+                "count": len(specifications)
+            })
+            
+        except Exception as e:
+            return Response(
+                {"error": f"Failed to generate specifications: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
+    @action(detail=False, methods=["post"])
+    def refine_description(self, request):
+        """
+        AI-powered description refinement
+        POST /api/products/refine_description/
+       
+        Body:
+        {
+            "description": "Original description text",
+            "product_name": "Optional product name"
+        }
+        """
+        from .ai_service import refine_product_description, is_ai_available
+        
+        if not is_ai_available():
+            return Response(
+                {"error": "AI features are not available. Please configure GEMINI_API_KEY."},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE
+            )
+        
+        description = request.data.get('description')
+        if not description:
+            return Response(
+                {"error": "description is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        product_name = request.data.get('product_name', '')
+        
+        try:
+            refined_description = refine_product_description(
+                description=description,
+                product_name=product_name
+            )
+            
+            return Response({
+                "success": True,
+                "refined_description": refined_description
+            })
+            
+        except Exception as e:
+            return Response(
+                {"error": f"Failed to refine description: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
