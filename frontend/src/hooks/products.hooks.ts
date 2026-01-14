@@ -103,6 +103,27 @@ export function useFeaturedProducts(
 }
 
 /**
+ * Fetch related products based on category
+ */
+export function useRelatedProducts(
+  currentProductId: string,
+  categoryId: string,
+  params?: { limit?: number },
+  options?: Omit<UseQueryOptions<Product[]>, 'queryKey' | 'queryFn'>
+) {
+  return useQuery({
+    queryKey: QUERY_KEYS.products.related(currentProductId, categoryId),
+    queryFn: async () => {
+      const response = await productsApi.related(categoryId, currentProductId, params);
+      return normalizeListResponse<Product>(response.data);
+    },
+    enabled: !!currentProductId && !!categoryId,
+    ...defaultQueryOptions,
+    ...options,
+  });
+}
+
+/**
  * Fetch product categories
  */
 export function useCategories(

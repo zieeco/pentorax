@@ -27,6 +27,7 @@ export const QUERY_KEYS = {
     paginated: (params: Record<string, any>) => [...QUERY_KEYS.products.all, 'paginated', params] as const,
     detail: (slug: string) => [...QUERY_KEYS.products.all, 'detail', slug] as const,
     featured: () => [...QUERY_KEYS.products.all, 'featured'] as const,
+    related: (productId: string, categoryId: string) => [...QUERY_KEYS.products.all, 'related', productId, categoryId] as const,
   },
   categories: {
     all: ['categories'] as const,

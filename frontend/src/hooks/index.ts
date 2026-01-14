@@ -21,6 +21,7 @@ export {
   useProductsPaginated,
   useProduct,
   useFeaturedProducts,
+  useRelatedProducts,
   useCategories,
   useCreateProduct,
   useUpdateProduct,
