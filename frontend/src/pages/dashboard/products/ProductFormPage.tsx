@@ -22,9 +22,15 @@ import { ProductBasicInfoSection } from '@/components/products/form/ProductBasic
 import { ProductPricingSection } from '@/components/products/form/ProductPricingSection';
 import { ProductCategorizationSection } from '@/components/products/form/ProductCategorizationSection';
 import { ProductVisualsSection } from '@/components/products/form/ProductVisualsSection';
+import { ProductImagesButton } from '@/components/products/form/ProductImagesButton';
+import { ProductSpecificationsButton } from '@/components/products/form/ProductSpecificationsButton';
+import { ProductImagesModal } from '@/components/products/form/ProductImagesModal';
+import { ProductSpecificationsModal } from '@/components/products/form/ProductSpecificationsModal';
+import { AISuggestionsAlert } from '@/components/products/form/AISuggestionsAlert';
 import { ProductDeleteButton } from '@/components/products/form/ProductDeleteButton';
-import type { ProductFormData } from '@/types/product';
+import type { ProductFormData, ProductImage, ProductSpecification } from '@/types/product';
 import { generateSlug, validateImageFile } from '@/utils/product-utils';
+import { productsApi } from '@/services/api';
 
 export default function ProductFormPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -46,6 +52,17 @@ export default function ProductFormPage() {
   // Form state
   const [imagePreview, setImagePreview] = useState<string>('');
   const [isUploading, setIsUploading] = useState(false);
+  const [productImages, setProductImages] = useState<ProductImage[]>([]);
+  const [specifications, setSpecifications] = useState<ProductSpecification[]>([]);
+  
+  // Modal state
+  const [isImagesModalOpen, setIsImagesModalOpen] = useState(false);
+  const [isSpecsModalOpen, setIsSpecsModalOpen] = useState(false);
+  
+  // AI Suggestions state
+  const [aiSuggestions, setAiSuggestions] = useState<ProductSpecification[]>([]);
+  const [isAiLoading, setIsAiLoading] = useState(false);
+  const [showAiSuggestions, setShowAiSuggestions] = useState(false);
 
   // Form setup
   const {
@@ -53,6 +70,7 @@ export default function ProductFormPage() {
     handleSubmit,
     watch,
     setValue,
+    control,
     reset,
     formState: { errors, isDirty },
   } = useForm<ProductFormData>({
@@ -98,6 +116,14 @@ export default function ProductFormPage() {
       if (product.featured_image) {
         setImagePreview(product.featured_image);
       }
+      
+      // Load images and specifications
+      if (product.images) {
+        setProductImages(product.images);
+      }
+      if (product.specifications) {
+        setSpecifications(product.specifications);
+      }
     }
   }, [product, isEditMode, reset]);
 
@@ -124,6 +150,17 @@ export default function ProductFormPage() {
         sku: data.sku || undefined,
         stock_quantity: data.stock_quantity ? parseInt(data.stock_quantity) : undefined,
         low_stock_threshold: data.low_stock_threshold ? parseInt(data.low_stock_threshold) : undefined,
+        // Include images and specifications
+        images: productImages.length > 0 ? productImages.map((img, index) => ({
+          image_url: img.image_url,
+          alt_text: img.alt_text || '',
+          position: index,
+        })) : undefined,
+        specifications: specifications.length > 0 ? specifications.map((spec, index) => ({
+          key: spec.key,
+          value: spec.value,
+          position: index,
+        })) : undefined,
       };
 
       if (isEditMode && slug) {
@@ -156,7 +193,7 @@ export default function ProductFormPage() {
     }
   };
 
-  // Image upload handler
+  // Image upload handler (for featured image)
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -176,11 +213,73 @@ export default function ProductFormPage() {
       setValue('featured_image', imageUrl, { shouldDirty: true });
       setImagePreview(imageUrl);
       toast.success('Image uploaded successfully');
+      
+      // Trigger AI specification generation
+      await generateAISpecifications(imageUrl);
     } catch (error: any) {
       toast.error(error?.response?.data?.error || 'Failed to upload image');
     } finally {
       setIsUploading(false);
     }
+  };
+
+  // Generate AI specifications from image
+  const generateAISpecifications = async (imageUrl: string) => {
+    console.log('🤖 AI: Starting specification generation for:', imageUrl);
+    try {
+      setIsAiLoading(true);
+      setShowAiSuggestions(false);
+      
+      console.log('🤖 AI: Calling backend API...');
+      const response = await productsApi.generateSpecifications({
+        image_url: imageUrl,
+        product_name: watchedValues.name || '',
+        product_description: watchedValues.description || '',
+      });
+      
+      console.log('🤖 AI: Response received:', response.data);
+      
+      if (response.data.specifications && response.data.specifications.length > 0) {
+        console.log('🤖 AI: Found', response.data.specifications.length, 'specifications');
+        setAiSuggestions(response.data.specifications);
+        setShowAiSuggestions(true);
+      } else {
+        console.log('🤖 AI: No specifications returned');
+      }
+    } catch (error: any) {
+      console.error('🤖 AI: Generation failed:', error);
+      console.error('🤖 AI: Error response:', error?.response?.data);
+      // Silently fail - don't interrupt the user's workflow
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
+
+  // Handle AI suggestions accept
+  const handleAcceptAISuggestions = (specs: ProductSpecification[]) => {
+    setSpecifications(specs);
+    setShowAiSuggestions(false);
+    setAiSuggestions([]);
+    toast.success(`Added ${specs.length} specifications from AI suggestions`);
+  };
+
+  // Handle AI suggestions reject
+  const handleRejectAISuggestions = () => {
+    setShowAiSuggestions(false);
+    setAiSuggestions([]);
+    toast.info('AI suggestions rejected');
+  };
+
+  // Product images upload handler (for ProductImagesSection)
+  const handleProductImageUpload = async (file: File): Promise<string> => {
+    // Validate image
+    const validation = validateImageFile(file);
+    if (!validation.isValid) {
+      throw new Error(validation.error);
+    }
+
+    const response = await uploadImage.mutateAsync(file);
+    return response.data.url;
   };
 
   const isSubmitting = createProduct.isPending || updateProduct.isPending;
@@ -214,6 +313,26 @@ export default function ProductFormPage() {
             errors={errors}
           />
 
+          <ProductImagesButton
+            imageCount={productImages.length}
+            onClick={() => setIsImagesModalOpen(true)}
+          />
+
+          {/* AI Suggestions Alert */}
+          {(showAiSuggestions || isAiLoading) && (
+            <AISuggestionsAlert
+              specifications={aiSuggestions}
+              isLoading={isAiLoading}
+              onAccept={handleAcceptAISuggestions}
+              onReject={handleRejectAISuggestions}
+            />
+          )}
+
+          <ProductSpecificationsButton
+            specCount={specifications.length}
+            onClick={() => setIsSpecsModalOpen(true)}
+          />
+
           {/* Delete Button */}
           {isEditMode && (
             <ProductDeleteButton
@@ -228,16 +347,17 @@ export default function ProductFormPage() {
         <div className="space-y-6">
           <ProductBasicInfoSection
             register={register}
+            setValue={setValue}
+            watch={watch}
             errors={errors}
             isEditMode={isEditMode}
           />
 
           <ProductPricingSection
             register={register}
-            setValue={setValue}
+            control={control}
             errors={errors}
             categories={categories}
-            categoryId={watchedValues.category_id}
           />
         </div>
 
@@ -258,6 +378,23 @@ export default function ProductFormPage() {
           />
         </div>
       </form>
+
+      {/* Modals */}
+      <ProductImagesModal
+        isOpen={isImagesModalOpen}
+        onClose={() => setIsImagesModalOpen(false)}
+        images={productImages}
+        onImagesChange={setProductImages}
+        onImageUpload={handleProductImageUpload}
+        isUploading={uploadImage.isPending}
+      />
+
+      <ProductSpecificationsModal
+        isOpen={isSpecsModalOpen}
+        onClose={() => setIsSpecsModalOpen(false)}
+        specifications={specifications}
+        onSpecificationsChange={setSpecifications}
+      />
     </div>
   );
 }
