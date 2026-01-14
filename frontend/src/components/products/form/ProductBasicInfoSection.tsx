@@ -5,21 +5,55 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Package, Sparkles } from 'lucide-react';
-import type { UseFormRegister, FieldErrors } from 'react-hook-form';
-import type { ProductFormData } from '@/types/product';
+import { Package, Sparkles, Loader2 } from 'lucide-react';
+import type { UseFormRegister, UseFormSetValue, UseFormWatch, FieldErrors } from 'react-hook-form';
+import type { ProductFormData } from '@/types/product';  
+import { productsApi } from '@/services/api';
+import { toast } from 'sonner';
+import { useState } from 'react';
 
 interface ProductBasicInfoSectionProps {
   register: UseFormRegister<ProductFormData>;
+  setValue: UseFormSetValue<ProductFormData>;
+  watch: UseFormWatch<ProductFormData>;
   errors: FieldErrors<ProductFormData>;
   isEditMode: boolean;
 }
 
 export function ProductBasicInfoSection({
   register,
+  setValue,
+  watch,
   errors,
   isEditMode,
 }: ProductBasicInfoSectionProps) {
+  const [isRefining, setIsRefining] = useState(false);
+  
+  const handleAIRefine = async () => {
+    const description = watch('description');
+    const productName = watch('name');
+    
+    if (!description) {
+      toast.error('Please enter a description first');
+      return;
+    }
+    
+    setIsRefining(true);
+    try {
+      const response = await productsApi.refineDescription({
+        description,
+        product_name: productName || '',
+      });
+      
+      setValue('description', response.data.refined_description, { shouldDirty: true });
+      toast.success('Description refined by AI!');
+    } catch (error: any) {
+      console.error('AI refinement failed:', error);
+      toast.error(error?.response?.data?.error || 'Failed to refine description');
+    } finally {
+      setIsRefining(false);
+    }
+  };
   return (
     <Card className="border-gray-100 shadow-sm">
       <CardHeader className="p-4">
@@ -76,10 +110,16 @@ export function ProductBasicInfoSection({
             </Label>
             <button
               type="button"
-              className="text-[10px] font-black uppercase text-primary flex items-center space-x-1 hover:underline"
+              onClick={handleAIRefine}
+              disabled={isRefining}
+              className="text-[10px] font-black uppercase text-primary flex items-center space-x-1 hover:underline disabled:opacity-50"
             >
-              <Sparkles className="h-3 w-3" />
-              <span>AI Refine</span>
+              {isRefining ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <Sparkles className="h-3 w-3" />
+              )}
+              <span>{isRefining ? 'Refining...' : 'AI Refine'}</span>
             </button>
           </div>
           <Textarea

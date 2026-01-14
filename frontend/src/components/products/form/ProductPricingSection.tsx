@@ -12,24 +12,23 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Zap } from 'lucide-react';
-import type { UseFormRegister, UseFormSetValue, FieldErrors } from 'react-hook-form';
+import type { UseFormRegister, FieldErrors, Control } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import type { ProductFormData } from '@/types/product';
 import type { Category } from '@/types/product';
 
 interface ProductPricingSectionProps {
   register: UseFormRegister<ProductFormData>;
-  categoryId: string;
-  setValue: UseFormSetValue<ProductFormData>;
+  control: Control<ProductFormData>;
   errors: FieldErrors<ProductFormData>;
   categories: Category[];
 }
 
 export function ProductPricingSection({
   register,
-  setValue,
+  control,
   errors,
   categories,
-  categoryId,
 }: ProductPricingSectionProps) {
   return (
     <Card className="border-gray-100 shadow-sm">
@@ -75,23 +74,30 @@ export function ProductPricingSection({
           
           <div className="space-y-1.5">
             <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
-              Category
+              Category *
             </Label>
-            <Select
-              value={categoryId}
-              onValueChange={(value) => setValue('category_id', value, { shouldDirty: true })}
-            >
-              <SelectTrigger className="px-5 py-4 bg-gray-50 border-transparent focus:bg-white focus:border-primary shadow-sm">
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Controller
+              name="category_id"
+              control={control}
+              rules={{ required: 'Category is required' }}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="px-5 py-4 bg-gray-50 border-transparent focus:bg-white focus:border-primary shadow-sm">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.category_id && (
+              <p className="text-sm text-red-500 mt-1">{errors.category_id.message}</p>
+            )}
           </div>
         </div>
       </CardContent>
