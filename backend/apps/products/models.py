@@ -62,9 +62,11 @@ class Product(TimeStampedModel):
     meta_description = models.CharField(max_length=500, blank=True, null=True, default="")
     category = models.ForeignKey(
         Category,
-        on_delete=models.RESTRICT,
+        on_delete=models.SET_NULL,
         related_name="products",
         db_column="category_id",
+        null=True,
+        blank=True,
     )
     
     # Inventory management fields
@@ -147,3 +149,57 @@ class ProductSpecification(TimeStampedModel):
 
     def __str__(self):
         return f"{self.key}: {self.value}"
+
+
+class Wishlist(TimeStampedModel):
+    """User's wishlist - one per user"""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_id = models.CharField(max_length=255, unique=True, db_index=True)
+    
+    class Meta(TimeStampedModel.Meta):
+        db_table = 'wishlists'
+        verbose_name = 'Wishlist'
+        verbose_name_plural = 'Wishlists'
+        ordering = ['-updated_at']
+        
+    def __str__(self):
+        return f"Wishlist for user {self.user_id}"
+    
+    @property
+    def items_count(self):
+        return self.items.count()
+
+
+class WishlistItem(TimeStampedModel):
+    """Individual items in a wishlist"""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    wishlist = models.ForeignKey(
+        Wishlist,
+        on_delete=models.CASCADE,
+        related_name='items',
+        db_column='wishlist_id'
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='wishlist_items',
+        db_column='product_id'
+    )
+    notes = models.TextField(blank=True, default='')
+    
+    class Meta(TimeStampedModel.Meta):
+        db_table = 'wishlist_items'
+        verbose_name = 'Wishlist Item'
+        verbose_name_plural = 'Wishlist Items'
+        ordering = ['-created_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['wishlist', 'product'], 
+                name='unique_wishlist_product'
+            )
+        ]
+        
+    def __str__(self):
+        return f"WishlistItem {self.id}"

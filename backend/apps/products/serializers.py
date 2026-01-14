@@ -4,7 +4,7 @@ Serializers for products app
 
 from rest_framework import serializers
 
-from .models import Category, Product, ProductImage, ProductSpecification
+from .models import Category, Product, ProductImage, ProductSpecification, Wishlist, WishlistItem
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
@@ -267,3 +267,33 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
                     "compare_at_price": "Compare at price must be greater than the regular price."
                 })
         return data
+
+
+class WishlistItemSerializer(serializers.ModelSerializer):
+    """Serializer for wishlist items with product details"""
+    
+    product = ProductListSerializer(read_only=True)
+    product_id = serializers.UUIDField(write_only=True)
+    
+    class Meta:
+        model = WishlistItem
+        fields = ['id', 'product', 'product_id', 'notes', 'created_at']
+        read_only_fields = ['id', 'created_at']
+        
+    def validate_product_id(self, value):
+        """Ensure product exists"""
+        if not Product.objects.filter(pk=value).exists():
+            raise serializers.ValidationError("Product does not exist")
+        return value
+
+
+class WishlistSerializer(serializers.ModelSerializer):
+    """Serializer for user wishlist"""
+    
+    items = WishlistItemSerializer(many=True, read_only=True)
+    items_count = serializers.IntegerField(read_only=True)
+    
+    class Meta:
+        model = Wishlist
+        fields = ['id', 'items', 'items_count', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']
