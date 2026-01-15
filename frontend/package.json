@@ -94,6 +94,7 @@
     "embla-carousel-react": "^8.2.1",
     "firebase": "10.8.0",
     "framer-motion": "^12.23.6",
+    "input-otp": "^1.4.2",
     "lucide-react": "^0.473.0",
     "next-themes": "^0.3.0",
     "prettier-plugin-tailwindcss": "^0.6.10",
