@@ -54,6 +54,7 @@ import AuthConfirmationPage from '@/pages/auth/AuthConfirmationPage';
 // Dashboard
 import DashboardPage from '@/pages/dashboard/DashboardPage';
 import { ProductsPage as AdminProductsPage, ProductFormPage } from '@/pages/dashboard/products';
+import NotificationsPage from '@/pages/dashboard/notifications/NotificationsPage';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -131,6 +132,16 @@ const App: React.FC = () => {
                 element={
                   <ProtectedRoute requireStaff>
                     <ProductFormPage />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Stock Notifications (Admin/Staff) */}
+              <Route 
+                path="notifications" 
+                element={
+                  <ProtectedRoute requireStaff>
+                    <NotificationsPage />
                   </ProtectedRoute>
                 } 
               />

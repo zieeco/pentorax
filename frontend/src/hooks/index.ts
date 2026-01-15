@@ -33,6 +33,17 @@ export {
   useBulkDeactivateProducts,
 } from './products.hooks';
 
+/**
+ * Wishlist hooks
+ */
+export {
+  useWishlist,
+  useAddToWishlist,
+  useRemoveFromWishlist,
+  useClearWishlist,
+  useIsInWishlist,
+} from './wishlist.hooks';
+
 // Cart
 export {
   useCart,
@@ -87,3 +98,21 @@ export {
   useCheckWarranty,
   useSubscribeNewsletter,
 } from './core.hooks';
+
+// Stock Notifications
+export {
+  useSubscribeStockNotification,
+  useUnsubscribeStockNotification,
+} from './stockNotifications.hooks';
+
+// Stock Notifications Admin
+export {
+  useStockNotifications,
+  useStockNotificationStats,
+  useMarkReadNotification,
+  useMarkUnreadNotification,
+  useArchiveNotification,
+  useUnarchiveNotification,
+  useSendCustomEmail,
+  useBulkSendEmail,
+} from './stockNotifications.admin.hooks';

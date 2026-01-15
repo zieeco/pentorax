@@ -9,8 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { toast } from 'sonner';
-import Logo from '@/assets/images/pentorax.jpeg';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 
 const signupSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
@@ -24,7 +23,7 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 const PentoraxLogo: React.FC = () => (
   <div className="flex items-center space-x-2">
-    <img src={Logo} alt="Pentorax Logo" className="h-8 w-8 object-contain rounded-lg" />
+    <img src="/pentorax.jpeg" alt="Pentorax Logo" className="h-8 w-8 object-contain rounded-lg" />
     <span className="font-sand text-xl font-extrabold text-gray-900">PentoraX</span>
   </div>
 );

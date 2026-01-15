@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Star, Zap, Loader2 } from 'lucide-react';
+import { ShoppingCart, Zap, Loader2 } from 'lucide-react';
 import SEO from '@/components/SEO';
 import { useProducts, useAddToCart } from '@/hooks';
 import { toast } from 'sonner';

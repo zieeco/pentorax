@@ -6,7 +6,7 @@ import { useProducts, useCategories } from '@/hooks';
 import { ProductGrid } from '@/components/shop/ProductGrid';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 export default function ShopPage() {
   const [search, setSearch] = useState('');

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Target, Users, Zap, ShieldCheck, Award } from 'lucide-react';
+import { Target, Users, Zap, ShieldCheck } from 'lucide-react';
 import SEO from '@/components/SEO';
 import { useTeam } from '@/hooks';
 

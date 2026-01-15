@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { CheckCircle2, Info, ArrowRight, Globe, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import Logo from '@/assets/images/pentorax.jpeg';
 
 type ConfirmationType = 'signup' | 'recovery' | 'email-verified' | 'info';
 
@@ -17,7 +16,7 @@ interface ConfirmationContent {
 
 const PentoraxLogo: React.FC = () => (
   <div className="flex items-center space-x-2">
-    <img src={Logo} alt="Pentorax Logo" className="h-8 w-8 object-contain rounded-lg" />
+    <img src="/pentorax.jpeg" alt="Pentorax Logo" className="h-8 w-8 object-contain rounded-lg" />
     <span className="font-sand text-xl font-extrabold text-gray-900">PentoraX</span>
   </div>
 );

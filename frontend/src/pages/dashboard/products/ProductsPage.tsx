@@ -4,7 +4,7 @@
  */
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Plus, Package, Loader2 } from 'lucide-react';
+import { Plus, Package } from 'lucide-react';
 import { ProductsTable } from '@/components/products/ProductsTable';
 import { ProductTableSkeleton } from '@/components/products/ProductTableSkeleton';
 import { ProductsFilters } from '@/components/products/ProductsFilters';

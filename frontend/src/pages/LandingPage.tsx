@@ -6,8 +6,6 @@ import CallToAction from '@/components/landing/CallToAction';
 import Journey from '@/components/landing/Journey';
 import Testimonials from '@/components/landing/Testimonials';
 import CustomerStories from '@/components/landing/CustomerStories';
-import CaseStudies from '@/components/landing/CaseStudies';
-import Partners from '@/components/landing/Partners';
 import Contact from '@/components/landing/Contact';
 import Process from '@/components/landing/Process';
 

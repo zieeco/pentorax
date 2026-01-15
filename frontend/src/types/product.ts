@@ -29,6 +29,7 @@ export interface Product {
   featured_image: string;
   category_id: string;
   category_name: string;
+  category?: Category; // Full category object (from ProductDetailSerializer)
   is_active: boolean;
   is_featured: boolean;
   in_stock: boolean;

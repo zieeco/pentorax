@@ -5,7 +5,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { Loader2 } from 'lucide-react';
+
 import { ProductFormSkeleton } from '@/components/products/form/ProductFormSkeleton';
 import { toast } from 'sonner';
 import {

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { 
   MessageSquare, 
   Phone, 
@@ -27,7 +26,7 @@ const SupportPage: React.FC = () => {
   });
 
   const { mutate: checkWarranty, data: warrantyData, isPending: isCheckingWarranty, isSuccess: warrantySuccess, isError: warrantyError } = useCheckWarranty();
-  const { mutate: submitTicket, isPending: isSubmittingTicket, isSuccess: ticketSuccess, isError: ticketError } = useSubmitTicket();
+  const { mutate: submitTicket, isPending: isSubmittingTicket, isSuccess: ticketSuccess } = useSubmitTicket();
 
   const handleCheckWarranty = (e: React.FormEvent) => {
     e.preventDefault();

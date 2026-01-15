@@ -57,4 +57,8 @@ export const QUERY_KEYS = {
     faqs: (params?: Record<string, any>) => ['faqs', params] as const,
     caseStudies: () => ['case-studies'] as const,
   },
+  wishlist: {
+    all: ['wishlist'] as const,
+    list: ['wishlist', 'list'] as const,
+  },
 } as const;

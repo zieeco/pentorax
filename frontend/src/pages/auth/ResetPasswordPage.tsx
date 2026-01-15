@@ -8,8 +8,7 @@ import { Globe, ChevronDown, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { toast } from 'sonner';
-import Logo from '@/assets/images/pentorax.jpeg';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
 
 const resetPasswordSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
@@ -23,7 +22,7 @@ type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 const PentoraxLogo: React.FC = () => (
   <div className="flex items-center space-x-2">
-    <img src={Logo} alt="Pentorax Logo" className="h-8 w-8 object-contain rounded-lg" />
+    <img src="/pentorax.jpeg" alt="Pentorax Logo" className="h-8 w-8 object-contain rounded-lg" />
     <span className="font-sand text-xl font-extrabold text-gray-900">PentoraX</span>
   </div>
 );

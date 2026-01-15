@@ -13,6 +13,7 @@ import {
   Settings,
   Zap,
   LogOut,
+  Bell,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -30,6 +31,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     { icon: LayoutDashboard, label: 'Overview', path: '/dashboard', roles: ['admin', 'staff', 'customer'] },
     { icon: Package, label: 'Products', path: '/dashboard/products', roles: ['admin', 'staff'] },
     { icon: ShoppingCart, label: 'Orders', path: '/dashboard/orders', roles: ['admin', 'staff', 'customer'] },
+    { icon: Bell, label: 'Stock Alerts', path: '/dashboard/notifications', roles: ['admin', 'staff'] },
     { icon: Users, label: 'Customers', path: '/dashboard/customers', roles: ['admin'] },
     { icon: BarChart3, label: 'Analytics', path: '/dashboard/analytics', roles: ['admin'] },
     { icon: FileText, label: 'Content', path: '/dashboard/content', roles: ['admin', 'staff'] },
@@ -56,11 +58,13 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     return (
       <aside className="w-20 bg-gray-900 text-white flex flex-col shrink-0">
         {/* Collapsed Logo */}
-        <div className="p-4 flex justify-center">
-          <div className="h-10 w-10 bg-primary rounded-lg flex items-center justify-center">
-            <Zap className="h-6 w-6 text-white" />
-          </div>
-        </div>
+        <Link to="/" className="p-4 flex justify-center hover:opacity-80 transition-opacity">
+          <img 
+            src="/pentorax.jpeg" 
+            alt="Pentorax Logo" 
+            className="h-10 w-10 rounded-lg object-cover"
+          />
+        </Link>
 
         {/* Collapsed Navigation */}
         <nav className="flex-1 px-2 space-y-2 mt-4">
@@ -115,19 +119,19 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   return (
     <aside className="w-64 bg-gray-900 text-white flex flex-col">
       {/* Logo */}
-      <div className="p-8">
+      <Link to="/" className="p-6 border-b border-gray-800 block hover:bg-gray-800/50 transition-colors">
         <div className="flex items-center space-x-3">
-          <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center">
-            <Zap className="h-5 w-5 text-white" />
+          <img 
+            src="/pentorax.jpeg" 
+            alt="Pentorax Logo" 
+            className="h-10 w-10 rounded-lg object-cover shrink-0"
+          />
+          <div className="overflow-hidden">
+            <h1 className="text-xl font-bold whitespace-nowrap">Pentorax</h1>
+            <p className="text-xs text-gray-400 whitespace-nowrap">Solar Energy</p>
           </div>
-          <span className="text-xl font-black tracking-tighter">
-            PentoraX{' '}
-            <span className="text-xs text-primary block mt-[-4px] uppercase tracking-widest">
-              Admin
-            </span>
-          </span>
         </div>
-      </div>
+      </Link>
 
       {/* Navigation */}
       <nav className="flex-1 px-4 space-y-2 mt-4">

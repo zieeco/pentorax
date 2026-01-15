@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Linkedin, ArrowLeft } from 'lucide-react';
+import { Linkedin, ArrowLeft } from 'lucide-react';
 import SEO from '@/components/SEO';
 import { useTeam } from '@/hooks';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';

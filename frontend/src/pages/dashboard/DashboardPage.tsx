@@ -1,18 +1,15 @@
 import React from 'react';
 import { useAuthStore } from '@/stores/auth';
-import { Button } from '@/components/ui/button';
 import { 
   TrendingUp, 
   ShoppingCart, 
   Users, 
   DollarSign,
-  Package,
   ArrowUpRight,
   MoreVertical,
   MapPin,
   Calendar,
-  CheckCircle2,
-  Zap
+  CheckCircle2
 } from 'lucide-react';
 
 const DashboardPage: React.FC = () => {
@@ -44,7 +41,7 @@ const DashboardPage: React.FC = () => {
       {/* Welcome Header */}
       <div>
         <h1 className="text-3xl font-black text-gray-900">
-          Welcome back, {user?.name}! 👋
+          Welcome back, {user?.email?.split('@')[0] || 'there'}! 👋
         </h1>
         <p className="text-gray-500 mt-1">Here's what's happening with your store today.</p>
       </div>

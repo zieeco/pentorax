@@ -17,7 +17,6 @@ import {
   LogOut,
   User,
 } from 'lucide-react';
-import Logo from '@/assets/images/pentorax.jpeg';
 import { useAuthStore, useIsAuthenticated, useUser } from '@/stores/auth';
 
 const ShopNowIcon: React.FC = () => (
@@ -27,7 +26,7 @@ const ShopNowIcon: React.FC = () => (
 const PentoraxLogo: React.FC = () => (
   <div className="space-x-2k flex items-center">
     <img
-      src={Logo}
+      src="/pentorax.jpeg"
       alt="Pentorax Logo"
       className="mt-[-20px] h-[7.5rem] w-[7.5rem] object-contain"
     />
