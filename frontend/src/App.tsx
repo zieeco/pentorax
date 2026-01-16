@@ -1,8 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { HelmetProvider } from 'react-helmet-async';
-import { Toaster } from '@/components/ui/sonner';
 import Layout from '@/components/Layout';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -60,20 +58,10 @@ import NewsletterPage from '@/pages/dashboard/newsletter/NewsletterPage';
 // Newsletter
 import UnsubscribePage from '@/pages/UnsubscribePage';
 
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
 const App: React.FC = () => {
   return (
     <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <Router>
+      <Router>
           <Routes>
             {/* Auth Routes (No Layout) - Redirect if already logged in */}
             <Route path="/auth/login" element={<AuthRedirect><LoginPage /></AuthRedirect>} />
@@ -208,9 +196,7 @@ const App: React.FC = () => {
             } />
           </Routes>
         </Router>
-        <Toaster />
-      </QueryClientProvider>
-    </HelmetProvider>
+      </HelmetProvider>
   );
 };
 
