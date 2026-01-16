@@ -159,7 +159,7 @@ RESEND_FROM_EMAIL = os.getenv('FROM_EMAIL', 'support@pentorax.com')
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 
 # Frontend URL for password reset redirects
-FRONTEND_URL = os.getenv('FRONTEND_URL', 'https://pentorax.com')
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
 
 # Session Configuration
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
