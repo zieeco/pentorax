@@ -55,6 +55,10 @@ import AuthConfirmationPage from '@/pages/auth/AuthConfirmationPage';
 import DashboardPage from '@/pages/dashboard/DashboardPage';
 import { ProductsPage as AdminProductsPage, ProductFormPage } from '@/pages/dashboard/products';
 import NotificationsPage from '@/pages/dashboard/notifications/NotificationsPage';
+import NewsletterPage from '@/pages/dashboard/newsletter/NewsletterPage';
+
+// Newsletter
+import UnsubscribePage from '@/pages/UnsubscribePage';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -77,6 +81,9 @@ const App: React.FC = () => {
             <Route path="/auth/forgot-password" element={<AuthRedirect><ForgotPasswordPage /></AuthRedirect>} />
             <Route path="/auth/reset-password" element={<AuthRedirect><ResetPasswordPage /></AuthRedirect>} />
             <Route path="/auth/confirmation" element={<AuthConfirmationPage />} />
+            
+            {/* Newsletter Unsubscribe (No Layout) */}
+            <Route path="/newsletter/unsubscribe" element={<UnsubscribePage />} />
             
             {/* Protected Dashboard Routes */}
             <Route
@@ -142,6 +149,16 @@ const App: React.FC = () => {
                 element={
                   <ProtectedRoute requireStaff>
                     <NotificationsPage />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Newsletter Subscribers (Admin/Staff) */}
+              <Route 
+                path="newsletter" 
+                element={
+                  <ProtectedRoute requireStaff>
+                    <NewsletterPage />
                   </ProtectedRoute>
                 } 
               />
