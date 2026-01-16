@@ -366,8 +366,21 @@ export const coreApi = {
   // Warranty Check
   checkWarranty: (serialNumber: string) =>
     apiClient.post('/support/warranty/check/', { serial_number: serialNumber }),
+};
+
+// ===========================
+// Newsletter API
+// ===========================
+export const newsletterApi = {
+  subscribe: (data: { email: string; full_name: string }) =>
+    apiClient.post('/newsletter/subscribe/', data),
   
-  // Newsletter Subscription
-  subscribeNewsletter: (email: string) =>
-    apiClient.post('/newsletter/subscribe/', { email }),
+  unsubscribe: (token: string) =>
+    apiClient.post('/newsletter/unsubscribe/', { token }),
+  
+  list: (params?: { is_active?: boolean; search?: string }) =>
+    apiClient.get('/newsletter/', { params }),
+  
+  export: () =>
+    apiClient.get('/newsletter/export/', { responseType: 'blob' }),
 };
