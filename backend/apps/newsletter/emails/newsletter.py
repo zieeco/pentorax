@@ -87,7 +87,7 @@ def send_welcome_email(subscriber):
                 <p style="margin: 5px 0;">
                     <strong style="color: #666;">Pentorax Solar Energy Solutions</strong><br>
                     1, Industrial Street, Ilupeju, Lagos<br>
-                    support@pentorax.com | +234 808 159 8604
+                    support@pentorax.com  | +234 808 159 8604
                 </p>
             </div>
         </body>

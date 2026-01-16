@@ -40,6 +40,10 @@ class ContactSubmissionViewSet(viewsets.ModelViewSet):
 
         # Send email notification to admin
         send_contact_submission_notification(contact)
+        
+        # Send confirmation email to customer
+        from .emails import send_customer_confirmation
+        send_customer_confirmation(contact)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

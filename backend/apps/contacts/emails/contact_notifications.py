@@ -18,10 +18,19 @@ def send_contact_submission_notification(contact):
     """
     try:
         resend.api_key = settings.RESEND_API_KEY
+        
+        # Debug logging
+        print(f"📧 Preparing to send contact notification email")
+        print(f"   From: {settings.RESEND_FROM_EMAIL}")
+        print(f"   To: {settings.ADMIN_EMAIL}")
+        print(f"   Subject: New Contact: {contact.subject}")
+        print(f"   Contact Name: {contact.name}")
+        print(f"   Contact Email: {contact.email}")
 
         html_content = _get_contact_submission_email_template(contact)
 
-        resend.Emails.send(
+        print(f"🚀 Sending email via Resend...")
+        response = resend.Emails.send(
             {
                 "from": settings.RESEND_FROM_EMAIL,
                 "to": settings.ADMIN_EMAIL,
@@ -30,11 +39,148 @@ def send_contact_submission_notification(contact):
                 "reply_to": contact.email,
             }
         )
-
+        
+        print(f"✅ Email sent successfully!")
+        print(f"   Resend Response: {response}")
         return True
 
     except Exception as e:
-        print(f"Failed to send contact submission notification: {str(e)}")
+        print(f"❌ Failed to send contact submission notification: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+
+def send_customer_confirmation(contact):
+    """
+    Send confirmation email to customer after contact form submission
+
+    Args:
+        contact: ContactSubmission instance
+
+    Returns:
+        bool: True if email sent successfully, False otherwise
+    """
+    try:
+        resend.api_key = settings.RESEND_API_KEY
+        
+        # Debug logging
+        print(f"📨 Sending confirmation to customer")
+        print(f"   From: {settings.RESEND_FROM_EMAIL}")
+        print(f"   To: {contact.email}")
+        print(f"   Customer: {contact.name}")
+
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                }}
+                .container {{
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }}
+                .header {{
+                    background: linear-gradient(135deg, #0052CC 0%, #00D1FF 100%);
+                    color: white;
+                    padding: 40px 30px;
+                    text-align: center;
+                    border-radius: 10px 10px 0 0;
+                }}
+                .content {{
+                    background-color: #ffffff;
+                    padding: 40px 30px;
+                    border: 1px solid #e0e0e0;
+                    border-top: none;
+                }}
+                .footer {{
+                    background-color: #f9f9f9;
+                    padding: 20px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #777;
+                    border-radius: 0 0 10px 10px;
+                }}
+                .info-box {{
+                    background-color: #f0f7ff;
+                    border-left: 4px solid #0052CC;
+                    padding: 15px;
+                    margin: 20px 0;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1 style="margin: 0; font-size: 28px;">Thank You for Contacting Us!</h1>
+                    <p style="margin: 10px 0 0 0; opacity: 0.9;">Your message has been received</p>
+                </div>
+                
+                <div class="content">
+                    <p style="font-size: 16px;">Hi {contact.name},</p>
+                    
+                    <p>Thank you for reaching out to Pentorax! We've successfully received your inquiry regarding <strong>{contact.subject}</strong>.</p>
+                    
+                    <div class="info-box">
+                        <p style="margin: 0;"><strong>What happens next?</strong></p>
+                        <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                            <li>Our team will review your message</li>
+                            <li>We'll get back to you within 24 business hours</li>
+                            <li>You'll receive a detailed response via email</li>
+                        </ul>
+                    </div>
+                    
+                    <p><strong>Your Message:</strong></p>
+                    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                        {contact.message}
+                    </div>
+                    
+                    <p style="margin-top: 30px;">If you have any urgent concerns, feel free to call us directly at <strong>+234 808 159 8604</strong>.</p>
+                    
+                    <p style="margin-top: 20px;">
+                        Best regards,<br>
+                        <strong>The Pentorax Team</strong>
+                    </p>
+                </div>
+                
+                <div class="footer">
+                    <p style="margin: 5px 0;">
+                        <strong>Pentorax Solar Energy Solutions</strong><br>
+                        1, Industrial Street, Ilupeju, Lagos, Nigeria<br>
+                        support@pentorax.com | +234 808 159 8604
+                    </p>
+                    <p style="margin: 15px 0 0 0; font-size: 11px;">
+                        This is an automated confirmation. Please do not reply to this email.
+                    </p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+
+        print(f"🚀 Sending customer confirmation via Resend...")
+        response = resend.Emails.send(
+            {
+                "from": settings.RESEND_FROM_EMAIL,
+                "to": contact.email,
+                "subject": "Thank You for Contacting Pentorax - We'll Be In Touch Soon!",
+                "html": html_content,
+            }
+        )
+        
+        print(f"✅ Customer confirmation sent!")
+        print(f"   Resend Response: {response}")
+        return True
+
+    except Exception as e:
+        print(f"❌ Failed to send customer confirmation: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return False
 
 
