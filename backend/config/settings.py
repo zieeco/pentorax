@@ -153,13 +153,13 @@ PAYSTACK_PUBLIC_KEY = os.getenv('PAYSTACK_PUBLIC_KEY', '')
 
 # Resend Configuration
 RESEND_API_KEY = os.getenv('RESEND_API_KEY', '')
-RESEND_FROM_EMAIL = os.getenv('FROM_EMAIL', 'noreply@myezer.org')
+RESEND_FROM_EMAIL = os.getenv('FROM_EMAIL', 'support@pentorax.com')
 
 # Gemini AI Configuration
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 
 # Frontend URL for password reset redirects
-FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'https://pentorax.com')
 
 # Session Configuration
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
