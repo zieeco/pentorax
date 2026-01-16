@@ -50,9 +50,22 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-gray-700 flex flex-col md:flex-row justify-between items-center text-sm">
-          <p>All rights reserved © 2025</p>
-          <a href="#" className="hover:text-white mt-4 md:mt-0">Pentorax Privacy Policy</a>
+        {/* Bottom section */}
+        <div className="border-t border-gray-700 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+            <p>&copy; 2026 Pentorax Solar Energy Solutions. All rights reserved.</p>
+            <p className="mt-2 md:mt-0">
+              Developed by{' '}
+              <a 
+                href="https://github.com/zieeco" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-blue-400 hover:text-blue-300 transition-colors font-medium"
+              >
+                zieeco
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
