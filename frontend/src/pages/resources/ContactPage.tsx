@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Clock, CheckCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Clock } from 'lucide-react';
 import { useSubmitContact } from '@/hooks';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { toast } from 'sonner';
 
 const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -13,13 +14,22 @@ const ContactPage: React.FC = () => {
     message: ''
   });
   
-  const { mutate: submitContact, isPending, isSuccess, isError } = useSubmitContact();
+  const { mutate: submitContact, isPending } = useSubmitContact();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     submitContact(formData, {
       onSuccess: () => {
+        toast.success('Message Sent Successfully!', {
+          description: "We'll get back to you soon.",
+          duration: 5000,
+        });
         setFormData({ name: '', email: '', phone: '', subject: 'Residential Solar', message: '' });
+      },
+      onError: () => {
+        toast.error('Failed to Send Message', {
+          description: 'Please try again or contact us directly.',
+        });
       }
     });
   };
@@ -45,19 +55,6 @@ const ContactPage: React.FC = () => {
             <div className="lg:w-3/5">
                 <div className="bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-xl shadow-gray-200/40">
                     <h2 className="text-3xl font-bold mb-8">Send a Message</h2>
-                    
-                    {isSuccess && (
-                      <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                        <p className="text-green-800 font-semibold">Message sent successfully! We'll get back to you soon.</p>
-                      </div>
-                    )}
-                    
-                    {isError && (
-                      <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
-                        <p className="text-red-800 font-semibold">Failed to send message. Please try again.</p>
-                      </div>
-                    )}
                     
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid md:grid-cols-2 gap-6">
