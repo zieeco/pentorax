@@ -14,6 +14,7 @@ import {
   Zap,
   LogOut,
   Bell,
+  Mail,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -32,6 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     { icon: Package, label: 'Products', path: '/dashboard/products', roles: ['admin', 'staff'] },
     { icon: ShoppingCart, label: 'Orders', path: '/dashboard/orders', roles: ['admin', 'staff', 'customer'] },
     { icon: Bell, label: 'Stock Alerts', path: '/dashboard/notifications', roles: ['admin', 'staff'] },
+    { icon: Mail, label: 'Newsletter', path: '/dashboard/newsletter', roles: ['admin', 'staff'] },
     { icon: Users, label: 'Customers', path: '/dashboard/customers', roles: ['admin'] },
     { icon: BarChart3, label: 'Analytics', path: '/dashboard/analytics', roles: ['admin'] },
     { icon: FileText, label: 'Content', path: '/dashboard/content', roles: ['admin', 'staff'] },

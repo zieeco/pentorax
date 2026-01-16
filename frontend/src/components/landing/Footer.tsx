@@ -1,5 +1,6 @@
 
 import React from 'react';
+import NewsletterForm from './NewsletterForm';
 
 const Footer: React.FC = () => {
   return (
@@ -11,11 +12,7 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-semibold text-white mb-4">Subscribe to our newsletter</h3>
             <p className="text-sm mb-4">For regular insights on residential and commercial renewable energy solutions.</p>
-            <form>
-              <input type="text" placeholder="Full Name" className="w-full bg-gray-700 border border-gray-600 rounded-md p-2 mb-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              <input type="email" placeholder="Email Address" className="w-full bg-gray-700 border border-gray-600 rounded-md p-2 mb-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              <button type="submit" className="w-full bg-blue-600 text-white font-bold py-2 rounded-md hover:bg-blue-700 transition-colors">SUBSCRIBE NOW</button>
-            </form>
+            <NewsletterForm />
           </div>
 
           {/* About & Contact */}
