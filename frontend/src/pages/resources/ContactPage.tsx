@@ -182,12 +182,18 @@ const ContactPage: React.FC = () => {
                     </ul>
                 </div>
                 
-                {/* Visual Map Placeholder */}
-                <div className="h-64 bg-gray-100 rounded-[2.5rem] relative overflow-hidden flex items-center justify-center border-2 border-dashed border-gray-200">
-                    <div className="text-center p-6">
-                        <MapPin className="h-10 w-10 text-gray-300 mx-auto mb-2" />
-                        <p className="text-sm text-gray-400 font-bold uppercase tracking-widest">Interactive Map Loading...</p>
-                    </div>
+                {/* Google Map */}
+                <div className="h-64 bg-gray-100 rounded-[2.5rem] overflow-hidden border border-gray-200">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.952479087442!2d3.358267!3d6.5531!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMzMnMTEuMiJOIDPCsDIxJzI5LjgiRQ!5e0!3m2!1sen!2sng!4v1234567890"
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title="Pentorax Solar Energy Solutions Location"
+                    ></iframe>
                 </div>
             </div>
           </div>
