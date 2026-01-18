@@ -3,6 +3,19 @@ import { toast } from 'sonner';
 import { extractUserMetadata } from '@/utils/authHelpers';
 import type { AuthStoreSetter, AuthResponse, AuthErrorResponse } from './auth-types';
 import { handleAuthError, persistSession, clearPersistedSession } from './auth-utils';
+import { cartApi } from '@/services/api';
+
+// Helper to get session key from cookies
+const getSessionKey = () => {
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+    const [name, value] = cookie.trim().split('=');
+    if (name === 'sessionid') {
+      return value;
+    }
+  }
+  return null;
+};
 
 // SIGN IN
 export const createSignInAction = (set: AuthStoreSetter) => async (
@@ -29,6 +42,18 @@ export const createSignInAction = (set: AuthStoreSetter) => async (
         isAuthenticated: true, // CRITICAL: Set isAuthenticated
         isLoading: false,
       });
+
+      // Merge guest cart if exists
+      const sessionKey = getSessionKey();
+      if (sessionKey) {
+        try {
+          await cartApi.merge(sessionKey);
+          console.log('[Auth] Guest cart merged successfully');
+        } catch (mergeError) {
+          // Don't fail login if cart merge fails
+          console.warn('[Auth] Cart merge failed:', mergeError);
+        }
+      }
 
       console.log('[AuthStore] Sign in successful. Role:', metadata.role);
       return { data: data.user, error: null };
