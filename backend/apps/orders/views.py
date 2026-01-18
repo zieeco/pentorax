@@ -55,6 +55,13 @@ class OrderViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = CreateOrderSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
+        # Validate user ID
+        if not request.user or not request.user.id:
+            return Response(
+                {"detail": "User authentication failed. Please login again."},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
         user_id = str(request.user.id)
 
         # Get user's cart
