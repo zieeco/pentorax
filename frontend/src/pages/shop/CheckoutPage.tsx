@@ -1,41 +1,33 @@
 /**
- * CheckoutPage - Order checkout with Paystack
+ * CheckoutPage - Order checkout (refactored)
+ * Uses modular components for better maintainability
  */
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useCart, useCreateOrder, useInitializePayment } from '@/hooks';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card } from '@/components/ui/card';
+import { useIsAuthenticated } from '@/stores/auth';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
+import CheckoutForm from '@/components/checkout/CheckoutForm';
+import OrderSummary from '@/components/checkout/OrderSummary';
+import EmptyCart from '@/components/cart/EmptyCart';
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
+  const isAuthenticated = useIsAuthenticated();
   const { data: cart, isLoading: cartLoading } = useCart();
   const createOrder = useCreateOrder();
   const initializePayment = useInitializePayment();
 
-  const [formData, setFormData] = useState({
-    email: '',
-    shipping_name: '',
-    shipping_phone: '',
-    shipping_address: '',
-    shipping_city: '',
-    shipping_state: '',
-  });
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast.error('Please login to checkout');
+      navigate('/login?redirect=/checkout');
+    }
+  }, [isAuthenticated, navigate]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleCheckout = async (formData: any) => {
     if (!cart || cart.items.length === 0) {
       toast.error('Your cart is empty');
       return;
@@ -43,20 +35,13 @@ export default function CheckoutPage() {
 
     try {
       // Create order
-      const orderResponse = await createOrder.mutateAsync({
-        ...formData,
-        items: cart.items.map(item => ({
-          product_id: item.product.id,
-          quantity: item.quantity,
-        })),
-      });
-
+      const orderResponse = await createOrder.mutateAsync(formData);
       const order = orderResponse.data;
 
       // Initialize payment
       const paymentResponse = await initializePayment.mutateAsync(order.id);
 
-      // Redirect to Paystack (or show payment modal)
+      // Redirect to Paystack
       if (paymentResponse.data.authorization_url) {
         window.location.href = paymentResponse.data.authorization_url;
       } else {
@@ -69,158 +54,64 @@ export default function CheckoutPage() {
     }
   };
 
+  // Loading state
   if (cartLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Skeleton className="h-96 w-full" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-full max-w-4xl px-4">
+          <Skeleton className="h-[600px] w-full rounded-3xl" />
+        </div>
       </div>
     );
   }
 
+  // Empty cart
   if (!cart || cart.items.length === 0) {
-    return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <h2 className="text-2xl font-bold mb-2">Your cart is empty</h2>
-        <Button onClick={() => navigate('/shop')}>Continue Shopping</Button>
-      </div>
-    );
+    return <EmptyCart />;
   }
+
+  const isProcessing = createOrder.isPending || initializePayment.isPending;
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="bg-gradient-to-r from-primary to-secondary py-12">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold text-white">Checkout</h1>
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 pb-20">
+      {/* Premium Header */}
+      <div className="bg-primary text-white pt-24 pb-12 rounded-b-[3rem] shadow-2xl relative overflow-hidden">
+        {/* Abstract Background Shapes */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 blur-[128px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/20 blur-[100px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
+
+        <div className="container mx-auto px-4 relative z-10 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+            Secure Checkout
+          </h1>
+          <p className="text-white/60 text-lg max-w-xl mx-auto">
+            Complete your order with confidence. Your payment is secured by Paystack.
+          </p>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Checkout Form */}
-          <div className="lg:col-span-2">
-            <Card className="p-6">
-              <h2 className="text-2xl font-semibold mb-6">Shipping Information</h2>
-              
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="email">Email Address *</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="your@email.com"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="shipping_name">Full Name *</Label>
-                  <Input
-                    id="shipping_name"
-                    name="shipping_name"
-                    required
-                    value={formData.shipping_name}
-                    onChange={handleInputChange}
-                    placeholder="John Doe"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="shipping_phone">Phone Number *</Label>
-                  <Input
-                    id="shipping_phone"
-                    name="shipping_phone"
-                    type="tel"
-                    required
-                    value={formData.shipping_phone}
-                    onChange={handleInputChange}
-                    placeholder="+234 800 000 0000"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="shipping_address">Street Address *</Label>
-                  <Input
-                    id="shipping_address"
-                    name="shipping_address"
-                    required
-                    value={formData.shipping_address}
-                    onChange={handleInputChange}
-                    placeholder="123 Main Street"
-                  />
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="shipping_city">City *</Label>
-                    <Input
-                      id="shipping_city"
-                      name="shipping_city"
-                      required
-                      value={formData.shipping_city}
-                      onChange={handleInputChange}
-                      placeholder="Lagos"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="shipping_state">State *</Label>
-                    <Input
-                      id="shipping_state"
-                      name="shipping_state"
-                      required
-                      value={formData.shipping_state}
-                      onChange={handleInputChange}
-                      placeholder="Lagos"
-                    />
-                  </div>
-                </div>
-
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full mt-6"
-                  disabled={createOrder.isPending || initializePayment.isPending}
-                >
-                  {createOrder.isPending || initializePayment.isPending
-                    ? 'Processing...'
-                    : 'Proceed to Payment'}
-                </Button>
-              </form>
-            </Card>
+      {/* Checkout Content */}
+      <div className="max-w-7xl mx-auto px-4 mt-8 relative z-20">
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
+          {/* Checkout Form - Main Content */}
+          <div className="lg:col-span-8">
+            <CheckoutForm onSubmit={handleCheckout} isSubmitting={isProcessing} />
           </div>
 
-          {/* Order Summary */}
-          <div className="lg:col-span-1">
-            <Card className="p-6 sticky top-4">
-              <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-              
-              <div className="space-y-3 mb-6">
-                {cart.items.map((item) => (
-                  <div key={item.id} className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {item.product.name} x{item.quantity}
-                    </span>
-                    <span className="font-medium">
-                      ₦{item.subtotal.toLocaleString()}
-                    </span>
-                  </div>
-                ))}
-                
-                <div className="border-t pt-3 flex justify-between text-lg font-bold">
-                  <span>Total</span>
-                  <span className="text-primary">₦{cart.total.toLocaleString()}</span>
-                </div>
-              </div>
-
-              <div className="text-sm text-muted-foreground">
-                <p>• Secure payment via Paystack</p>
-                <p>• Shipping calculated after order</p>
-                <p>• Free delivery on orders over ₦500,000</p>
-              </div>
-            </Card>
+          {/* Order Summary - Sidebar */}
+          <div className="lg:col-span-4 sticky top-8">
+            <OrderSummary items={cart.items} total={cart.total} />
+            
+            {/* Trust Badges */}
+            <div className="mt-6 flex flex-col items-center gap-2 text-center text-xs text-muted-foreground bg-white dark:bg-neutral-900 p-4 rounded-xl shadow-sm border border-border/50">
+               <div className="flex items-center gap-2 mb-1">
+                 <span className="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 p-1.5 rounded-full">
+                   🔒
+                 </span>
+                 <span className="font-medium">SSL Encrypted Payment</span>
+               </div>
+               <p>Your personal data is protected.</p>
+            </div>
           </div>
         </div>
       </div>
