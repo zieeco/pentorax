@@ -30,7 +30,7 @@ import { AISuggestionsAlert } from '@/components/products/form/AISuggestionsAler
 import { ProductDeleteButton } from '@/components/products/form/ProductDeleteButton';
 import type { ProductFormData, ProductImage, ProductSpecification } from '@/types/product';
 import { generateSlug, validateImageFile } from '@/utils/product-utils';
-import { productsApi } from '@/services/api';
+import { productsApi } from '@/services';
 
 export default function ProductFormPage() {
   const { slug } = useParams<{ slug: string }>();

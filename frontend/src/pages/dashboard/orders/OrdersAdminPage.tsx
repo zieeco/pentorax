@@ -3,7 +3,7 @@
  */
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ordersApi } from '@/services/api';
+import { ordersApi } from '@/services';
 import { useUpdateOrderStatus } from '@/hooks';
 import { normalizeListResponse } from '@/hooks/api.utils';
 import { ShoppingBag } from 'lucide-react';
