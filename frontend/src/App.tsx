@@ -14,6 +14,8 @@ import ShopPage from '@/pages/shop/ShopPage';
 import ProductDetailPage from '@/pages/shop/ProductDetailPage';
 import CartPage from '@/pages/shop/CartPage';
 import CheckoutPage from '@/pages/shop/CheckoutPage';
+import PaymentSuccessPage from '@/pages/shop/PaymentSuccessPage';
+import OrderHistoryPage from '@/pages/shop/OrderHistoryPage';
 
 // About
 import AboutPage from '@/pages/about/AboutPage';
@@ -54,6 +56,7 @@ import DashboardPage from '@/pages/dashboard/DashboardPage';
 import { ProductsPage as AdminProductsPage, ProductFormPage } from '@/pages/dashboard/products';
 import NotificationsPage from '@/pages/dashboard/notifications/NotificationsPage';
 import NewsletterPage from '@/pages/dashboard/newsletter/NewsletterPage';
+import OrdersAdminPage from '@/pages/dashboard/orders/OrdersAdminPage';
 
 // Newsletter
 import UnsubscribePage from '@/pages/UnsubscribePage';
@@ -150,6 +153,15 @@ const App: React.FC = () => {
                   </ProtectedRoute>
                 } 
               />
+              {/* Order Management (Admin/Staff) */}
+              <Route 
+                path="orders" 
+                element={
+                  <ProtectedRoute requireStaff>
+                    <OrdersAdminPage />
+                  </ProtectedRoute>
+                } 
+              />
             </Route>
 
             {/* Customer-facing Routes (With Layout) */}
@@ -164,6 +176,8 @@ const App: React.FC = () => {
                   <Route path="/shop/:slug" element={<ProductDetailPage />} />
                   <Route path="/cart" element={<CartPage />} />
                   <Route path="/checkout" element={<CheckoutPage />} />
+                  <Route path="/payment/success" element={<PaymentSuccessPage />} />
+                  <Route path="/orders" element={<OrderHistoryPage />} />
                   
                   {/* About section */}
                   <Route path="/about" element={<AboutPage />} />
