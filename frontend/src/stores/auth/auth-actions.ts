@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import { extractUserMetadata } from '@/utils/authHelpers';
 import type { AuthStoreSetter, AuthResponse, AuthErrorResponse } from './auth-types';
 import { handleAuthError, persistSession, clearPersistedSession } from './auth-utils';
-import { cartApi } from '@/services/api';
+import { cartApi } from '@/services';
 
 // Helper to get session key from cookies
 const getSessionKey = () => {
