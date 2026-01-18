@@ -5,16 +5,17 @@ import { cn } from '@/lib/utils';
 import {
   LayoutDashboard,
   Package,
-  ShoppingCart,
+  ShoppingBag,
   Users,
   BarChart3,
   FileText,
   Headphones,
   Settings,
-  Zap,
   LogOut,
   Bell,
   Mail,
+  Menu,
+  X,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -31,7 +32,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const navItems = [
     { icon: LayoutDashboard, label: 'Overview', path: '/dashboard', roles: ['admin', 'staff', 'customer'] },
     { icon: Package, label: 'Products', path: '/dashboard/products', roles: ['admin', 'staff'] },
-    { icon: ShoppingCart, label: 'Orders', path: '/dashboard/orders', roles: ['admin', 'staff', 'customer'] },
+    { icon: ShoppingBag, label: 'Orders', path: '/dashboard/orders', roles: ['admin', 'staff'] },
     { icon: Bell, label: 'Stock Alerts', path: '/dashboard/notifications', roles: ['admin', 'staff'] },
     { icon: Mail, label: 'Newsletter', path: '/dashboard/newsletter', roles: ['admin', 'staff'] },
     { icon: Users, label: 'Customers', path: '/dashboard/customers', roles: ['admin'] },

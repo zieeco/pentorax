@@ -18,6 +18,7 @@ import {
   User,
 } from 'lucide-react';
 import { useAuthStore, useIsAuthenticated, useUser } from '@/stores/auth';
+import CartBadge from '@/components/cart/CartBadge';
 
 const ShopNowIcon: React.FC = () => (
   <ExternalLink className="ml-2 h-5 w-5" aria-hidden="true" />
@@ -259,13 +260,14 @@ const Header: React.FC = () => {
               ))}
             </nav>
 
-            <div className="hidden items-center lg:flex">
+            <div className="hidden items-center gap-2 lg:flex">
               <Link
                 to="/shop"
                 className="flex items-center rounded-xl border-2 border-primary px-6 py-2.5 font-bold text-primary transition-all hover:bg-primary hover:text-white shadow-lg shadow-primary/10 active:scale-95"
               >
                 Shop Now <ShopNowIcon />
               </Link>
+              <CartBadge />
             </div>
 
             {/* Mobile Menu Button */}
