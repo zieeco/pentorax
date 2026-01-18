@@ -111,7 +111,7 @@ export const productsApi = {
 // Cart API
 // ===========================
 export const cartApi = {
-  get: () => apiClient.get('/cart/'),
+  get: () => apiClient.get('/cart/items/'),
   
   addItem: (productId: string, quantity: number) =>
     apiClient.post('/cart/items/', { product_id: productId, quantity }),
@@ -123,7 +123,10 @@ export const cartApi = {
     apiClient.delete(`/cart/items/${itemId}/`),
   
   clear: () => 
-    apiClient.delete('/cart/clear/'),
+    apiClient.delete('/cart/items/clear/'),
+  
+  merge: (sessionKey: string) =>
+    apiClient.post('/cart/items/merge_cart/', { session_key: sessionKey }),
 };
 
 // ===========================
@@ -131,7 +134,7 @@ export const cartApi = {
 // ===========================
 export const ordersApi = {
   create: (data: any) => 
-    apiClient.post('/orders/', data),
+    apiClient.post('/orders/create_order/', data),
   
   list: () => 
     apiClient.get('/orders/'),
@@ -140,7 +143,7 @@ export const ordersApi = {
     apiClient.get(`/orders/${id}/`),
   
   updateStatus: (orderId: string, status: string) =>
-    apiClient.patch(`/orders/${orderId}/`, { status }),
+    apiClient.patch(`/orders/${orderId}/update_status/`, { status }),
   
   cancel: (orderId: string) =>
     apiClient.post(`/orders/${orderId}/cancel/`),
