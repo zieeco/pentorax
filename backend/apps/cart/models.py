@@ -14,18 +14,33 @@ class TimeStampedModel(models.Model):
 
 
 class Cart(TimeStampedModel):
-    """Shopping cart - one per user"""
+    """Shopping cart - one per user or session"""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id = models.UUIDField(unique=True, db_index=True)
+    user_id = models.UUIDField(null=True, blank=True, db_index=True)  # Nullable for guest carts
+    session_key = models.CharField(max_length=40, null=True, blank=True, db_index=True)  # For guest users
 
     class Meta:
         db_table = "cart_cart"
         verbose_name = "Cart"
         verbose_name_plural = "Carts"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user_id"],
+                condition=models.Q(user_id__isnull=False),
+                name="unique_user_cart"
+            ),
+            models.UniqueConstraint(
+                fields=["session_key"],
+                condition=models.Q(session_key__isnull=False),
+                name="unique_session_cart"
+            ),
+        ]
 
     def __str__(self):
-        return f"Cart for user {self.user_id}"
+        if self.user_id:
+            return f"Cart for user {self.user_id}"
+        return f"Guest cart (session: {self.session_key})"
 
 
 class CartItem(TimeStampedModel):

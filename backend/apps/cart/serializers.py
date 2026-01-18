@@ -9,7 +9,7 @@ from .models import Cart, CartItem
 
 
 class CartItemSerializer(serializers.ModelSerializer):
-    product_details = serializers.SerializerMethodField()
+    product = serializers.SerializerMethodField()
     subtotal = serializers.SerializerMethodField()
 
     class Meta:
@@ -19,13 +19,13 @@ class CartItemSerializer(serializers.ModelSerializer):
             "cart_id",
             "product_id",
             "quantity",
-            "product_details",
+            "product",
             "subtotal",
             "created_at",
         ]
         read_only_fields = ["id", "cart_id", "created_at"]
 
-    def get_product_details(self, obj):
+    def get_product(self, obj):
         """Fetch product details"""
         with connection.cursor() as cursor:
             cursor.execute(
@@ -53,7 +53,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     def get_subtotal(self, obj):
         """Calculate subtotal for this item"""
-        product = self.get_product_details(obj)
+        product = self.get_product(obj)
         if product:
             return float(product["price"]) * obj.quantity
         return 0
