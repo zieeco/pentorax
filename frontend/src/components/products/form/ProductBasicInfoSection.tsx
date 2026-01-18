@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Package, Sparkles, Loader2 } from 'lucide-react';
 import type { UseFormRegister, UseFormSetValue, UseFormWatch, FieldErrors } from 'react-hook-form';
 import type { ProductFormData } from '@/types/product';  
-import { productsApi } from '@/services/api';
+import { productsApi } from '@/services';
 import { toast } from 'sonner';
 import { useState } from 'react';
 
