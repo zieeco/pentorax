@@ -5,7 +5,7 @@
  */
 
 import { useMutation } from '@tanstack/react-query';
-import { stockNotificationsApi } from '@/services/api';
+import { stockNotificationsApi } from '@/services';
 import { toast } from 'sonner';
 
 /**

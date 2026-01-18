@@ -4,7 +4,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient, type UseQueryOptions } from '@tanstack/react-query';
-import { productsApi } from '@/services/api';
+import { productsApi } from '@/services';
 import { QUERY_KEYS } from './api.constants';
 import { normalizePaginatedResponse, normalizeListResponse, defaultQueryOptions } from './api.utils';
 import type { Product, Category } from '@/types/product';

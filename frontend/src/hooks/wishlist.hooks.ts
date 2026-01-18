@@ -5,7 +5,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { wishlistApi } from '@/services/api';
+import { wishlistApi } from '@/services';
 import { QUERY_KEYS } from './api.constants';
 import { toast } from 'sonner';
 

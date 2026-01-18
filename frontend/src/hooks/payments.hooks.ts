@@ -3,7 +3,7 @@
 // Payment Hooks
 // ===========================
 
-import { paymentsApi } from '@/services/api';
+import { paymentsApi } from '@/services';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '.';
 

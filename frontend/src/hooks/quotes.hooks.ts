@@ -2,7 +2,7 @@
 // Quote Hooks
 // ===========================
 
-import { quotesApi } from '@/services/api';
+import { quotesApi } from '@/services';
 import { useMutation } from '@tanstack/react-query';
 
 interface QuoteData {

@@ -4,7 +4,7 @@
  */
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
-import { blogApi } from '@/services/api';
+import { blogApi } from '@/services';
 import { QUERY_KEYS } from './api.constants';
 import { defaultQueryOptions } from './api.utils';
 

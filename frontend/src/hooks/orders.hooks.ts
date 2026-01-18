@@ -4,7 +4,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient, type UseQueryOptions } from '@tanstack/react-query';
-import { ordersApi } from '@/services/api';
+import { ordersApi } from '@/services';
 import { QUERY_KEYS } from './api.constants';
 import { normalizeListResponse, defaultQueryOptions } from './api.utils';
 import type { Order } from '@/types';

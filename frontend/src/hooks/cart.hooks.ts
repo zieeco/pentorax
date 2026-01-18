@@ -4,7 +4,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient, type UseQueryOptions } from '@tanstack/react-query';
-import { cartApi } from '@/services/api';
+import { cartApi } from '@/services';
 import { QUERY_KEYS } from './api.constants';
 import { defaultQueryOptions } from './api.utils';
 import type { Cart } from '@/types';

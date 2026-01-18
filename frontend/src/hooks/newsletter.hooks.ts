@@ -2,7 +2,7 @@
  * Newsletter subscription hooks
  */
 import { useMutation } from '@tanstack/react-query';
-import { newsletterApi } from '@/services/api';
+import { newsletterApi } from '@/services';
 import { toast } from 'sonner';
 
 interface SubscribeData {

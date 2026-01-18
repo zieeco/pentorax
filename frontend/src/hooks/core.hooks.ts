@@ -5,7 +5,7 @@
  */
 
 import { useQuery, useMutation, type UseQueryOptions } from '@tanstack/react-query';
-import { coreApi } from '@/services/api';
+import { coreApi } from '@/services';
 import { QUERY_KEYS } from './api.constants';
 import { normalizeListResponse, defaultQueryOptions } from './api.utils';
 
