@@ -20,8 +20,6 @@ class PaymentSerializer(serializers.ModelSerializer):
 class PaymentInitializeSerializer(serializers.Serializer):
     """Serializer for initializing payment"""
     order_id = serializers.UUIDField()
-    email = serializers.EmailField()
-    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
 
 
 class PaymentVerifySerializer(serializers.Serializer):
