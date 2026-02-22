@@ -16,6 +16,8 @@ class TimeStampedModel(models.Model):
         abstract = True
 
 
+from django.contrib.auth.models import User
+
 class ProductQuestion(TimeStampedModel):
     """Customer questions about products"""
     
@@ -26,7 +28,8 @@ class ProductQuestion(TimeStampedModel):
         related_name='questions',
         db_column='product_id'
     )
-    user_id = models.CharField(max_length=255, db_index=True, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_questions', null=True, blank=True)
+
     user_name = models.CharField(max_length=255)
     user_email = models.EmailField(max_length=255)
     question = models.TextField()
@@ -61,7 +64,8 @@ class ProductAnswer(TimeStampedModel):
         related_name='answers',
         db_column='question_id'
     )
-    user_id = models.CharField(max_length=255, db_index=True, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_answers', null=True, blank=True)
+
     user_name = models.CharField(max_length=255)
     user_email = models.EmailField(max_length=255)
     answer = models.TextField()
@@ -95,7 +99,9 @@ class AnswerVote(TimeStampedModel):
         related_name='votes',
         db_column='answer_id'
     )
-    user_id = models.CharField(max_length=255, db_index=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='answer_votes', null=True, blank=True)
+
+
     user_email = models.EmailField(max_length=255)
     
     class Meta(TimeStampedModel.Meta):
@@ -104,10 +110,11 @@ class AnswerVote(TimeStampedModel):
         verbose_name_plural = 'Answer Votes'
         constraints = [
             models.UniqueConstraint(
-                fields=['answer', 'user_email'],
+                fields=['answer', 'user'],
                 name='unique_answer_vote_per_user'
             )
         ]
+
         
     def __str__(self):
         return f"Vote by {self.user_email} on answer {self.answer_id}"

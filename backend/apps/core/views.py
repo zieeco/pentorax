@@ -7,16 +7,62 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
 from .models import FAQ, CaseStudy, TeamMember, UserProfile
 from .serializers import (
     CaseStudySerializer,
     FAQSerializer,
     TeamMemberSerializer,
     UserProfileSerializer,
+    UserRegistrationSerializer,
 )
 
 
+class RegisterView(viewsets.GenericViewSet):
+    permission_classes = [AllowAny]
+    serializer_class = UserRegistrationSerializer
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            token, _ = Token.objects.get_or_create(user=user)
+            return Response({
+                "access_token": token.key,
+                "token_type": "Token",
+                "user": UserProfileSerializer(user.profile).data
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TokenLoginView(viewsets.GenericViewSet):
+    permission_classes = [AllowAny]
+
+    def create(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+        user = authenticate(username=email, password=password)
+        if user:
+            token, _ = Token.objects.get_or_create(user=user)
+            return Response({
+                "access_token": token.key,
+                "token_type": "Token",
+                "user": UserProfileSerializer(user.profile).data
+            })
+        return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class LogoutView(viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request):
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class UserProfileViewSet(viewsets.ModelViewSet):
+
     """
     ViewSet for managing user profiles.
 
@@ -31,13 +77,14 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     def me(self, request):
         """Get current user's profile"""
         try:
-            profile = UserProfile.objects.get(supabase_id=request.user.id)
+            profile = UserProfile.objects.get(user=request.user)
             serializer = self.get_serializer(profile)
             return Response(serializer.data)
         except UserProfile.DoesNotExist:
             return Response(
                 {"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
             )
+
 
 
 class CaseStudyViewSet(viewsets.ReadOnlyModelViewSet):

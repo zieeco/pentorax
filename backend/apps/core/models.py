@@ -17,8 +17,10 @@ class TimeStampedModel(models.Model):
         abstract = True
 
 
+from django.contrib.auth.models import User
+
 class UserProfile(TimeStampedModel):
-    """Extended user profile linked to Supabase auth"""
+    """Extended user profile linked to Django auth"""
 
     ROLE_CHOICES = [
         ("admin", "Admin"),
@@ -27,12 +29,11 @@ class UserProfile(TimeStampedModel):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    supabase_id = models.UUIDField(unique=True, db_index=True)
-    email = models.EmailField(max_length=255, unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', null=True)
     name = models.CharField(max_length=255)
     phone = models.CharField(max_length=50, blank=True, null=True, default="")
     role = models.CharField(max_length=50, choices=ROLE_CHOICES, default="customer")
-    avatar_url = models.URLField(blank=True, null=True, default="", help_text="Supabase Storage URL")
+    avatar_url = models.URLField(blank=True, null=True, default="", help_text="Profile Image URL")
     bio = models.TextField(blank=True, null=True, default="")
     is_active = models.BooleanField(default=True)
     email_verified = models.BooleanField(default=False)
@@ -40,10 +41,10 @@ class UserProfile(TimeStampedModel):
     class Meta(TimeStampedModel.Meta):
         db_table = "core_userprofile"
         ordering = ["-created_at"]
-        # Indexes managed manually in Supabase SQL
 
     def __str__(self):
-        return f"{self.name} ({self.email}) - {self.role}"
+        return f"{self.name} ({self.user.email if self.user else 'No User'}) - {self.role}"
+
 
     @property
     def is_admin(self):

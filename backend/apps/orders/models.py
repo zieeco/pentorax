@@ -13,6 +13,8 @@ class TimeStampedModel(models.Model):
         abstract = True
 
 
+from django.contrib.auth.models import User
+
 class Order(TimeStampedModel):
     """Customer order"""
 
@@ -25,7 +27,8 @@ class Order(TimeStampedModel):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id = models.CharField(max_length=255, db_index=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders', null=True, blank=True)
+
     email = models.EmailField(max_length=255)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="pending")
     total = models.DecimalField(max_digits=10, decimal_places=2)

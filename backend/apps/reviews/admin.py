@@ -11,15 +11,16 @@ from .models import Review
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = [
-        "user_email",
-        "product_id",
+        "get_user_email",
+        "product",
         "rating_stars",
         "is_verified_purchase",
         "created_at",
     ]
     list_filter = ["rating", "is_verified_purchase", "created_at"]
-    search_fields = ["user_id", "user_email", "product_id", "comment"]
+    search_fields = ["user__email", "product__name", "comment"]
     readonly_fields = ["id", "created_at", "updated_at"]
+
 
     fieldsets = (
         (
@@ -27,13 +28,13 @@ class ReviewAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "id",
-                    "user_id",
-                    "user_email",
-                    "product_id",
+                    "user",
+                    "product",
                     "rating",
                     "is_verified_purchase",
                 )
             },
+
         ),
         ("Content", {"fields": ("comment",)}),
         (
@@ -42,7 +43,12 @@ class ReviewAdmin(admin.ModelAdmin):
         ),
     )
 
+    def get_user_email(self, obj):
+        return obj.user.email if obj.user else "N/A"
+    get_user_email.short_description = "User Email"
+
     def rating_stars(self, obj):
+
         """Display rating as stars"""
         stars = "★" * obj.rating + "☆" * (5 - obj.rating)
         return format_html(

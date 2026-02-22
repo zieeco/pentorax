@@ -22,14 +22,16 @@ class ProductSpecificationInline(admin.TabularInline):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "slug", "parent_id", "product_count", "created_at"]
+    list_display = ["name", "slug", "parent", "product_count", "created_at"]
+
     prepopulated_fields = {"slug": ("name",)}
     search_fields = ["name"]
     list_filter = ["created_at"]
     readonly_fields = ["id", "created_at", "updated_at"]
 
     def product_count(self, obj):
-        return Product.objects.filter(category_id=obj.id).count()
+        return Product.objects.filter(category=obj).count()
+
 
     product_count.short_description = "Products"
 
@@ -58,9 +60,10 @@ class ProductAdmin(admin.ModelAdmin):
                     "id",
                     "name",
                     "slug",
-                    "category_id",
+                    "category",
                     "short_description",
                     "description",
+
                 )
             },
         ),
@@ -78,11 +81,8 @@ class ProductAdmin(admin.ModelAdmin):
     )
 
     def category_name(self, obj):
-        try:
-            category = Category.objects.get(id=obj.category_id)
-            return category.name
-        except Category.DoesNotExist:
-            return "N/A"
+        return obj.category.name if obj.category else "N/A"
+
 
     category_name.short_description = "Category"
 
@@ -114,13 +114,15 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
-    list_display = ["product_id", "image_url", "position", "created_at"]
+    list_display = ["product", "image_url", "position", "created_at"]
+
     list_filter = ["created_at"]
     readonly_fields = ["id", "created_at", "updated_at"]
 
 
 @admin.register(ProductSpecification)
 class ProductSpecificationAdmin(admin.ModelAdmin):
-    list_display = ["product_id", "key", "value", "position", "created_at"]
+    list_display = ["product", "key", "value", "position", "created_at"]
+
     list_filter = ["created_at"]
     readonly_fields = ["id", "created_at", "updated_at"]

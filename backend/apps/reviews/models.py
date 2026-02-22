@@ -18,12 +18,15 @@ class TimeStampedModel(models.Model):
         abstract = True
 
 
+from django.contrib.auth.models import User
+
 class Review(TimeStampedModel):
     """Product review"""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id = models.CharField(max_length=255, db_index=True)
-    user_email = models.EmailField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews', null=True, blank=True)
+
+
     product = models.ForeignKey(
         'products.Product',
         on_delete=models.CASCADE,
@@ -44,9 +47,11 @@ class Review(TimeStampedModel):
         ordering = ["-created_at"]
         constraints = [
             models.UniqueConstraint(
-                fields=["user_id", "product"], name="unique_user_product_review"
+                fields=["user", "product"], name="unique_user_product_review"
             )
         ]
 
+
     def __str__(self):
-        return f"Review by {self.user_email} for product {self.product_id}"
+        return f"Review by {self.user.email} for product {self.product_id}"
+

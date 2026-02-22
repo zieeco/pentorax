@@ -49,11 +49,20 @@ class PaymentViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=["post"])
     def initialize(self, request):
         """Initialize payment with Paystack"""
+        print(f"💰 Payment Initialize Request: {request.data}")
+        print(f"👤 User: {request.user.id}")
+
         serializer = PaymentInitializeSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid():
+            print(f"❌ Serializer Errors: {serializer.errors}")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        # serializer.is_valid(raise_exception=True)
 
         order_id = serializer.validated_data["order_id"]
         user_id = str(request.user.id)
+        
+        print(f"🛒 initialize for Order ID: {order_id} User ID: {user_id}")
 
         # Verify order belongs to user
         with connection.cursor() as cursor:
@@ -69,11 +78,15 @@ class PaymentViewSet(viewsets.ReadOnlyModelViewSet):
             order = cursor.fetchone()
 
             if not order:
+                print("❌ Order not found or does not belong to user")
                 return Response(
                     {"detail": "Order not found"}, status=status.HTTP_404_NOT_FOUND
                 )
+            
+            print(f"✅ Order found: {order}")
 
             if order[3] != "pending":
+                print(f"❌ Order status is {order[3]}, expected 'pending'")
                 return Response(
                     {"detail": "Order is not in pending status"},
                     status=status.HTTP_400_BAD_REQUEST,

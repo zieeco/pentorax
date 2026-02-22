@@ -6,12 +6,15 @@ import uuid
 from django.db import models
 
 
+from django.contrib.auth.models import User
+
 class ChatMessage(models.Model):
     """Live chat messages"""
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     session_id = models.CharField(max_length=255, db_index=True)  # Browser session ID
-    user_id = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_messages', null=True, blank=True)
+
     user_name = models.CharField(max_length=255)
     user_email = models.EmailField(max_length=255, blank=True)
     message = models.TextField()
@@ -38,7 +41,8 @@ class ChatSession(models.Model):
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     session_id = models.CharField(max_length=255, unique=True, db_index=True)
-    user_id = models.CharField(max_length=255, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_sessions', null=True, blank=True)
+
     user_name = models.CharField(max_length=255)
     user_email = models.EmailField(max_length=255, blank=True)
     product_id = models.UUIDField(blank=True, null=True)  # If chat started from product page

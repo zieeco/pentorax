@@ -7,15 +7,20 @@ from .models import FAQ, CaseStudy, TeamMember, UserProfile
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = [
         "name",
-        "email",
+        "get_email",
         "role",
         "is_active",
         "email_verified",
         "created_at",
     ]
     list_filter = ["role", "is_active", "email_verified"]
-    search_fields = ["name", "email", "supabase_id"]
-    readonly_fields = ["id", "supabase_id", "created_at", "updated_at"]
+    search_fields = ["name", "user__email"]
+    readonly_fields = ["id", "created_at", "updated_at"]
+
+    def get_email(self, obj):
+        return obj.user.email if obj.user else "N/A"
+    get_email.short_description = 'Email'
+
 
 
 @admin.register(CaseStudy)

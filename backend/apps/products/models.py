@@ -160,11 +160,15 @@ class ProductSpecification(TimeStampedModel):
         return f"{self.key}: {self.value}"
 
 
+from django.contrib.auth.models import User
+
 class Wishlist(TimeStampedModel):
     """User's wishlist - one per user"""
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id = models.CharField(max_length=255, unique=True, db_index=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='wishlist', null=True, blank=True)
+
+
     
     class Meta(TimeStampedModel.Meta):
         db_table = 'wishlists'
@@ -173,7 +177,8 @@ class Wishlist(TimeStampedModel):
         ordering = ['-updated_at']
         
     def __str__(self):
-        return f"Wishlist for user {self.user_id}"
+        return f"Wishlist for user {self.user.email}"
+
     
     @property
     def items_count(self):
@@ -225,7 +230,8 @@ class StockNotification(TimeStampedModel):
         db_column='product_id'
     )
     email = models.EmailField(max_length=255, db_index=True)
-    user_id = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stock_notifications', null=True, blank=True)
+
     is_notified = models.BooleanField(default=False)
     notified_at = models.DateTimeField(null=True, blank=True)
     
