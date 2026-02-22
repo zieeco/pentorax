@@ -1,8 +1,26 @@
-import type { User } from '@supabase/supabase-js';
-
 // ============================================
 // TYPE DEFINITIONS
 // ============================================
+
+/**
+ * Native User type
+ */
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+  role?: UserRole;
+  [key: string]: any;
+}
+
+/**
+ * Native Session type
+ */
+export interface Session {
+  access_token: string;
+  token_type: string;
+  user: User;
+}
 
 /**
  * User roles in Pentorax
@@ -13,7 +31,7 @@ import type { User } from '@supabase/supabase-js';
 export type UserRole = 'customer' | 'staff' | 'admin';
 
 /**
- * Extracted user metadata from JWT token
+ * Extracted user metadata
  */
 export interface UserMetadata {
   role: UserRole | null;
@@ -24,13 +42,9 @@ export interface UserMetadata {
 // ============================================
 
 /**
- * Extracts user metadata from Supabase User object
+ * Extracts user metadata from User object
  *
- * Reads role from app_metadata.role (set by JWT hook in migration)
- * Falls back to user_metadata.role for backward compatibility
- * Defaults to 'customer' if no role found
- *
- * @param user - Supabase User object from session
+ * @param user - User object from session
  * @returns UserMetadata with role
  */
 export const extractUserMetadata = (user: User | null): UserMetadata => {
@@ -38,18 +52,12 @@ export const extractUserMetadata = (user: User | null): UserMetadata => {
     return { role: null };
   }
 
-  // Primary: Check app_metadata (set by JWT hook)
-  let role = user.app_metadata?.role as UserRole | undefined;
-
-  // Fallback: Check user_metadata (for backward compatibility)
-  if (!role) {
-    role = user.user_metadata?.role as UserRole | undefined;
-  }
+  const role = user.role as UserRole | undefined;
 
   // Validate role is one of our allowed values
   if (role && !isValidRole(role)) {
     console.warn(`Invalid role detected: ${role}. Defaulting to 'customer'.`);
-    role = 'customer';
+    return { role: 'customer' };
   }
 
   // Default to customer if no role found
@@ -57,6 +65,7 @@ export const extractUserMetadata = (user: User | null): UserMetadata => {
 
   return { role: finalRole };
 };
+
 
 // ============================================
 // VALIDATION HELPERS
