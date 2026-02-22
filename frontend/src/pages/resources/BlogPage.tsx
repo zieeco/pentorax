@@ -1,17 +1,24 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, User, ArrowRight } from 'lucide-react';
 import { useBlogPosts, useBlogCategories } from '@/hooks';
 import SEO from '@/components/SEO';
+import { BlogPost } from '@/services/blog.service';
 
 const BlogPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>();
-  const { data: posts = [], isLoading } = useBlogPosts({ category: selectedCategory });
+  const { data: postsData, isLoading } = useBlogPosts({ category: selectedCategory });
   const { data: categories = [] } = useBlogCategories();
+
+  // Handle DRF Paginated Response vs Direct Array
+  const posts: BlogPost[] = Array.isArray(postsData) 
+    ? postsData 
+    : (postsData?.results || []);
 
   // Get featured post (first post or most recent)
   const featuredPost = posts[0];
-  const regularPosts = posts.slice(1, 4); // Show 3 posts after featured
+  const regularPosts = posts.slice(1);
 
   if (isLoading) {
     return (
@@ -80,20 +87,20 @@ const BlogPage: React.FC = () => {
           {/* Featured Post */}
           {featuredPost && (
             <Link to={`/blog/${featuredPost.slug}`}>
-              <div className="group relative mb-20 flex h-[500px] items-end overflow-hidden rounded-[3rem] bg-gray-900 text-white shadow-2xl">
+              <div className="group relative mb-20 flex min-h-[500px] items-end overflow-hidden rounded-[3rem] bg-gray-900 text-white shadow-2xl">
                 <img
                   src={featuredPost.featured_image || 'https://images.unsplash.com/photo-1466611653911-954ffaa13b6f?auto=format&fit=crop&w=1200&q=80'}
                   alt={featuredPost.title}
                   className="absolute inset-0 h-full w-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105"
                 />
-                <div className="relative z-10 max-w-3xl p-12">
+                <div className="relative z-10 max-w-3xl p-8 lg:p-12">
                   <span className="mb-6 inline-block rounded-full bg-secondary px-4 py-1.5 text-xs font-black uppercase tracking-widest text-gray-900">
                     Featured Story
                   </span>
-                  <h2 className="mb-6 text-4xl font-bold md:text-5xl">
+                  <h2 className="mb-6 text-3xl lg:text-5xl font-bold font-heading">
                     {featuredPost.title}
                   </h2>
-                  <p className="mb-6 text-lg text-blue-100">
+                  <p className="mb-6 text-lg text-blue-100 line-clamp-3">
                     {featuredPost.excerpt}
                   </p>
                   <div className="flex items-center text-lg font-bold text-secondary hover:underline">
@@ -106,14 +113,14 @@ const BlogPage: React.FC = () => {
 
           {/* Post Grid */}
           {regularPosts.length > 0 ? (
-            <div className="grid gap-12 md:grid-cols-3">
-              {regularPosts.map((post: any) => (
+            <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+              {regularPosts.map((post) => (
                 <Link
                   key={post.id}
                   to={`/blog/${post.slug}`}
-                  className="group cursor-pointer"
+                  className="group cursor-pointer flex flex-col"
                 >
-                  <div className="mb-6 h-64 overflow-hidden rounded-3xl shadow-sm transition-all group-hover:shadow-xl">
+                  <div className="mb-6 h-64 overflow-hidden rounded-3xl shadow-sm transition-all group-hover:shadow-xl relative bg-gray-100">
                     <img
                       src={post.featured_image || `https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=600&q=80`}
                       alt={post.title}
@@ -121,7 +128,8 @@ const BlogPage: React.FC = () => {
                     />
                   </div>
                   <div className="mb-4 flex items-center space-x-4 text-xs font-bold uppercase tracking-wider text-primary">
-                    <span>{post.category?.name || 'Uncategorized'}</span>
+                    {/* Accessing category safely if it's an object or string */}
+                    <span>{typeof post.category === 'object' ? (post.category as any).name : 'News'}</span>
                     <span className="text-gray-300">|</span>
                     <span className="flex items-center uppercase tracking-normal text-gray-500">
                       <Calendar className="mr-1 h-3 w-3" />
@@ -132,13 +140,13 @@ const BlogPage: React.FC = () => {
                       })}
                     </span>
                   </div>
-                  <h3 className="mb-4 text-2xl font-bold leading-tight text-gray-900 transition-colors group-hover:text-primary">
+                  <h3 className="mb-4 text-2xl font-bold leading-tight text-gray-900 transition-colors group-hover:text-primary line-clamp-2">
                     {post.title}
                   </h3>
-                  <p className="mb-6 leading-relaxed text-gray-600">
+                  <p className="mb-6 leading-relaxed text-gray-600 line-clamp-3 flex-grow">
                     {post.excerpt}
                   </p>
-                  <div className="flex items-center space-x-3 text-sm font-bold text-gray-500">
+                  <div className="flex items-center space-x-3 text-sm font-bold text-gray-500 mt-auto">
                     <User className="h-5 w-5 text-gray-300" />
                     <span>{post.author?.name || 'PentoraX Team'}</span>
                   </div>
@@ -153,16 +161,6 @@ const BlogPage: React.FC = () => {
                 </p>
               </div>
             )
-          )}
-
-          {/* Load More / Pagination (if needed) */}
-          {posts.length > 4 && (
-            <div className="mt-16 text-center">
-              <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-4 font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl">
-                Load More Articles
-                <ArrowRight className="h-5 w-5" />
-              </button>
-            </div>
           )}
         </div>
       </div>

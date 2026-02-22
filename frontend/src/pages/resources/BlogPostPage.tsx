@@ -68,11 +68,10 @@ export default function BlogPostPage() {
             )}
           </div>
 
-          <div className="prose prose-lg max-w-none">
-            {post.content.split('\n').map((paragraph, i) => (
-              <p key={i} className="mb-4">{paragraph}</p>
-            ))}
-          </div>
+          <div 
+            className="prose prose-lg max-w-none prose-headings:font-bold prose-a:text-primary prose-img:rounded-xl"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
         </article>
       </div>
     </div>

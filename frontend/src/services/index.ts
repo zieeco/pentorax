@@ -20,3 +20,5 @@ export { quotesApi } from './quotes.service';
 export { blogApi } from './blog.service';
 export { coreApi } from './core.service';
 export { newsletterApi } from './newsletter.service';
+export { authApi } from './auth.service';
+
