@@ -68,7 +68,8 @@ class Migration(migrations.Migration):
                 ('role', models.CharField(max_length=255)),
                 ('department', models.CharField(choices=[('leadership', 'Leadership'), ('engineering', 'Engineering'), ('operations', 'Operations')], max_length=50)),
                 ('bio', models.TextField(blank=True, default='', null=True)),
-                ('image', models.URLField(help_text='Supabase Storage URL', max_length=500)),
+                ('image', models.URLField(help_text='Storage URL', max_length=500)),
+
                 ('email', models.EmailField(blank=True, default='', max_length=255, null=True)),
                 ('linkedin', models.URLField(blank=True, default='', null=True)),
                 ('order', models.IntegerField(default=0, help_text='Display order')),

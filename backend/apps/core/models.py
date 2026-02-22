@@ -116,7 +116,7 @@ class TeamMember(TimeStampedModel):
     role = models.CharField(max_length=255)
     department = models.CharField(max_length=50, choices=DEPARTMENT_CHOICES)
     bio = models.TextField(blank=True, null=True, default="")
-    image = models.URLField(max_length=500, help_text="Supabase Storage URL")
+    image = models.URLField(max_length=500, help_text="Storage URL")
     email = models.EmailField(max_length=255, blank=True, null=True, default="")
     linkedin = models.URLField(blank=True, null=True, default="")
     order = models.IntegerField(default=0, help_text="Display order")

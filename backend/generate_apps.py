@@ -12,7 +12,8 @@ from apps.products.models import Product
 
 class Cart(TimeStampedModel):
     """Shopping cart"""
-    user_id = models.CharField(max_length=255, db_index=True, help_text="Supabase user ID or session ID")
+    user_id = models.CharField(max_length=255, db_index=True, help_text="User ID or session ID")
+
     
     class Meta:
         ordering = ['-updated_at']

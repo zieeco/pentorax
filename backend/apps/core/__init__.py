@@ -1,4 +1,5 @@
 """
-Core app for Pentorax - Supabase integration and shared utilities
+Core app for Pentorax - Shared utilities
 """
+
 default_app_config = 'apps.core.apps.CoreConfig'

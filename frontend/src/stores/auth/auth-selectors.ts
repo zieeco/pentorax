@@ -20,14 +20,14 @@ import { useAuthStore } from './auth-store';
 export const useRole = (): UserRole | null => useAuthStore((state) => state.role);
 
 /**
- * Get current Supabase session
+ * Get current session
  * @returns Session object or null
  */
 export const useSession = (): Session | null => useAuthStore((state) => state.session);
 
 /**
  * Get current user object
- * @returns Supabase User object or null
+ * @returns User object or null
  */
 export const useUser = (): User | null => useAuthStore((state) => state.user);
 

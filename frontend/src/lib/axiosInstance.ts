@@ -6,8 +6,6 @@ import type {
   InternalAxiosRequestConfig,
 } from 'axios';
 import { toast } from 'sonner';
-import { supabase } from '../utils/supabaseClient';
-import { extractUserMetadata, type UserRole } from '@/utils/authHelpers';
 import { useAuthStore } from '@/stores/auth';
 
 // --- Configuration ---
@@ -57,14 +55,14 @@ const delay = (ms: number): Promise<void> =>
 
 // --- Interceptors ---
 
-// 1. Request Interceptor: Attach Supabase JWT from Zustand store
+// 1. Request Interceptor: Attach Token from Zustand store
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Get current session token synchronously
     const accessToken = useAuthStore.getState().session?.access_token;
 
     if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+      config.headers.Authorization = `Token ${accessToken}`;
     }
 
     // Log requests in development
@@ -124,41 +122,12 @@ axiosInstance.interceptors.response.use(
       message?: string;
     };
 
-    // --- Handle 401: Try to refresh session and retry ---
+    // --- Handle 401: Clear session and redirect ---
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      try {
-        const {
-          data: { session: refreshedSession },
-          error: refreshError,
-        } = await supabase.auth.refreshSession();
-
-        if (refreshError) throw refreshError;
-
-        if (refreshedSession?.access_token) {
-          // Update auth store with fresh data
-          const { role } = extractUserMetadata(refreshedSession.user);
-          useAuthStore.setState({
-            session: refreshedSession,
-            user: refreshedSession.user,
-            role: role as UserRole | null,
-          });
-
-          // Persist to localStorage for cross-tab sync
-          localStorage.setItem('WW-auth', JSON.stringify(refreshedSession));
-
-          // Retry original request with new token
-          if (originalRequest.headers) {
-            originalRequest.headers.Authorization = `Bearer ${refreshedSession.access_token}`;
-          }
-          return axiosInstance(originalRequest);
-        }
-      } catch (refreshErr) {
-        console.error('Session refresh failed:', refreshErr);
-      }
-
-      // If we get here, refresh failed or no session
+      // Session renewal could be added here if refresh tokens are implemented in Django
+      
       toast.error('Your session has expired. Please log in again.');
 
       // Clear auth state
@@ -166,8 +135,9 @@ axiosInstance.interceptors.response.use(
         session: null,
         user: null,
         role: null,
+        isAuthenticated: false,
       });
-      localStorage.removeItem('WW-auth');
+      localStorage.removeItem('pentorax-auth');
 
       // Redirect to sign-in
       if (typeof window !== 'undefined') {
@@ -175,6 +145,7 @@ axiosInstance.interceptors.response.use(
       }
       return Promise.reject(error);
     }
+
 
     // Handle case where 401 retry already attempted
     if (status === 401 && originalRequest._retry) {

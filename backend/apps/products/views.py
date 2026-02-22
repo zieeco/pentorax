@@ -470,9 +470,7 @@ class WishlistViewSet(viewsets.ViewSet):
     
     def list(self, request):
         """Get current user's wishlist"""
-        # Extract user_id from Supabase user object
-        user_id = request.user.get('sub') if isinstance(request.user, dict) else str(request.user.id)
-        wishlist, created = Wishlist.objects.get_or_create(user_id=user_id)
+        wishlist, created = Wishlist.objects.get_or_create(user=request.user)
         serializer = WishlistSerializer(wishlist)
         return Response(serializer.data)
     
@@ -488,11 +486,8 @@ class WishlistViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        # Get user ID
-        user_id = request.user.get('sub') if isinstance(request.user, dict) else str(request.user.id)
-        
         # Get or create wishlist
-        wishlist, _ = Wishlist.objects.get_or_create(user_id=user_id)
+        wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
         
         # Check if product exists
         try:
@@ -519,9 +514,8 @@ class WishlistViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['delete'], url_path='remove_item/(?P<product_id>[^/.]+)')
     def remove_item(self, request, product_id=None):
         """Remove product from wishlist"""
-        user_id = request.user.get('sub') if isinstance(request.user, dict) else str(request.user.id)
         try:
-            wishlist = Wishlist.objects.get(user_id=user_id)
+            wishlist = Wishlist.objects.get(user=request.user)
             item = WishlistItem.objects.get(wishlist=wishlist, product_id=product_id)
             item.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -539,9 +533,8 @@ class WishlistViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['delete'])
     def clear(self, request):
         """Clear all items from wishlist"""
-        user_id = request.user.get('sub') if isinstance(request.user, dict) else str(request.user.id)
         try:
-            wishlist = Wishlist.objects.get(user_id=user_id)
+            wishlist = Wishlist.objects.get(user=request.user)
             wishlist.items.all().delete()
             return Response(
                 {'message': 'Wishlist cleared'},
