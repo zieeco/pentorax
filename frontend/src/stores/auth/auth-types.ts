@@ -1,5 +1,4 @@
-import type { Session, User } from '@supabase/supabase-js';
-import type { UserRole, UserMetadata } from '@/utils/authHelpers';
+import type { UserRole, UserMetadata, User, Session } from '@/utils/authHelpers';
 
 // AUTH STATE INTERFACE
 export interface AuthState {
@@ -14,6 +13,7 @@ export interface AuthState {
   setSession: (session: Session | null) => void;
   setUser: (user: User | null) => void;
   setRole: (role: UserRole | null) => void;
+
 
   // Auth actions
   signIn: (email: string, password: string) => Promise<AuthResponse<User>>;

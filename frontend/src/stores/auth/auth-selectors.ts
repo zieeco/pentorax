@@ -5,9 +5,9 @@
  * Provides type-safe selectors with optimized re-rendering.
  */
 
-import type { Session, User } from '@supabase/supabase-js';
-import { type UserRole } from '@/utils/authHelpers';
+import type { Session, User, UserRole } from '@/utils/authHelpers';
 import { useAuthStore } from './auth-store';
+
 
 // ============================================
 // CORE STATE SELECTORS

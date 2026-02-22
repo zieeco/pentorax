@@ -1,48 +1,9 @@
-import { supabase } from '@/utils/supabaseClient';
 import { extractUserMetadata } from '@/utils/authHelpers';
 import type { AuthStoreSetter } from './auth-types';
 import { debounce, persistSession, clearPersistedSession, getStorageKey } from './auth-utils';
 
-// AUTH STATE CHANGE LISTENER
-export const setupAuthStateListener = (set: AuthStoreSetter) => {
-  const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-    console.log('[AuthStore] Auth state changed:', event);
-
-    if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-      const user = session?.user ?? null;
-      const metadata = extractUserMetadata(user);
-
-      set({
-        session,
-        user,
-        role: metadata.role,
-        isAuthenticated: !!session, // CRITICAL: Set isAuthenticated
-        isLoading: false,
-      });
-
-      if (session) {
-        persistSession(session);
-      }
-
-      console.log('[AuthStore] User signed in/refreshed. Role:', metadata.role);
-    } else if (event === 'SIGNED_OUT') {
-      set({
-        session: null,
-        user: null,
-        role: null,
-        isAuthenticated: false, // CRITICAL: Set isAuthenticated to false
-        isLoading: false,
-      });
-
-      clearPersistedSession();
-      console.log('[AuthStore] User signed out');
-    }
-  });
-
-  return authListener;
-};
-
 // CROSS-TAB SYNC
+
 export const setupCrossTabSync = (set: AuthStoreSetter) => {
   const handleStorageChange = (event: StorageEvent) => {
     if (event.key === getStorageKey()) {

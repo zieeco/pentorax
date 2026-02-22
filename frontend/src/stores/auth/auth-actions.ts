@@ -1,21 +1,9 @@
-import { supabase } from '@/utils/supabaseClient';
+import { authApi } from '@/services/auth.service';
 import { toast } from 'sonner';
 import { extractUserMetadata } from '@/utils/authHelpers';
 import type { AuthStoreSetter, AuthResponse, AuthErrorResponse } from './auth-types';
 import { handleAuthError, persistSession, clearPersistedSession } from './auth-utils';
 import { cartApi } from '@/services';
-
-// Helper to get session key from cookies
-const getSessionKey = () => {
-  const cookies = document.cookie.split(';');
-  for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split('=');
-    if (name === 'sessionid') {
-      return value;
-    }
-  }
-  return null;
-};
 
 // SIGN IN
 export const createSignInAction = (set: AuthStoreSetter) => async (
@@ -25,46 +13,37 @@ export const createSignInAction = (set: AuthStoreSetter) => async (
   set({ isLoading: true });
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      toast.error(handleAuthError(error, 'Sign in'));
-      set({ isLoading: false });
-      return { data: null, error };
-    }
+    const data = await authApi.login(email, password);
 
     if (data.user) {
       const metadata = extractUserMetadata(data.user);
+      const session = {
+        access_token: data.access_token,
+        token_type: data.token_type,
+        user: data.user
+      };
+      
       set({
-        session: data.session,
+        session,
         user: data.user,
         role: metadata.role,
-        isAuthenticated: true, // CRITICAL: Set isAuthenticated
+        isAuthenticated: true,
         isLoading: false,
       });
 
-      // Merge guest cart if exists
-      const sessionKey = getSessionKey();
-      if (sessionKey) {
-        try {
-          await cartApi.merge(sessionKey);
-          console.log('[Auth] Guest cart merged successfully');
-        } catch (mergeError) {
-          // Don't fail login if cart merge fails
-          console.warn('[Auth] Cart merge failed:', mergeError);
-        }
-      }
-
+      persistSession(session);
+      
       console.log('[AuthStore] Sign in successful. Role:', metadata.role);
       return { data: data.user, error: null };
     }
 
     set({ isLoading: false });
     return { data: null, error: null };
-  } catch (error) {
-    toast.error(handleAuthError(error, 'Sign in exception'));
+  } catch (error: any) {
+    const errorMsg = error.response?.data?.detail || error.message || 'Sign in failed';
+    toast.error(errorMsg);
     set({ isLoading: false });
-    return { data: null, error: error as any };
+    return { data: null, error };
   }
 };
 
@@ -78,32 +57,17 @@ export const createSignUpAction = (set: AuthStoreSetter) => async (
   set({ isLoading: true });
 
   try {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name: fullName,
-          full_name: fullName,
-          ...metadata,
-        },
-        emailRedirectTo: `${window.location.origin}/auth/confirmation?type=email-verified`,
-      },
-    });
+    const user = await authApi.register(email, password, fullName, metadata);
 
-    if (error) {
-      toast.error(handleAuthError(error, 'Sign up'));
-      set({ isLoading: false });
-      return { data: null, error };
-    }
-
-    console.log('[AuthStore] Sign up successful:', data.user?.email);
+    console.log('[AuthStore] Sign up successful:', user?.email);
+    toast.success('Registration successful! You can now sign in.');
     set({ isLoading: false });
-    return { data: data.user, error: null };
-  } catch (error) {
-    toast.error(handleAuthError(error, 'Sign up exception'));
+    return { data: user, error: null };
+  } catch (error: any) {
+    const errorMsg = error.response?.data?.detail || error.message || 'Sign up failed';
+    toast.error(errorMsg);
     set({ isLoading: false });
-    return { data: null, error: error as any };
+    return { data: null, error };
   }
 };
 
@@ -114,23 +78,15 @@ export const createForgotPasswordAction = (set: AuthStoreSetter) => async (
   set({ isLoading: true });
 
   try {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/dashboard/reset-password`,
-    });
-
-    if (error) {
-      toast.error(handleAuthError(error, 'Forgot password'));
-      set({ isLoading: false });
-      return { error };
-    }
-
-    console.log('[AuthStore] Password reset email sent to:', email);
+    await authApi.forgotPassword(email);
+    toast.success('Password reset email sent');
     set({ isLoading: false });
     return { error: null };
-  } catch (error) {
-    toast.error(handleAuthError(error, 'Forgot password exception'));
+  } catch (error: any) {
+    const errorMsg = error.response?.data?.detail || error.message || 'Failed to send reset email';
+    toast.error(errorMsg);
     set({ isLoading: false });
-    return { error: error as any };
+    return { error };
   }
 };
 
@@ -141,21 +97,15 @@ export const createUpdatePasswordAction = (set: AuthStoreSetter) => async (
   set({ isLoading: true });
 
   try {
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
-
-    if (error) {
-      toast.error(handleAuthError(error, 'Update password'));
-      set({ isLoading: false });
-      return { error };
-    }
-
-    console.log('[AuthStore] Password updated successfully');
+    await authApi.updatePassword(newPassword);
+    toast.success('Password updated successfully');
     set({ isLoading: false });
     return { error: null };
-  } catch (error) {
-    toast.error(handleAuthError(error, 'Update password exception'));
+  } catch (error: any) {
+    const errorMsg = error.response?.data?.detail || error.message || 'Failed to update password';
+    toast.error(errorMsg);
     set({ isLoading: false });
-    return { error: error as any };
+    return { error };
   }
 };
 
@@ -164,24 +114,11 @@ export const createResendVerificationAction = () => async (
   email: string
 ): Promise<AuthErrorResponse> => {
   try {
-    const { error } = await supabase.auth.resend({
-      type: 'signup',
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
-      },
-    });
-
-    if (error) {
-      toast.error(handleAuthError(error, 'Resend verification'));
-      return { error };
-    }
-
-    console.log('[AuthStore] Verification email resent to:', email);
+    // Implement resend if available in Django
+    console.log('[AuthStore] Resend verification not implemented yet');
     return { error: null };
-  } catch (error) {
-    toast.error(handleAuthError(error, 'Resend verification exception'));
-    return { error: error as any };
+  } catch (error: any) {
+    return { error };
   }
 };
 
@@ -190,23 +127,25 @@ export const createSignOutAction = (set: AuthStoreSetter) => async (): Promise<v
   set({ isLoading: true });
 
   try {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      toast.error(handleAuthError(error, 'Sign out'));
-      throw error;
-    }
-
+    await authApi.logout();
     set({ 
       session: null, 
       user: null, 
       role: null,
-      isAuthenticated: false, // CRITICAL: Set isAuthenticated to false
+      isAuthenticated: false,
     });
     toast.success('Signed out successfully');
     clearPersistedSession();
-  } catch (error) {
-    toast.error(handleAuthError(error, 'Sign out error'));
+  } catch (error: any) {
+    console.error('[AuthStore] Sign out error:', error);
+    // Still clear local state even if server logout fails
+    set({ 
+      session: null, 
+      user: null, 
+      role: null,
+      isAuthenticated: false,
+    });
+    clearPersistedSession();
   } finally {
     set({ isLoading: false });
   }
@@ -216,69 +155,37 @@ export const createSignOutAction = (set: AuthStoreSetter) => async (): Promise<v
 export const createCheckUserAction = (set: AuthStoreSetter) => async () => {
   set({ isLoading: true });
 
-  let role = null;
-
   try {
-    const { data: { session }, error } = await supabase.auth.getSession();
-
-    if (error) {
-      console.error('[AuthStore] Error getting session:', error.message);
-      return { role: null };
-    }
-
-    const user = session?.user ?? null;
+    // Try to get user from server to verify session
+    const user = await authApi.getCurrentUser();
     const metadata = extractUserMetadata(user);
-    role = metadata.role;
+    const role = metadata.role;
 
     set({ 
-      session, 
       user, 
       role,
-      isAuthenticated: !!session, // CRITICAL: Set isAuthenticated based on session
+      isAuthenticated: true,
     });
 
-    if (session) {
-      persistSession(session);
-    } else {
-      clearPersistedSession();
-    }
-
-    if (!role && user) {
-      console.warn('[AuthStore] Role not found in JWT. App metadata:', user.app_metadata);
-    }
+    return { role };
   } catch (error) {
-    console.error(handleAuthError(error, 'Check user'));
-    toast.error('Failed to verify authentication status');
+    console.log('[AuthStore] Check user failed, user might not be logged in');
+    set({ 
+      session: null, 
+      user: null, 
+      role: null,
+      isAuthenticated: false,
+    });
+    clearPersistedSession();
+    return { role: null };
   } finally {
     set({ isLoading: false });
   }
-
-  return { role };
 };
 
 // REFRESH SESSION
 export const createRefreshSessionAction = (set: AuthStoreSetter) => async (): Promise<void> => {
-  try {
-    const { data, error } = await supabase.auth.refreshSession();
-
-    if (error) {
-      console.error('[AuthStore] Failed to refresh session:', error.message);
-      return;
-    }
-
-    if (data.session) {
-      const metadata = extractUserMetadata(data.session.user);
-      set({
-        session: data.session,
-        user: data.session.user,
-        role: metadata.role,
-        isAuthenticated: true, // CRITICAL: Set isAuthenticated
-      });
-
-      persistSession(data.session);
-      console.log('[AuthStore] Session refreshed. Role:', metadata.role);
-    }
-  } catch (error) {
-    console.error('[AuthStore] Exception in refreshSession:', error);
-  }
+  // Logic for token refresh if using JWT with refresh tokens
+  console.log('[AuthStore] Refresh session not implemented');
 };
+

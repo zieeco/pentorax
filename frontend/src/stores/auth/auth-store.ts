@@ -11,13 +11,11 @@ import {
   createRefreshSessionAction,
 } from './auth-actions';
 import { createPermissionHelpers } from './auth-permissions';
-import { setupAuthStateListener, setupCrossTabSync, setupAutoRefresh } from './auth-listeners';
+import { setupCrossTabSync, setupAutoRefresh } from './auth-listeners';
+
 
 // AUTH STORE
 export const useAuthStore = create<AuthState>((set, get) => {
-  // Initialize auth state listener
-  const authListener = setupAuthStateListener(set);
-
   // Setup cross-tab synchronization
   const cleanupCrossTabSync = setupCrossTabSync(set);
 
@@ -30,11 +28,11 @@ export const useAuthStore = create<AuthState>((set, get) => {
   // Cleanup on unmount (if needed)
   if (typeof window !== 'undefined') {
     window.addEventListener('beforeunload', () => {
-      authListener.subscription.unsubscribe();
       cleanupCrossTabSync();
       cleanupAutoRefresh();
     });
   }
+
 
   // Return store state and actions
   return {
