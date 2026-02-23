@@ -4,22 +4,9 @@
  */
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
-import { blogApi } from '@/services';
+import { blogApi, type BlogPost } from '@/services';
 import { QUERY_KEYS } from './api.constants';
 import { defaultQueryOptions } from './api.utils';
-
-interface BlogPost {
-  id: string;
-  title: string;
-  slug: string;
-  content: string;
-  excerpt: string;
-  featured_image: string;
-  author: string;
-  category: BlogCategory;
-  published_at: string;
-  created_at: string;
-}
 
 interface BlogCategory {
   id: string;
