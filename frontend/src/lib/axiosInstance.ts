@@ -32,6 +32,8 @@ const axiosInstance: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
+  xsrfCookieName: 'csrftoken',
+  xsrfHeaderName: 'X-CSRFToken',
   timeout: 30000, // 30 seconds
 });
 
@@ -122,27 +124,18 @@ axiosInstance.interceptors.response.use(
       message?: string;
     };
 
-    // --- Handle 401: Clear session and redirect ---
+    // --- Handle 401: Clear session ---
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      // Session renewal could be added here if refresh tokens are implemented in Django
-      
-      toast.error('Your session has expired. Please log in again.');
-
-      // Clear auth state
+      // Clear auth state silently (don't redirect globally)
       useAuthStore.setState({
         session: null,
         user: null,
         role: null,
         isAuthenticated: false,
       });
-      localStorage.removeItem('pentorax-auth');
 
-      // Redirect to sign-in
-      if (typeof window !== 'undefined') {
-        window.location.href = '/sign-in';
-      }
       return Promise.reject(error);
     }
 
