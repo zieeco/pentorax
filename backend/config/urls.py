@@ -1,11 +1,15 @@
 """
 URL configuration for Pentorax project.
 """
+from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+admin.site.site_url = settings.FRONTEND_URL
+
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('api/', include('apps.core.urls')),
     path('api/products/', include('apps.products.urls')),
     path('api/cart/', include('apps.cart.urls')),
