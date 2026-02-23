@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Mail, Lock, Globe, ChevronDown, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Loader2 } from 'lucide-react';
 
@@ -140,18 +141,13 @@ const LoginPage: React.FC = () => {
                     <FormItem className="space-y-1">
                       <FormLabel className="text-[10px] font-black text-gray-400 ml-1 uppercase tracking-widest">Password</FormLabel>
                       <FormControl>
-                        <div className="relative group">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                            <Lock className="h-4.5 w-4.5 text-gray-300 group-focus-within:text-primary transition-colors" />
-                          </div>
-                          <Input
-                            type="password"
-                            placeholder="••••••••••••••••"
-                            className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-transparent rounded-[1.25rem] focus:bg-white focus:border-primary font-bold text-gray-900 shadow-sm h-auto"
-                            disabled={isLoading}
-                            {...field}
-                          />
-                        </div>
+                        <PasswordInput
+                          placeholder="••••••••••••••••"
+                          className="w-full py-3.5 bg-gray-50 border border-transparent rounded-[1.25rem] focus:bg-white focus:border-primary font-bold text-gray-900 shadow-sm h-auto"
+                          disabled={isLoading}
+                          leftIcon={<Lock className="h-4.5 w-4.5 text-gray-300 group-focus-within:text-primary transition-colors" />}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

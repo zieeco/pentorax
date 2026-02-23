@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Globe, ChevronDown, UserCircle, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { ArrowLeft, Loader2 } from 'lucide-react';
@@ -175,7 +176,7 @@ const SignupPage: React.FC = () => {
                     <FormItem className="space-y-1">
                       <FormLabel className="text-[10px] font-black text-gray-400 ml-1 uppercase tracking-widest">Create Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="Min. 8 characters" className="px-3.5 py-3 bg-gray-50 border-transparent rounded-xl focus:bg-white focus:border-primary font-bold shadow-sm h-auto" disabled={isLoading} {...field} />
+                        <PasswordInput placeholder="Min. 8 characters" className="px-3.5 py-3 bg-gray-50 border-transparent rounded-xl focus:bg-white focus:border-primary font-bold shadow-sm h-auto" disabled={isLoading} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

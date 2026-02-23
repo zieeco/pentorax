@@ -7,8 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Globe, ChevronDown, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 const resetPasswordSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
@@ -91,7 +92,7 @@ const ResetPasswordPage: React.FC = () => {
                     <FormItem className="space-y-1">
                       <FormLabel className="text-[10px] font-black text-gray-400 ml-1 uppercase tracking-widest">New Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="••••••••" className="px-4 py-3.5 bg-gray-50 border-transparent rounded-xl focus:bg-white focus:border-primary font-bold shadow-sm h-auto" disabled={isLoading} {...field} />
+                        <PasswordInput placeholder="••••••••" className="px-4 py-3.5 bg-gray-50 border-transparent rounded-xl focus:bg-white focus:border-primary font-bold shadow-sm h-auto" disabled={isLoading} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -104,7 +105,7 @@ const ResetPasswordPage: React.FC = () => {
                     <FormItem className="space-y-1">
                       <FormLabel className="text-[10px] font-black text-gray-400 ml-1 uppercase tracking-widest">Confirm Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="••••••••" className="px-4 py-3.5 bg-gray-50 border-transparent rounded-xl focus:bg-white focus:border-primary font-bold shadow-sm h-auto" disabled={isLoading} {...field} />
+                        <PasswordInput placeholder="••••••••" className="px-4 py-3.5 bg-gray-50 border-transparent rounded-xl focus:bg-white focus:border-primary font-bold shadow-sm h-auto" disabled={isLoading} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

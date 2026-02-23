@@ -1,5 +1,5 @@
-import React from 'react';
 import { useAuthStore } from '@/stores/auth';
+import { Link } from 'react-router-dom';
 import { 
   TrendingUp, 
   ShoppingCart, 
@@ -11,9 +11,27 @@ import {
   Calendar,
   CheckCircle2
 } from 'lucide-react';
+import { useProductsPaginated } from '@/hooks/products.hooks';
 
 const DashboardPage: React.FC = () => {
   const user = useAuthStore((state) => state.user);
+  
+  const { data: productData, isLoading } = useProductsPaginated({ per_page: 4 });
+  const products = productData?.results || [];
+
+  const getStockStatus = (prod: any) => {
+    if (prod.stock_quantity === 0) return 'Out of Stock';
+    if (prod.stock_quantity <= (prod.low_stock_threshold || 5)) return 'Low Stock';
+    return 'In Stock';
+  };
+
+  const getHealth = (prod: any) => {
+    if (prod.stock_quantity === 0) return 0;
+    const threshold = prod.low_stock_threshold || 5;
+    const ratio = prod.stock_quantity / threshold;
+    if (ratio <= 1) return Math.round(ratio * 60 + 20); // 20-80% for low stock
+    return Math.min(100, Math.round(80 + (ratio / 10) * 20)); // 80-100% for good stock
+  };
 
   const stats = [
     { label: 'Total Revenue', value: '₦2.45M', trend: '+14%', icon: <DollarSign className="h-5 w-5" />, color: 'bg-blue-500' },
@@ -27,13 +45,6 @@ const DashboardPage: React.FC = () => {
     { id: 'ORD-1091', customer: 'Baze University', product: 'Battery Storage 200Ah', priority: 'Medium', status: 'Assigned', time: '4h ago' },
     { id: 'ORD-1088', customer: 'John Doe Residence', product: 'Solar Panel 450W', priority: 'Low', status: 'Resolved', time: '1d ago' },
     { id: 'ORD-1087', customer: 'Industrial Hub 1', product: 'Inverter System', priority: 'High', status: 'Pending', time: '1d ago' },
-  ];
-
-  const products = [
-    { name: '5kW Solar Inverter', location: 'Lagos Warehouse', stock: 45, status: 'In Stock', health: 98 },
-    { name: 'LiFePO4 Battery 200Ah', location: 'Abuja Store', stock: 12, status: 'Low Stock', health: 82 },
-    { name: 'Solar Panel 450W Mono', location: 'Port Harcourt', stock: 89, status: 'In Stock', health: 94 },
-    { name: 'Charge Controller MPPT', location: 'Kano Branch', stock: 0, status: 'Out of Stock', health: 0 },
   ];
 
   return (
@@ -69,7 +80,7 @@ const DashboardPage: React.FC = () => {
         <div className="lg:col-span-2 bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-gray-50 flex items-center justify-between">
             <h3 className="font-black text-lg text-gray-900">Live Inventory Status</h3>
-            <button className="text-primary text-xs font-bold hover:underline">View All Products</button>
+            <Link to="/shop" className="text-primary text-xs font-bold hover:underline">View All Products</Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -83,45 +94,68 @@ const DashboardPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {products.map((prod, i) => (
-                  <tr key={i} className="hover:bg-gray-50/50 transition-colors group">
-                    <td className="px-6 py-4">
-                      <div className="font-bold text-gray-900">{prod.name}</div>
-                      <div className="text-[10px] text-gray-400 flex items-center">
-                        <MapPin className="h-2.5 w-2.5 mr-1" /> {prod.location}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 font-bold text-primary">{prod.stock} units</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center space-x-2">
-                        <div className="flex-1 h-1.5 w-16 bg-gray-100 rounded-full overflow-hidden">
-                          <div 
-                            className={`h-full rounded-full ${prod.health > 90 ? 'bg-emerald-500' : prod.health > 70 ? 'bg-amber-500' : 'bg-rose-500'}`} 
-                            style={{ width: `${prod.health}%` }}
-                          ></div>
-                        </div>
-                        <span className="text-[10px] font-bold text-gray-500">{prod.health}%</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className={`inline-flex items-center px-2 py-1 rounded-md text-[10px] font-black uppercase ${
-                        prod.status === 'In Stock' ? 'bg-emerald-50 text-emerald-600' : 
-                        prod.status === 'Low Stock' ? 'bg-amber-50 text-amber-600' : 'bg-rose-50 text-rose-600'
-                      }`}>
-                        <span className={`h-1.5 w-1.5 rounded-full mr-1.5 ${
-                          prod.status === 'In Stock' ? 'bg-emerald-500' : 
-                          prod.status === 'Low Stock' ? 'bg-amber-500 animate-pulse' : 'bg-rose-500'
-                        }`}></span>
-                        {prod.status}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <button className="p-1 hover:bg-gray-100 rounded-lg text-gray-400">
-                        <MoreVertical className="h-4 w-4" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {isLoading ? (
+                  Array(4).fill(0).map((_, i) => (
+                    <tr key={i} className="animate-pulse">
+                      <td className="px-6 py-4"><div className="h-4 bg-gray-100 rounded w-32"></div></td>
+                      <td className="px-6 py-4"><div className="h-4 bg-gray-100 rounded w-16"></div></td>
+                      <td className="px-6 py-4"><div className="h-4 bg-gray-100 rounded w-24"></div></td>
+                      <td className="px-6 py-4"><div className="h-4 bg-gray-100 rounded w-20"></div></td>
+                      <td className="px-6 py-4"></td>
+                    </tr>
+                  ))
+                ) : (
+                  products.map((prod: any, i: number) => {
+                    const status = getStockStatus(prod);
+                    const health = getHealth(prod);
+                    return (
+                      <tr key={prod.id || i} className="hover:bg-gray-50/50 transition-colors group">
+                        <td className="px-6 py-4">
+                          <div className="font-bold text-gray-900">{prod.name}</div>
+                          <div className="text-[10px] text-gray-400 flex items-center">
+                            <MapPin className="h-2.5 w-2.5 mr-1" /> {prod.location || 'Main Warehouse'}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 font-bold text-primary">{prod.stock_quantity} units</td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center space-x-2">
+                            <div className="flex-1 h-1.5 w-16 bg-gray-100 rounded-full overflow-hidden">
+                              <div 
+                                className={`h-full rounded-full ${health > 90 ? 'bg-emerald-500' : health > 70 ? 'bg-amber-500' : 'bg-rose-500'}`} 
+                                style={{ width: `${health}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-[10px] font-bold text-gray-500">{health}%</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className={`inline-flex items-center px-2 py-1 rounded-md text-[10px] font-black uppercase ${
+                            status === 'In Stock' ? 'bg-emerald-50 text-emerald-600' : 
+                            status === 'Low Stock' ? 'bg-amber-50 text-amber-600' : 'bg-rose-50 text-rose-600'
+                          }`}>
+                            <span className={`h-1.5 w-1.5 rounded-full mr-1.5 ${
+                              status === 'In Stock' ? 'bg-emerald-500' : 
+                              status === 'Low Stock' ? 'bg-amber-500 animate-pulse' : 'bg-rose-500'
+                            }`}></span>
+                            {status}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="relative group/menu">
+                            <button className="p-1 hover:bg-gray-100 rounded-lg text-gray-400">
+                              <MoreVertical className="h-4 w-4" />
+                            </button>
+                            <div className="absolute right-0 mt-1 w-32 bg-white border border-gray-100 rounded-xl shadow-xl py-2 invisible group-hover/menu:visible z-30 transition-all opacity-0 group-hover/menu:opacity-100 scale-95 group-hover/menu:scale-100">
+                              <button className="w-full text-left px-4 py-2 text-[10px] font-bold text-gray-700 hover:bg-gray-50">Edit Product</button>
+                              <button className="w-full text-left px-4 py-2 text-[10px] font-bold text-gray-700 hover:bg-gray-50 font-sand">Restock</button>
+                              <button className="w-full text-left px-4 py-2 text-[10px] font-bold text-rose-600 hover:bg-rose-50">Mark Offline</button>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>
