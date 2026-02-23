@@ -20,19 +20,17 @@ export const debounce = <T extends (...args: any[]) => any>(func: T, delay: numb
   }) as T;
 };
 
-// LOCAL STORAGE HELPERS
-const AUTH_STORAGE_KEY = 'pentorax-auth';
-
-export const persistSession = (session: any) => {
-  if (session) {
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
-  } else {
-    localStorage.removeItem(AUTH_STORAGE_KEY);
-  }
+// STORAGE UTILS (Intentionally empty - Never use localstorage)
+export const persistSession = (_session: any) => {
+  // Cookies are handled by the browser
 };
 
 export const clearPersistedSession = () => {
-  localStorage.removeItem(AUTH_STORAGE_KEY);
+  // Cookies are handled by the browser/server
 };
 
-export const getStorageKey = () => AUTH_STORAGE_KEY;
+export const loadSessionFromStorage = (): any | null => {
+  return null;
+};
+
+export const getStorageKey = () => 'pentorax-auth';

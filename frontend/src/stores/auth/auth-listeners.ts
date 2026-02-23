@@ -1,45 +1,76 @@
 import { extractUserMetadata } from '@/utils/authHelpers';
 import type { AuthStoreSetter } from './auth-types';
-import { debounce, persistSession, clearPersistedSession, getStorageKey } from './auth-utils';
+import { debounce } from './auth-utils';
+import { authApi } from '@/services/auth.service';
 
-// CROSS-TAB SYNC
+// CROSS-TAB SYNC (Using BroadcastChannel instead of localStorage)
+const AUTH_CHANNEL = 'pentorax-auth-channel';
 
 export const setupCrossTabSync = (set: AuthStoreSetter) => {
-  const handleStorageChange = (event: StorageEvent) => {
-    if (event.key === getStorageKey()) {
-      if (event.newValue) {
-        const session = JSON.parse(event.newValue);
-        const metadata = extractUserMetadata(session.user);
+  if (typeof window === 'undefined') return () => {};
 
-        set({
-          session,
-          user: session.user,
-          role: metadata.role,
-          isAuthenticated: true, // CRITICAL: Set isAuthenticated
-        });
+  const channel = new BroadcastChannel(AUTH_CHANNEL);
 
-        console.log('[AuthStore] Session synced from another tab');
-      } else {
+  channel.onmessage = async (event) => {
+    if (event.data === 'LOGIN' || event.data === 'LOGOUT') {
+      console.log(`[AuthStore] Auth change detected in another tab: ${event.data}`);
+      
+      try {
+        // When auth changes in another tab, re-verify locally
+        if (event.data === 'LOGIN') {
+          const data = await authApi.getCurrentUser();
+          if (data.user) {
+            const metadata = extractUserMetadata(data.user);
+            const session = {
+              access_token: data.access_token,
+              token_type: data.token_type,
+              user: data.user
+            };
+
+            set({
+              session,
+              user: data.user,
+              role: metadata.role,
+              isAuthenticated: true,
+            });
+          }
+        } else {
+          set({
+            session: null,
+            user: null,
+            role: null,
+            isAuthenticated: false,
+          });
+        }
+      } catch (error) {
         set({
           session: null,
           user: null,
           role: null,
-          isAuthenticated: false, // CRITICAL: Set isAuthenticated to false
+          isAuthenticated: false,
         });
-
-        console.log('[AuthStore] Sign out synced from another tab');
       }
     }
   };
 
-  window.addEventListener('storage', handleStorageChange);
-  return () => window.removeEventListener('storage', handleStorageChange);
+  return () => channel.close();
+};
+
+// Helper to notify other tabs (used in login/logout actions if needed, 
+// but currently we rely on page refreshes or explicit calls)
+export const broadcastAuthChange = (type: 'LOGIN' | 'LOGOUT') => {
+  if (typeof window !== 'undefined') {
+    const channel = new BroadcastChannel(AUTH_CHANNEL);
+    channel.postMessage(type);
+    channel.close();
+  }
 };
 
 // AUTO-REFRESH ON FOCUS
 export const setupAutoRefresh = (refreshSession: () => Promise<void>) => {
   const debouncedRefresh = debounce(async () => {
-    console.log('[AuthStore] Window focused, refreshing session...');
+    console.log('[AuthStore] Window focused, refreshing user data...');
+    // In cookie-based auth, we just re-check the user
     await refreshSession();
   }, 500);
 

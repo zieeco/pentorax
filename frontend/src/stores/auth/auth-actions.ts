@@ -2,8 +2,8 @@ import { authApi } from '@/services/auth.service';
 import { toast } from 'sonner';
 import { extractUserMetadata } from '@/utils/authHelpers';
 import type { AuthStoreSetter, AuthResponse, AuthErrorResponse } from './auth-types';
-import { handleAuthError, persistSession, clearPersistedSession } from './auth-utils';
-import { cartApi } from '@/services';
+import { handleAuthError } from './auth-utils';
+import { broadcastAuthChange } from './auth-listeners';
 
 // SIGN IN
 export const createSignInAction = (set: AuthStoreSetter) => async (
@@ -31,9 +31,8 @@ export const createSignInAction = (set: AuthStoreSetter) => async (
         isLoading: false,
       });
 
-      persistSession(session);
-      
       console.log('[AuthStore] Sign in successful. Role:', metadata.role);
+      broadcastAuthChange('LOGIN');
       return { data: data.user, error: null };
     }
 
@@ -111,10 +110,9 @@ export const createUpdatePasswordAction = (set: AuthStoreSetter) => async (
 
 // RESEND VERIFICATION EMAIL
 export const createResendVerificationAction = () => async (
-  email: string
+  _email: string
 ): Promise<AuthErrorResponse> => {
   try {
-    // Implement resend if available in Django
     console.log('[AuthStore] Resend verification not implemented yet');
     return { error: null };
   } catch (error: any) {
@@ -134,18 +132,16 @@ export const createSignOutAction = (set: AuthStoreSetter) => async (): Promise<v
       role: null,
       isAuthenticated: false,
     });
+    broadcastAuthChange('LOGOUT');
     toast.success('Signed out successfully');
-    clearPersistedSession();
   } catch (error: any) {
     console.error('[AuthStore] Sign out error:', error);
-    // Still clear local state even if server logout fails
     set({ 
       session: null, 
       user: null, 
       role: null,
       isAuthenticated: false,
     });
-    clearPersistedSession();
   } finally {
     set({ isLoading: false });
   }
@@ -156,27 +152,37 @@ export const createCheckUserAction = (set: AuthStoreSetter) => async () => {
   set({ isLoading: true });
 
   try {
-    // Try to get user from server to verify session
-    const user = await authApi.getCurrentUser();
-    const metadata = extractUserMetadata(user);
-    const role = metadata.role;
+    // Try to get user from server to verify session (Cookie based)
+    const data = await authApi.getCurrentUser();
+    
+    if (data.user) {
+      const metadata = extractUserMetadata(data.user);
+      const role = metadata.role;
+      const session = {
+        access_token: data.access_token,
+        token_type: data.token_type,
+        user: data.user
+      };
 
-    set({ 
-      user, 
-      role,
-      isAuthenticated: true,
-    });
+      set({ 
+        session,
+        user: data.user, 
+        role,
+        isAuthenticated: true,
+      });
 
-    return { role };
+      return { role };
+    }
+    
+    throw new Error('User data not found');
   } catch (error) {
-    console.log('[AuthStore] Check user failed, user might not be logged in');
+    console.log('[AuthStore] Check user failed, session might be invalid or expired');
     set({ 
       session: null, 
       user: null, 
       role: null,
       isAuthenticated: false,
     });
-    clearPersistedSession();
     return { role: null };
   } finally {
     set({ isLoading: false });
@@ -184,8 +190,6 @@ export const createCheckUserAction = (set: AuthStoreSetter) => async () => {
 };
 
 // REFRESH SESSION
-export const createRefreshSessionAction = (set: AuthStoreSetter) => async (): Promise<void> => {
-  // Logic for token refresh if using JWT with refresh tokens
-  console.log('[AuthStore] Refresh session not implemented');
+export const createRefreshSessionAction = (_set: AuthStoreSetter) => async (): Promise<void> => {
+  console.log('[AuthStore] Refresh session not required for server-side sessions');
 };
-
