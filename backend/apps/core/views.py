@@ -8,8 +8,11 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
 from .models import FAQ, CaseStudy, TeamMember, UserProfile
+
 from .serializers import (
     CaseStudySerializer,
     FAQSerializer,
@@ -19,6 +22,7 @@ from .serializers import (
 )
 
 
+@method_decorator(ensure_csrf_cookie, name='dispatch')
 class RegisterView(viewsets.GenericViewSet):
     permission_classes = [AllowAny]
     serializer_class = UserRegistrationSerializer
@@ -27,6 +31,7 @@ class RegisterView(viewsets.GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+            login(request, user)
             token, _ = Token.objects.get_or_create(user=user)
             return Response({
                 "access_token": token.key,
@@ -36,6 +41,7 @@ class RegisterView(viewsets.GenericViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@method_decorator(ensure_csrf_cookie, name='dispatch')
 class TokenLoginView(viewsets.GenericViewSet):
     permission_classes = [AllowAny]
 
@@ -44,6 +50,7 @@ class TokenLoginView(viewsets.GenericViewSet):
         password = request.data.get("password")
         user = authenticate(username=email, password=password)
         if user:
+            login(request, user)
             token, _ = Token.objects.get_or_create(user=user)
             return Response({
                 "access_token": token.key,
@@ -53,12 +60,14 @@ class TokenLoginView(viewsets.GenericViewSet):
         return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+@method_decorator(ensure_csrf_cookie, name='dispatch')
 class LogoutView(viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
 
     def create(self, request):
-        request.user.auth_token.delete()
+        logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -76,10 +85,21 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def me(self, request):
         """Get current user's profile"""
+        if not request.user.is_authenticated:
+            return Response({"detail": "Not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+            
         try:
             profile = UserProfile.objects.get(user=request.user)
             serializer = self.get_serializer(profile)
-            return Response(serializer.data)
+            
+            # Include token for session rehydration
+            token, _ = Token.objects.get_or_create(user=request.user)
+            
+            return Response({
+                "user": serializer.data,
+                "access_token": token.key,
+                "token_type": "Token"
+            })
         except UserProfile.DoesNotExist:
             return Response(
                 {"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND

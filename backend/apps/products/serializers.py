@@ -100,6 +100,7 @@ class ProductListSerializer(serializers.ModelSerializer):
             "is_low_stock",
             "stock_quantity",
             "sku",
+            "location",
             "created_at",
         ]
 
@@ -143,6 +144,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "stock_quantity",
             "low_stock_threshold",
             "sku",
+            "location",
             "meta_title",
             "meta_description",
             "created_at",
@@ -198,6 +200,7 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
             "stock_quantity",
             "low_stock_threshold",
             "sku",
+            "location",
         ]
         read_only_fields = ["id"]
 

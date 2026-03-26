@@ -82,6 +82,8 @@ class Product(TimeStampedModel):
     sku = models.CharField(max_length=100, blank=True, unique=True, null=True)
     stock_quantity = models.PositiveIntegerField(default=0)
     low_stock_threshold = models.PositiveIntegerField(default=5)
+    target_stock = models.PositiveIntegerField(default=100)
+    location = models.CharField(max_length=255, blank=True, null=True, default="Main Warehouse")
 
     class Meta(TimeStampedModel.Meta):
         db_table = "products_product"
