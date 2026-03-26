@@ -432,7 +432,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/7e/55/babf7e2564618d705
 [[package]]
 name = "pentorax"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "boto3" },
     { name = "django" },
