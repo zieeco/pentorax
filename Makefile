@@ -1,11 +1,14 @@
-.PHONY: help dev build up down logs shell-backend shell-frontend migrate makemigrations test-backend test-frontend lint format clean
+.PHONY: help dev build up down logs shell-backend shell-frontend \
+        migrate makemigrations test-backend test-frontend lint format clean \
+        lock sync add add-dev rebuild
 
 help:
 	@echo "Pentorax Monorepo Commands"
 	@echo "=========================="
-	@echo "dev                - Start development environment"
+	@echo "dev                - Start development environment (with rebuild)"
+	@echo "rebuild            - Force rebuild backend and start"
 	@echo "build              - Build Docker images"
-	@echo "up                 - Start containers"
+	@echo "up                 - Start containers in detached mode"
 	@echo "down               - Stop containers"
 	@echo "logs               - View logs"
 	@echo "shell-backend      - Open Django shell"
@@ -17,48 +20,87 @@ help:
 	@echo "lint               - Lint code"
 	@echo "format             - Format code"
 	@echo "clean              - Clean up containers and volumes"
+	@echo ""
+	@echo "uv / dependency commands (local)"
+	@echo "================================"
+	@echo "lock               - Regenerate uv.lock"
+	@echo "sync               - Sync local venv with lockfile"
+	@echo "add pkg=<name>     - Add a dependency"
+	@echo "add-dev pkg=<name> - Add a dev dependency"
+
+# ── Docker Compose Command ───────────────────────────────────────────────────
+
+COMPOSE = docker compose -f docker/docker-compose.dev.yml
+
+# ── Main Development Commands ────────────────────────────────────────────────
 
 dev:
-	docker compose -f docker/docker-compose.dev.yml up
+	$(COMPOSE) up --build
+
+rebuild:
+	$(COMPOSE) down -v
+	$(COMPOSE) build --no-cache backend
+	$(COMPOSE) up
 
 build:
-	docker compose -f docker/docker-compose.dev.yml build
+	$(COMPOSE) build --no-cache
 
 up:
-	docker compose -f docker/docker-compose.dev.yml up -d
+	$(COMPOSE) up -d
 
 down:
-	docker compose -f docker/docker-compose.dev.yml down
+	$(COMPOSE) down
 
 logs:
-	docker compose -f docker/docker-compose.dev.yml logs -f
+	$(COMPOSE) logs -f
+
+# ── Backend Commands ─────────────────────────────────────────────────────────
 
 shell-backend:
-	docker compose -f docker/docker-compose.dev.yml exec backend python manage.py shell
+	$(COMPOSE) exec backend python manage.py shell
 
 shell-frontend:
-	docker compose -f docker/docker-compose.dev.yml exec frontend sh
+	$(COMPOSE) exec frontend sh
 
 migrate:
-	docker compose -f docker/docker-compose.dev.yml exec backend python manage.py migrate
+	$(COMPOSE) exec backend python manage.py migrate
 
 makemigrations:
-	docker compose -f docker/docker-compose.dev.yml exec backend python manage.py makemigrations
+	$(COMPOSE) exec backend python manage.py makemigrations
 
 test-backend:
-	docker compose -f docker/docker-compose.dev.yml exec backend python manage.py test
+	$(COMPOSE) exec backend python -m pytest
+
+# ── Frontend Commands ────────────────────────────────────────────────────────
 
 test-frontend:
-	docker compose -f docker/docker-compose.dev.yml exec frontend npm test
+	$(COMPOSE) exec frontend npm test
 
 lint:
-	docker compose -f docker/docker-compose.dev.yml exec backend flake8 .
-	docker compose -f docker/docker-compose.dev.yml exec frontend npm run lint
+	$(COMPOSE) exec backend flake8 .
+	$(COMPOSE) exec frontend npm run lint
 
 format:
-	docker compose -f docker/docker-compose.dev.yml exec backend black .
-	docker compose -f docker/docker-compose.dev.yml exec frontend npm run format
+	$(COMPOSE) exec backend black .
+	$(COMPOSE) exec frontend npm run format
+
+# ── Cleanup ──────────────────────────────────────────────────────────────────
 
 clean:
-	docker compose -f docker/docker-compose.dev.yml down -v
-	docker system prune -f
+	$(COMPOSE) down -v
+	docker volume rm -f pentorax_backend_venv 2>/dev/null || true
+
+# ── uv dependency management (run locally on host) ───────────────────────────
+
+lock:
+	uv lock
+
+sync:
+	uv sync
+
+add:
+	uv add $(pkg)
+
+add-dev:
+	uv add --dev $(pkg)
+	
