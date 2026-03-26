@@ -13,6 +13,7 @@ const ProductFormPage = lazy(() => import('@/pages/dashboard/products').then(m =
 const NotificationsPage = lazy(() => import('@/pages/dashboard/notifications/NotificationsPage'));
 const NewsletterPage = lazy(() => import('@/pages/dashboard/newsletter/NewsletterPage'));
 const OrdersAdminPage = lazy(() => import('@/pages/dashboard/orders/OrdersAdminPage'));
+const BlogAdminPage = lazy(() => import('@/pages/dashboard/BlogAdminPage'));
 
 /**
  * Dashboard routes - all require authentication
@@ -97,6 +98,16 @@ export const dashboardRoutes: RouteObject[] = [
     element: (
       <ProtectedRoute requireStaff>
         <OrdersAdminPage />
+      </ProtectedRoute>
+    ),
+  },
+
+  // Content/Blog management (Admin/Staff)
+  {
+    path: 'content',
+    element: (
+      <ProtectedRoute requireStaff>
+        <BlogAdminPage />
       </ProtectedRoute>
     ),
   },

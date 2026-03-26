@@ -11,13 +11,37 @@ import {
   Calendar,
   CheckCircle2
 } from 'lucide-react';
-import { useProductsPaginated } from '@/hooks/products.hooks';
+import { useProductsPaginated, useUpdateProduct } from '@/hooks/products.hooks';
+import { toast } from 'sonner';
 
 const DashboardPage: React.FC = () => {
   const user = useAuthStore((state) => state.user);
   
   const { data: productData, isLoading } = useProductsPaginated({ per_page: 4 });
+  const { mutate: updateProduct } = useUpdateProduct();
   const products = productData?.results || [];
+
+  const handleRestock = (slug: string, currentStock: number) => {
+    const input = prompt('Enter new stock quantity:', currentStock.toString());
+    if (input !== null) {
+      const quantity = parseInt(input, 10);
+      if (!isNaN(quantity)) {
+        updateProduct({ slug, data: { stock_quantity: quantity } }, {
+          onSuccess: () => toast.success('Stock updated successfully'),
+          onError: () => toast.error('Failed to update stock')
+        });
+      }
+    }
+  };
+
+  const handleMarkOffline = (slug: string) => {
+    if (confirm('Are you sure you want to mark this product as offline?')) {
+      updateProduct({ slug, data: { is_active: false } }, {
+        onSuccess: () => toast.success('Product marked offline'),
+        onError: () => toast.error('Failed to mark offline')
+      });
+    }
+  };
 
   const getStockStatus = (prod: any) => {
     if (prod.stock_quantity === 0) return 'Out of Stock';
@@ -146,9 +170,9 @@ const DashboardPage: React.FC = () => {
                               <MoreVertical className="h-4 w-4" />
                             </button>
                             <div className="absolute right-0 mt-1 w-32 bg-white border border-gray-100 rounded-xl shadow-xl py-2 invisible group-hover/menu:visible z-30 transition-all opacity-0 group-hover/menu:opacity-100 scale-95 group-hover/menu:scale-100">
-                              <button className="w-full text-left px-4 py-2 text-[10px] font-bold text-gray-700 hover:bg-gray-50">Edit Product</button>
-                              <button className="w-full text-left px-4 py-2 text-[10px] font-bold text-gray-700 hover:bg-gray-50 font-sand">Restock</button>
-                              <button className="w-full text-left px-4 py-2 text-[10px] font-bold text-rose-600 hover:bg-rose-50">Mark Offline</button>
+                              <Link to={`/dashboard/products/${prod.slug}/edit`} className="block w-full text-left px-4 py-2 text-[10px] font-bold text-gray-700 hover:bg-gray-50">Edit Product</Link>
+                              <button onClick={() => handleRestock(prod.slug, prod.stock_quantity)} className="w-full text-left px-4 py-2 text-[10px] font-bold text-gray-700 hover:bg-gray-50 font-sand">Restock</button>
+                              <button onClick={() => handleMarkOffline(prod.slug)} className="w-full text-left px-4 py-2 text-[10px] font-bold text-rose-600 hover:bg-rose-50">Mark Offline</button>
                             </div>
                           </div>
                         </td>

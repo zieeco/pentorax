@@ -22,7 +22,7 @@ export const authApi = {
   },
   
   getCurrentUser: async () => {
-    const response = await apiClient.get('/core/user-profiles/me/');
+    const response = await apiClient.get('/profiles/me/');
     return response.data;
   },
   

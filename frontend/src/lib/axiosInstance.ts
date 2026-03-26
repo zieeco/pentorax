@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { useAuthStore } from '@/stores/auth';
 
 // --- Configuration ---
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 // Environment-aware configuration
 console.log('🌍 Environment:', import.meta.env.MODE);
