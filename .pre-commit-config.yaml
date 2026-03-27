@@ -1,4 +1,4 @@
-# Pre-commit hooks for SkillForge monorepo
+# Pre-commit hooks for PentoraX monorepo
 # See https://pre-commit.com for more information
 
 repos:
@@ -9,7 +9,7 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
-        exclude: 'backend/poetry.lock|frontend/package-lock.json'
+        exclude: 'backend/uv.lock|frontend_next/package-lock.json'
       - id: check-added-large-files
         args: ['--maxkb=5000']
       - id: check-json
@@ -34,7 +34,7 @@ repos:
     rev: v1.19.0
     hooks:
       - id: mypy
-        files: ^backend/app/
+        files: ^backend/(apps|config)/
         additional_dependencies:
           - types-redis
           - types-passlib
@@ -48,31 +48,30 @@ repos:
     hooks:
       - id: bandit
         args: [-r, -ll]
-        files: ^backend/app/
-        exclude: ^backend/tests/
+        files: ^backend/apps/
+        exclude: ^backend/apps/.*/tests/
 
   # JavaScript/TypeScript - Prettier with Tailwind support
   - repo: local
     hooks:
       - id: prettier
         name: prettier
-        entry: bash -c 'cd frontend && npx prettier --write --ignore-unknown'
+        entry: bash -c 'cd frontend_next && npx prettier --write --ignore-unknown "${@#frontend_next/}"' --
         language: system
-        files: ^frontend/
+        files: ^frontend_next/
         types_or: [javascript, jsx, ts, tsx, json, css, scss, markdown]
-        pass_filenames: false  # Add this to ensure all matching files are formatted
 
   # JavaScript/TypeScript - ESLint
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v10.0.0-beta.0
     hooks:
       - id: eslint
-        files: ^frontend/.*\.[jt]sx?$
-        exclude: ^frontend/(node_modules|dist|build)/
+        files: ^frontend_next/.*\.[jt]sx?$
+        exclude: ^frontend_next/(node_modules|dist|build|\.next)/
         types: [file]
         args:
           - --fix
-          - --config=frontend/eslint.config.mjs
+          - --config=frontend_next/eslint.config.mjs
         additional_dependencies:
           - eslint@9.17.0
           - globals
