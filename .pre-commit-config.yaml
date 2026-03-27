@@ -1,0 +1,111 @@
+# Pre-commit hooks for SkillForge monorepo
+# See https://pre-commit.com for more information
+
+repos:
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        exclude: 'backend/poetry.lock|frontend/package-lock.json'
+      - id: check-added-large-files
+        args: ['--maxkb=5000']
+      - id: check-json
+        exclude: 'mysettings\.json'
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: mixed-line-ending
+
+  # Python - Backend
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.9
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^backend/
+      - id: ruff-format
+        files: ^backend/
+
+  # Python - Type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.19.0
+    hooks:
+      - id: mypy
+        files: ^backend/app/
+        additional_dependencies:
+          - types-redis
+          - types-passlib
+          - django-stubs
+          - djangorestframework-stubs
+        args: [--ignore-missing-imports, --explicit-package-bases]
+
+  # Python - Security
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.9.2
+    hooks:
+      - id: bandit
+        args: [-r, -ll]
+        files: ^backend/app/
+        exclude: ^backend/tests/
+
+  # JavaScript/TypeScript - Prettier with Tailwind support
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier
+        entry: bash -c 'cd frontend && npx prettier --write --ignore-unknown'
+        language: system
+        files: ^frontend/
+        types_or: [javascript, jsx, ts, tsx, json, css, scss, markdown]
+        pass_filenames: false  # Add this to ensure all matching files are formatted
+
+  # JavaScript/TypeScript - ESLint
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v10.0.0-beta.0
+    hooks:
+      - id: eslint
+        files: ^frontend/.*\.[jt]sx?$
+        exclude: ^frontend/(node_modules|dist|build)/
+        types: [file]
+        args:
+          - --fix
+          - --config=frontend/eslint.config.mjs
+        additional_dependencies:
+          - eslint@9.17.0
+          - globals
+          - '@eslint/js'
+          - typescript
+          - typescript-eslint
+          - eslint-plugin-react
+          - eslint-plugin-react-hooks
+          - eslint-plugin-react-refresh
+          - '@tanstack/eslint-plugin-query'
+          - eslint-config-prettier
+
+  # Dockerfile linting
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.14.0
+    hooks:
+      - id: hadolint-docker
+        args: [--ignore, DL3008, --ignore, DL3013, --ignore, DL3059]
+
+  # Shell script linting
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        files: ^scripts/.*\.sh$
+
+  # Commit message linting
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.10.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit]
+fail_fast: false
