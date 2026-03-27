@@ -1,4 +1,4 @@
-import type { UserRole, UserMetadata, User, Session } from '@/utils/authHelpers';
+import type { Session, User, UserMetadata, UserRole } from '@/utils/authHelpers';
 
 // AUTH STATE INTERFACE
 export interface AuthState {
@@ -14,10 +14,14 @@ export interface AuthState {
   setUser: (user: User | null) => void;
   setRole: (role: UserRole | null) => void;
 
-
   // Auth actions
   signIn: (email: string, password: string) => Promise<AuthResponse<User>>;
-  signUp: (email: string, password: string, fullName: string, metadata?: Record<string, any>) => Promise<AuthResponse<User>>;
+  signUp: (
+    email: string,
+    password: string,
+    fullName: string,
+    metadata?: UserMetadata
+  ) => Promise<AuthResponse<User>>;
   forgotPassword: (email: string) => Promise<AuthErrorResponse>;
   updatePassword: (newPassword: string) => Promise<AuthErrorResponse>;
   resendVerificationEmail: (email: string) => Promise<AuthErrorResponse>;
@@ -47,5 +51,7 @@ export interface AuthErrorResponse {
 }
 
 // STORE SETTER TYPE
-export type AuthStoreSetter = (partial: Partial<AuthState> | ((state: AuthState) => Partial<AuthState>)) => void;
+export type AuthStoreSetter = (
+  partial: Partial<AuthState> | ((state: AuthState) => Partial<AuthState>)
+) => void;
 export type AuthStoreGetter = () => AuthState;

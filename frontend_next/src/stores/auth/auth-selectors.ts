@@ -8,7 +8,6 @@
 import type { Session, User, UserRole } from '@/utils/authHelpers';
 import { useAuthStore } from './auth-store';
 
-
 // ============================================
 // CORE STATE SELECTORS
 // ============================================
@@ -89,7 +88,8 @@ export const useIsCustomer = (): boolean => useAuthStore((state) => state.isCust
  * Check if user can manage products (create/edit/delete)
  * @returns True if user has product management permissions
  */
-export const useCanManageProducts = (): boolean => useAuthStore((state) => state.canManageProducts());
+export const useCanManageProducts = (): boolean =>
+  useAuthStore((state) => state.canManageProducts());
 
 /**
  * Check if user can manage orders

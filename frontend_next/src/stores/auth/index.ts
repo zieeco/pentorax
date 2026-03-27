@@ -5,4 +5,4 @@ export { useAuthStore } from './auth-store';
 export * from './auth-selectors';
 
 // Export types
-export type { AuthState, AuthResponse, AuthErrorResponse } from './auth-types';
+export type { AuthErrorResponse, AuthResponse, AuthState } from './auth-types';

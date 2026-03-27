@@ -1,18 +1,17 @@
 import { create } from 'zustand';
-import type { AuthState } from './auth-types';
 import {
-  createSignInAction,
-  createSignUpAction,
-  createForgotPasswordAction,
-  createUpdatePasswordAction,
-  createResendVerificationAction,
-  createSignOutAction,
   createCheckUserAction,
+  createForgotPasswordAction,
   createRefreshSessionAction,
+  createResendVerificationAction,
+  createSignInAction,
+  createSignOutAction,
+  createSignUpAction,
+  createUpdatePasswordAction,
 } from './auth-actions';
+import { setupAutoRefresh, setupCrossTabSync } from './auth-listeners';
 import { createPermissionHelpers } from './auth-permissions';
-import { setupCrossTabSync, setupAutoRefresh } from './auth-listeners';
-
+import type { AuthState } from './auth-types';
 
 // AUTH STORE
 export const useAuthStore = create<AuthState>((set, get) => {
@@ -32,7 +31,6 @@ export const useAuthStore = create<AuthState>((set, get) => {
       cleanupAutoRefresh();
     });
   }
-
 
   // Return store state and actions
   return {
