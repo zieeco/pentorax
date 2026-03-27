@@ -1,0 +1,15 @@
+# Dependency directories
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Next.js specific
+next-env.d.ts
+
+# Misc folders
+ignored-folder/
+ignored-file.sql
