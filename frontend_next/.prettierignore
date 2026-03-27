@@ -1,15 +1,44 @@
-# Dependency directories
-node_modules/
+# Dependencies
+node_modules
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
 
 # Build outputs
-.next/
-out/
-dist/
-build/
+dist
+build
+.next
+out
+.output
+.vercel
 
-# Next.js specific
-next-env.d.ts
+# Cache
+.cache
+.parcel-cache
+.turbo
 
-# Misc folders
-ignored-folder/
-ignored-file.sql
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+
+# Logs
+*.log
+logs
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+
+# Test coverage
+coverage
+
+# Misc
+*.min.js
+*.min.css
+public/
