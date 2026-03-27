@@ -77,6 +77,10 @@ backend/staticfiles/
 backend/media/
 .mypy_cache/
 *.pyc
+*.egg-info/
+*.egg
+*.egg-link
+
 
 # Django migrations (optional - uncomment if you want to ignore)
 # backend/apps/*/migrations/[0-9]*.py
@@ -97,5 +101,10 @@ supabase/.temp
 # Monorepo specific
 **/dist/
 **/build/
+**/out/
+**/.next/
 **/.vite/
 **/node_modules/
+**/*.tsbuildinfo
+**/next-env.d.ts
+**/.env*.local
