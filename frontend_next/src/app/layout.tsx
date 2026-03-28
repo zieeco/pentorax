@@ -1,6 +1,6 @@
-import type { Metadata } from 'next';
-import { Inter, Quicksand } from 'next/font/google';
 import './globals.css';
+import { Metadata } from 'next';
+import { Inter, Quicksand } from 'next/font/google';
 import { AppProvider } from '@/providers/AppProvider';
 
 const inter = Inter({
