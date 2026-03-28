@@ -1,14 +1,14 @@
-import React from 'react';
 import { AlertCircle } from 'lucide-react';
+import React from 'react';
 
 interface ErrorMessageProps {
   message?: string;
   retry?: () => void;
 }
 
-const ErrorMessage: React.FC<ErrorMessageProps> = ({ 
-  message = 'Something went wrong. Please try again.', 
-  retry 
+const ErrorMessage: React.FC<ErrorMessageProps> = ({
+  message = 'Something went wrong. Please try again.',
+  retry,
 }) => {
   return (
     <div className="flex flex-col items-center justify-center p-8 text-center">
@@ -20,7 +20,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
       {retry && (
         <button
           onClick={retry}
-          className="rounded-lg bg-primary px-6 py-2 font-semibold text-white transition-colors hover:bg-blue-700"
+          className="bg-primary rounded-lg px-6 py-2 font-semibold text-white transition-colors hover:bg-blue-700"
         >
           Try Again
         </button>

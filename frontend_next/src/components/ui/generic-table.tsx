@@ -1,3 +1,7 @@
+import type { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,10 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Checkbox } from '@/components/ui/checkbox';
-import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 // Generic types for any resource
 export interface BaseResource {
@@ -83,9 +83,7 @@ export function createTableColumns<T extends BaseResource>({
           ? ({ column: tableColumn }) => (
               <Button
                 variant="ghost"
-                onClick={() =>
-                  tableColumn.toggleSorting(tableColumn.getIsSorted() === 'asc')
-                }
+                onClick={() => tableColumn.toggleSorting(tableColumn.getIsSorted() === 'asc')}
                 className="h-auto p-0 font-semibold hover:bg-transparent"
               >
                 {column.label}
@@ -122,15 +120,13 @@ export function createTableColumns<T extends BaseResource>({
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-muted">
+              <Button variant="ghost" className="hover:bg-muted h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuLabel className="font-medium">
-                Actions
-              </DropdownMenuLabel>
+              <DropdownMenuLabel className="font-medium">Actions</DropdownMenuLabel>
 
               {/* Default copy ID action */}
               <DropdownMenuItem
@@ -157,9 +153,7 @@ export function createTableColumns<T extends BaseResource>({
                   >
                     {action.label}
                   </DropdownMenuItem>
-                  {action.separator && index < actions.length - 1 && (
-                    <DropdownMenuSeparator />
-                  )}
+                  {action.separator && index < actions.length - 1 && <DropdownMenuSeparator />}
                 </div>
               ))}
             </DropdownMenuContent>
