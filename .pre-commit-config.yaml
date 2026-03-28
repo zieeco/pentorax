@@ -51,16 +51,6 @@ repos:
         files: ^backend/apps/
         exclude: ^backend/apps/.*/tests/
 
-  # JavaScript/TypeScript - Prettier with Tailwind support
-  - repo: local
-    hooks:
-      - id: prettier
-        name: prettier
-        entry: bash -c 'cd frontend_next && npx prettier --write --ignore-unknown "${@#frontend_next/}"' --
-        language: system
-        files: ^frontend_next/
-        types_or: [javascript, jsx, ts, tsx, json, css, scss, markdown]
-
   # JavaScript/TypeScript - ESLint
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v10.0.0-beta.0
@@ -83,6 +73,16 @@ repos:
           - eslint-plugin-react-refresh
           - '@tanstack/eslint-plugin-query'
           - eslint-config-prettier
+
+  # JavaScript/TypeScript - Prettier
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier
+        entry: bash -c 'cd frontend_next && npx prettier --write --ignore-unknown "${@#frontend_next/}"' --
+        language: system
+        files: ^frontend_next/
+        types_or: [javascript, jsx, ts, tsx, json, css, scss, markdown]
 
   # Dockerfile linting
   - repo: https://github.com/hadolint/hadolint
