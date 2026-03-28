@@ -1,8 +1,9 @@
+import { apiClient } from '@/lib/axiosInstance';
+
 /**
  * Wishlist API Service
  * Handles user wishlist operations
  */
-import { apiClient } from '@/lib/axiosInstance';
 
 export const wishlistApi = {
   /**
