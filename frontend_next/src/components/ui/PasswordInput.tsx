@@ -1,9 +1,9 @@
-import * as React from "react";
-import { Eye, EyeOff } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from 'lucide-react';
+import * as React from 'react';
+import { cn } from '@/lib/utils';
+import { Input } from './input';
 
-export interface PasswordInputProps extends React.ComponentProps<"input"> {
+export interface PasswordInputProps extends React.ComponentProps<typeof Input> {
   leftIcon?: React.ReactNode;
 }
 
@@ -16,38 +16,30 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
     };
 
     return (
-      <div className="relative group w-full">
+      <div className="group relative w-full">
         {leftIcon && (
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none z-10">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-3.5">
             {leftIcon}
           </div>
         )}
         <Input
-          type={showPassword ? "text" : "password"}
-          className={cn(
-            "pr-10",
-            leftIcon && "pl-11",
-            className
-          )}
+          type={showPassword ? 'text' : 'password'}
+          className={cn('pr-10', leftIcon && 'pl-11', className)}
           ref={ref}
           {...props}
         />
         <button
           type="button"
           onClick={togglePasswordVisibility}
-          className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-primary transition-colors focus:outline-none z-10"
+          className="hover:text-primary absolute inset-y-0 right-0 z-10 flex items-center pr-3 text-gray-400 transition-colors focus:outline-none"
         >
-          {showPassword ? (
-            <EyeOff className="h-4.5 w-4.5" />
-          ) : (
-            <Eye className="h-4.5 w-4.5" />
-          )}
+          {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
         </button>
       </div>
     );
   }
 );
 
-PasswordInput.displayName = "PasswordInput";
+PasswordInput.displayName = 'PasswordInput';
 
 export { PasswordInput };
