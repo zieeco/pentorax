@@ -9,29 +9,11 @@ import {
   createSignUpAction,
   createUpdatePasswordAction,
 } from './auth-actions';
-import { setupAutoRefresh, setupCrossTabSync } from './auth-listeners';
 import { createPermissionHelpers } from './auth-permissions';
 import type { AuthState } from './auth-types';
 
 // AUTH STORE
 export const useAuthStore = create<AuthState>((set, get) => {
-  // Setup cross-tab synchronization
-  const cleanupCrossTabSync = setupCrossTabSync(set);
-
-  // Create refresh session action
-  const refreshSession = createRefreshSessionAction(set);
-
-  // Setup auto-refresh on window focus
-  const cleanupAutoRefresh = setupAutoRefresh(refreshSession);
-
-  // Cleanup on unmount (if needed)
-  if (typeof window !== 'undefined') {
-    window.addEventListener('beforeunload', () => {
-      cleanupCrossTabSync();
-      cleanupAutoRefresh();
-    });
-  }
-
   // Return store state and actions
   return {
     // INITIAL STATE
@@ -54,13 +36,9 @@ export const useAuthStore = create<AuthState>((set, get) => {
     resendVerificationEmail: createResendVerificationAction(),
     checkUser: createCheckUserAction(set),
     signOut: createSignOutAction(set),
-    refreshSession,
+    refreshSession: createRefreshSessionAction(set),
 
     // PERMISSION HELPERS
     ...createPermissionHelpers(get),
   };
 });
-
-// INITIALIZE AUTH STATE
-// Check user on initial load
-useAuthStore.getState().checkUser();
