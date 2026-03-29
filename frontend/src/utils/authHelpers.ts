@@ -66,7 +66,6 @@ export const extractUserMetadata = (user: User | null): UserMetadata => {
   return { role: finalRole };
 };
 
-
 // ============================================
 // VALIDATION HELPERS
 // ============================================
@@ -178,4 +177,3 @@ export const getRoleBasedRedirect = (role: UserRole | null): string => {
   // Default for customers and null roles
   return '/dashboard';
 };
-

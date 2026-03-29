@@ -1,98 +1,79 @@
-/**
- * OrderSummary Component
- * Reusable order summary for cart and checkout pages
- */
-import { Card } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Receipt, ShieldCheck, Truck } from 'lucide-react';
+'use client';
 
-interface OrderSummaryItem {
-  id: string;
-  product: {
-    name: string;
-  };
-  quantity: number;
-  subtotal: number;
-}
+/**
+ * OrderSummary Component - Real-time checkout calculation
+ * Refactored for Next.js 16 and premium styling.
+ */
+import { ShieldCheck, ShoppingBag } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { CartItem } from '@/types/cart';
 
 interface OrderSummaryProps {
-  items: OrderSummaryItem[];
+  items: CartItem[];
   total: number;
-  showItems?: boolean;
 }
 
-export default function OrderSummary({ items, total, showItems = true }: OrderSummaryProps) {
-  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+const formatPrice = (price: string | number) => {
+  const num = typeof price === 'string' ? parseFloat(price) : price;
+  return new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+    minimumFractionDigits: 0,
+  }).format(num);
+};
 
+export function OrderSummary({ items, total }: OrderSummaryProps) {
   return (
-    <Card className="p-0 shadow-2xl rounded-3xl border-0 overflow-hidden bg-white dark:bg-neutral-900 sticky top-8">
-      {/* Header */}
-      <div className="bg-primary/90 ddark:bg-black text-white p-6 flex items-center gap-3">
-         <Receipt className="w-6 h-6 text-primary" />
-         <h2 className="text-xl font-bold tracking-tight">Order Summary</h2>
+    <Card className="sticky top-8 rounded-[2.5rem] border border-gray-100 bg-white p-8 shadow-xl shadow-gray-200/50">
+      <div className="mb-8 flex items-center gap-3">
+        <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-xl">
+          <ShoppingBag className="text-primary h-5 w-5" />
+        </div>
+        <h2 className="text-xl font-black text-gray-900">Procurement Summary</h2>
       </div>
 
-      <div className="p-6">
-        {showItems && (
-          <>
-            <div className="space-y-4 mb-6 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-muted">
-              {items.map((item) => (
-                <div key={item.id} className="flex justify-between items-start text-sm group">
-                  <div className="flex-1 pr-4">
-                    <p className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                       {item.product.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">Quantity: {item.quantity}</p>
-                  </div>
-                  <span className="font-semibold whitespace-nowrap">
-                    ₦{item.subtotal.toLocaleString()}
-                  </span>
-                </div>
-              ))}
+      <div className="scrollbar-hide mb-8 max-h-[40vh] space-y-6 overflow-y-auto pr-2">
+        {items.map((item) => (
+          <div key={item.id} className="flex justify-between gap-4">
+            <div className="min-w-0">
+              <p className="line-clamp-1 truncate text-sm font-black text-gray-900">
+                {item.product.name}
+              </p>
+              <p className="mt-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                Qty: {item.quantity}
+              </p>
             </div>
-            
-            <div className="relative my-6">
-               <div className="absolute inset-x-0 top-1/2 border-t-2 border-dashed border-muted-foreground/30"></div>
-            </div>
-          </>
-        )}
-
-        <div className="space-y-3">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">
-              Subtotal ({itemCount} {itemCount === 1 ? 'item' : 'items'})
+            <span className="text-sm font-black text-gray-900 italic">
+              {formatPrice(item.subtotal)}
             </span>
-            <span className="font-medium">₦{total.toLocaleString()}</span>
           </div>
+        ))}
+      </div>
 
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground flex items-center gap-2">
-               <Truck className="w-3 h-3" /> Shipping
-            </span>
-            <span className="font-medium text-green-600 dark:text-green-400">Free</span>
-          </div>
+      <div className="mb-6 h-px bg-gray-100" />
+
+      <div className="mb-8 space-y-4">
+        <div className="flex items-center justify-between text-xs font-black tracking-widest text-gray-400 uppercase">
+          <span>Base Value</span>
+          <span className="text-gray-900 italic">{formatPrice(total)}</span>
         </div>
-
-        <div className="mt-6 pt-4 border-t border-border">
-          <div className="flex justify-between items-end">
-             <span className="text-muted-foreground font-medium">Total to Pay</span>
-             <div className="text-right">
-                <span className="block text-3xl font-extrabold text-primary tracking-tight">
-                  ₦{total.toLocaleString()}
-                </span>
-                <span className="text-xs text-muted-foreground">Including taxes</span>
-             </div>
-          </div>
+        <div className="flex items-center justify-between text-xs font-black tracking-widest text-gray-400 uppercase">
+          <span>Logistics</span>
+          <span className="text-emerald-500 italic">COMPLIMENTARY</span>
+        </div>
+        <div className="flex items-center justify-between border-t border-gray-50 pt-2">
+          <span className="text-sm font-black tracking-widest text-gray-900 uppercase">
+            Aggregate Total
+          </span>
+          <span className="text-primary text-2xl font-black italic">{formatPrice(total)}</span>
         </div>
       </div>
-      
-      {/* Footer Info */}
-      <div className="bg-muted/30 p-4 text-xs text-muted-foreground border-t border-border/50">
-        <div className="flex items-center gap-2 mb-2">
-           <ShieldCheck className="w-4 h-4 text-primary" />
-           <span className="font-medium">Buyer Protection Guarantee</span>
-        </div>
-        <p>If your order doesn't arrive as described, we'll refund you fully.</p>
+
+      <div className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-gray-50 p-4">
+        <ShieldCheck className="text-primary h-5 w-5" />
+        <p className="text-[10px] leading-relaxed font-black text-gray-500 uppercase">
+          Secure payment processing via Paystack API infrastructure.
+        </p>
       </div>
     </Card>
   );

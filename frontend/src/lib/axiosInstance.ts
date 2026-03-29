@@ -1,19 +1,16 @@
+import type { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import axios from 'axios';
-import type {
-  AxiosError,
-  AxiosInstance,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-} from 'axios';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/stores/auth';
 
 // --- Configuration ---
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
 
 // Environment-aware configuration
-console.log('🌍 Environment:', import.meta.env.MODE);
-console.log('🔗 API Base URL:', API_BASE_URL);
+if (process.env.NODE_ENV === 'development') {
+  console.log('🌍 Environment:', process.env.NODE_ENV);
+  console.log('🔗 API Base URL:', API_BASE_URL);
+}
 
 // Request retry configuration
 const RETRY_CONFIG = {
@@ -46,14 +43,11 @@ interface RetryableRequestConfig extends InternalAxiosRequestConfig {
 // --- Helper: Check if error is retryable ---
 const isRetryableError = (error: AxiosError): boolean => {
   if (!error.code) return false;
-  return RETRY_CONFIG.retryableErrors.includes(
-    error.code as RetryableErrorCode,
-  );
+  return RETRY_CONFIG.retryableErrors.includes(error.code as RetryableErrorCode);
 };
 
 // --- Helper: Delay function for retries ---
-const delay = (ms: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+const delay = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
 // --- Interceptors ---
 
@@ -68,10 +62,8 @@ axiosInstance.interceptors.request.use(
     }
 
     // Log requests in development
-    if (import.meta.env.DEV) {
-      console.log(
-        `📤 ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`,
-      );
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`📤 ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
     }
 
     return config;
@@ -79,16 +71,16 @@ axiosInstance.interceptors.request.use(
   (error: AxiosError) => {
     console.error('Request interceptor error:', error);
     return Promise.reject(error);
-  },
+  }
 );
 
 // 2. Response Interceptor: Handle errors globally and retry on 401
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     // Log successful responses in development
-    if (import.meta.env.DEV) {
+    if (process.env.NODE_ENV === 'development') {
       console.log(
-        `📥 ${response.status} ${response.config.method?.toUpperCase()} ${response.config.url}`,
+        `📥 ${response.status} ${response.config.method?.toUpperCase()} ${response.config.url}`
       );
     }
     return response;
@@ -101,13 +93,12 @@ axiosInstance.interceptors.response.use(
       // Check if this is a retryable network error
       if (
         isRetryableError(error) &&
-        (!originalRequest._retryCount ||
-          originalRequest._retryCount < RETRY_CONFIG.maxRetries)
+        (!originalRequest._retryCount || originalRequest._retryCount < RETRY_CONFIG.maxRetries)
       ) {
         originalRequest._retryCount = (originalRequest._retryCount || 0) + 1;
 
         console.warn(
-          `Network error, retrying... (${originalRequest._retryCount}/${RETRY_CONFIG.maxRetries})`,
+          `Network error, retrying... (${originalRequest._retryCount}/${RETRY_CONFIG.maxRetries})`
         );
         await delay(RETRY_CONFIG.retryDelay * originalRequest._retryCount);
 
@@ -139,7 +130,6 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(error);
     }
 
-
     // Handle case where 401 retry already attempted
     if (status === 401 && originalRequest._retry) {
       toast.error('Authentication failed. Please log in again.');
@@ -157,9 +147,7 @@ axiosInstance.interceptors.response.use(
         break;
 
       case 403:
-        toast.error(
-          "Access denied: You don't have permission for this action.",
-        );
+        toast.error("Access denied: You don't have permission for this action.");
         break;
 
       case 404:
@@ -176,11 +164,7 @@ axiosInstance.interceptors.response.use(
           toast.error(`Validation Error: ${errorData.detail}`);
         } else if (Array.isArray(errorData.detail)) {
           const firstError = errorData.detail[0];
-          if (
-            firstError &&
-            typeof firstError === 'object' &&
-            'msg' in firstError
-          ) {
+          if (firstError && typeof firstError === 'object' && 'msg' in firstError) {
             toast.error(`Validation Error: ${firstError.msg}`);
           } else {
             toast.error('Validation Error: Please check your input.');
@@ -195,9 +179,7 @@ axiosInstance.interceptors.response.use(
         break;
 
       case 500:
-        toast.error(
-          'Server Error: Something went wrong on our end. Please try again later.',
-        );
+        toast.error('Server Error: Something went wrong on our end. Please try again later.');
         break;
 
       case 502:
@@ -212,10 +194,7 @@ axiosInstance.interceptors.response.use(
 
         if (errorData?.detail && typeof errorData.detail === 'string') {
           errorMessage = errorData.detail;
-        } else if (
-          errorData?.message &&
-          typeof errorData.message === 'string'
-        ) {
+        } else if (errorData?.message && typeof errorData.message === 'string') {
           errorMessage = errorData.message;
         }
 
@@ -226,7 +205,7 @@ axiosInstance.interceptors.response.use(
 
     // Forward error for potential local handling
     return Promise.reject(error);
-  },
+  }
 );
 
 // Export utilities for manual usage

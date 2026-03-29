@@ -1,25 +1,32 @@
+'use client';
+
+import { Bell, Search } from 'lucide-react';
 import React from 'react';
-import { useRole, useUser } from '@/stores/auth';
-import { getRoleDisplayName } from '@/utils/authHelpers';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Bell, Search } from 'lucide-react';
+import { useRole, useUser } from '@/stores/auth';
+import { getRoleDisplayName } from '@/utils/authHelpers';
 
+/**
+ * DashboardHeader component for Next.js 16.
+ * Refactored from legacy implementation to use Shadcn primitives.
+ * Strictly adheres to professional naming conventions and dashboard layout.
+ */
 const DashboardHeader: React.FC = () => {
   const user = useUser();
   const role = useRole();
 
   return (
-    <header className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-8">
+    <header className="flex h-20 shrink-0 items-center justify-between border-b border-gray-100 bg-white px-8 transition-shadow duration-300">
       {/* Search */}
-      <div className="flex items-center space-x-4 flex-1">
-        <div className="relative w-96">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+      <div className="flex flex-1 items-center space-x-4">
+        <div className="group relative w-96">
+          <Search className="group-focus-within:text-primary absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400 transition-colors" />
           <Input
             type="text"
             placeholder="Search products, orders, customers..."
-            className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
+            className="focus-visible:ring-primary/20 focus-visible:border-primary w-full rounded-xl border border-gray-100 bg-gray-50 py-2.5 pr-4 pl-10 text-sm transition-all outline-none placeholder:text-gray-400 focus-visible:ring-2"
           />
         </div>
       </div>
@@ -27,24 +34,33 @@ const DashboardHeader: React.FC = () => {
       {/* Right Section */}
       <div className="flex items-center space-x-6">
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-6 w-6" />
-          <span className="absolute top-2 right-2 h-2 w-2 bg-rose-500 rounded-full border-2 border-white"></span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hover:text-primary relative rounded-xl transition-all hover:bg-gray-50"
+        >
+          <Bell className="h-5 w-5" />
+          <span className="absolute top-2.5 right-2.5 h-2 w-2 animate-pulse rounded-full border-2 border-white bg-rose-500 ring-1 ring-rose-500/20"></span>
         </Button>
 
         {/* User Profile */}
-        <div className="flex items-center space-x-3 pl-6 border-l border-gray-100">
+        <div className="flex items-center space-x-3 border-l border-gray-100 pl-6">
           <div className="text-right">
-            <p className="text-sm font-bold text-gray-900 leading-none">
+            <p className="text-sm leading-none font-bold text-gray-900">
               {user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'}
             </p>
-            <p className="text-[10px] text-primary font-black uppercase mt-1">
+            <p className="text-primary mt-1.5 flex items-center justify-end text-[10px] font-black tracking-wider uppercase">
+              <span className="bg-primary mr-1.5 h-1.5 w-1.5 rounded-full"></span>
               {getRoleDisplayName(role)}
             </p>
           </div>
-          <Avatar className="h-10 w-10 rounded-xl ring-2 ring-primary/10">
-            <AvatarFallback className="bg-primary text-white rounded-xl font-bold">
-              {user?.user_metadata?.name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
+          <Avatar className="ring-primary/5 h-10 w-10 rounded-xl ring-2 transition-transform hover:scale-105">
+            <AvatarFallback className="bg-primary rounded-xl text-xs font-bold text-white">
+              {(
+                user?.user_metadata?.name?.charAt(0) ||
+                user?.email?.charAt(0) ||
+                'U'
+              ).toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </div>

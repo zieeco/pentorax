@@ -1,7 +1,14 @@
+'use client';
+
 /**
  * SendEmailDialog - Dialog for sending custom emails to subscribers
+ * Refined for Next.js 15 Premium Dashboard
  */
-import { useState, useEffect } from 'react';
+import { Loader2, Send, Sparkles, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -10,14 +17,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Sparkles } from 'lucide-react';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
 import { stockNotificationsApi } from '@/services';
-import { toast } from 'sonner';
 
 interface SendEmailDialogProps {
   open: boolean;
@@ -41,11 +44,10 @@ export function SendEmailDialog({
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [useAIBulk, setUseAIBulk] = useState(false); // For bulk personalized AI emails
+  const [useAIBulk, setUseAIBulk] = useState(false);
 
   const isBulk = recipientCount > 1;
 
-  // Reset form when dialog closes
   useEffect(() => {
     if (!open) {
       setSubject('');
@@ -61,13 +63,11 @@ export function SendEmailDialog({
         notificationId || undefined,
         notificationIds.length > 0 ? notificationIds : undefined
       );
-      
-      const { subject: aiSubject, message: aiMessage } = response.data;
-      setSubject(aiSubject);
-      setMessage(aiMessage);
-      toast.success('Email template generated!');
-    } catch (error: any) {
-      toast.error(error?.response?.data?.error || 'Failed to generate email');
+      setSubject(response.data.subject);
+      setMessage(response.data.message);
+      toast.success('AI Template Ready');
+    } catch (err: any) {
+      toast.error(err?.response?.data?.error || 'Generation Failed');
     } finally {
       setIsGenerating(false);
     }
@@ -75,12 +75,9 @@ export function SendEmailDialog({
 
   const handleSend = () => {
     if (isBulk && useAIBulk) {
-      // Send with AI personalization for each user
-      onSend('', '', true); // Empty subject/message, AI will generate per-user
+      onSend('', '', true);
     } else if (subject.trim() && message.trim()) {
       onSend(subject, message, false);
-      setSubject('');
-      setMessage('');
     }
   };
 
@@ -88,18 +85,22 @@ export function SendEmailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[650px]">
-        <DialogHeader>
-          <DialogTitle>Send Custom Email</DialogTitle>
-          <DialogDescription>
-            Send {isBulk ? 'personalized ' : ''}email to {recipientCount} subscriber{recipientCount !== 1 ? 's' : ''}
+      <DialogContent className="gap-0 overflow-hidden rounded-[2.5rem] border-gray-100 p-0 shadow-2xl sm:max-w-[700px]">
+        <DialogHeader className="border-b border-gray-100 bg-gray-50/50 p-8">
+          <DialogTitle className="flex items-center gap-3 text-2xl font-black text-gray-900">
+            <Send className="text-primary h-6 w-6" />
+            Communication Hub
+          </DialogTitle>
+          <DialogDescription className="font-medium text-gray-500">
+            Mailing {recipientCount} customer{recipientCount !== 1 ? 's' : ''} regarding stock
+            interest
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
+        <div className="space-y-6 p-8">
           <div className="flex items-center justify-between">
             {isBulk && (
-              <div className="flex items-center space-x-2">
+              <div className="bg-brand-indigo/5 border-brand-indigo/10 flex items-center space-x-3 rounded-2xl border px-4 py-2">
                 <Checkbox
                   id="use-ai-bulk"
                   checked={useAIBulk}
@@ -108,14 +109,14 @@ export function SendEmailDialog({
                 />
                 <Label
                   htmlFor="use-ai-bulk"
-                  className="text-sm font-medium cursor-pointer flex items-center gap-2"
+                  className="text-brand-indigo flex cursor-pointer items-center gap-2 text-xs font-black tracking-wider uppercase"
                 >
-                  <Sparkles className="h-4 w-4 text-purple-600" />
-                  AI-Personalized for Each User
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Hyper-Personalized AI
                 </Label>
               </div>
             )}
-            
+
             {!useAIBulk && (
               <Button
                 type="button"
@@ -123,64 +124,93 @@ export function SendEmailDialog({
                 size="sm"
                 onClick={handleGenerateWithAI}
                 disabled={isGenerating || isLoading}
-                className={`gap-2 ${isBulk ? '' : 'ml-auto'}`}
+                className="ml-auto h-10 gap-2 rounded-xl border-gray-100 bg-white px-4 font-bold shadow-sm"
               >
-                <Sparkles className="h-4 w-4" />
-                {isGenerating ? 'Generating...' : 'Generate Template'}
+                {isGenerating ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Sparkles className="text-primary h-4 w-4" />
+                )}
+                {isGenerating ? 'Drafting...' : 'AI Draft'}
               </Button>
             )}
           </div>
 
-          {useAIBulk && (
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <p className="text-sm text-purple-900">
-                <Sparkles className="h-4 w-4 inline mr-2" />
-                <strong>AI Mode:</strong> Each subscriber will receive a unique, personalized email based on their product and details. No template needed!
+          {useAIBulk ? (
+            <div className="bg-brand-indigo/5 border-brand-indigo/10 animate-in zoom-in-95 space-y-2 rounded-[1.5rem] border p-6 duration-300">
+              <p className="text-brand-indigo flex items-center gap-2 text-sm font-black tracking-wider uppercase">
+                <Sparkles className="h-4 w-4" />
+                AI Personalization Enabled
+              </p>
+              <p className="text-xs leading-relaxed font-medium text-gray-600">
+                PentoraX AI will analyze each subscriber&apos;s profile and interest history to
+                craft unique, high-conversion messages. No manual input required.
               </p>
             </div>
-          )}
-
-          {!useAIBulk && (
-            <>
+          ) : (
+            <div className="animate-in fade-in space-y-5 duration-500">
               <div className="space-y-2">
-                <Label htmlFor="subject">Subject {isBulk && <span className="text-xs text-gray-500">(You can use {'{product_name}'} and {'{customer_email}'})</span>}</Label>
+                <Label
+                  htmlFor="subject"
+                  className="ml-1 text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase"
+                >
+                  Email Subject
+                </Label>
                 <Input
                   id="subject"
-                  placeholder="Enter email subject"
+                  placeholder="Draft a compelling subject line..."
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   disabled={isLoading || isGenerating}
+                  className="h-12 rounded-xl border-gray-100 bg-gray-50/30 px-5 font-bold focus:bg-white"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="message">Message {isBulk && <span className="text-xs text-gray-500">(Placeholders available)</span>}</Label>
+                <Label
+                  htmlFor="message"
+                  className="ml-1 text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase"
+                >
+                  Message Content
+                </Label>
                 <Textarea
                   id="message"
-                  placeholder="Enter your message or click 'Generate Template' to create one..."
+                  placeholder="Type your message here..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  rows={12}
+                  rows={10}
                   disabled={isLoading || isGenerating}
+                  className="resize-none rounded-[1.5rem] border-gray-100 bg-gray-50/30 p-5 font-medium focus:bg-white"
                 />
               </div>
-            </>
+            </div>
           )}
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="gap-3 border-t border-gray-100 bg-gray-50/30 p-6">
           <Button
-            variant="outline"
+            variant="ghost"
             onClick={() => onOpenChange(false)}
             disabled={isLoading || isGenerating}
+            className="h-12 rounded-xl px-8 font-bold"
           >
-            Cancel
+            Discard
           </Button>
           <Button
             onClick={handleSend}
             disabled={!canSend || isLoading || isGenerating}
+            className="shadow-primary/20 bg-primary hover:bg-primary/90 h-12 gap-2 rounded-xl px-10 text-[11px] font-black tracking-widest uppercase shadow-lg"
           >
-            {isLoading ? 'Sending...' : useAIBulk ? `Send ${recipientCount} Personalized Emails` : 'Send Email'}
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-white" />
+            ) : (
+              <Send className="h-4 w-4 text-white" />
+            )}
+            {isLoading
+              ? 'Transmitting...'
+              : useAIBulk
+                ? `Deploy ${recipientCount} AI Emails`
+                : 'Broadcast Now'}
           </Button>
         </DialogFooter>
       </DialogContent>

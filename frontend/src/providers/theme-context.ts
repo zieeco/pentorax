@@ -1,25 +1,18 @@
-import { createContext, useContext } from 'react';
+'use client';
 
-export type Theme = 'dark' | 'light' | 'system';
+import { useTheme as useNextTheme } from 'next-themes';
 
-export type ThemeProviderState = {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-};
-
-const initialState: ThemeProviderState = {
-  theme: 'system',
-  setTheme: () => null,
-};
-
-export const ThemeProviderContext =
-  createContext<ThemeProviderState>(initialState);
-
+/**
+ * Hook to access theme state and setters.
+ * Refactored to use next-themes under the hood.
+ */
 export const useTheme = () => {
-  const context = useContext(ThemeProviderContext);
+  const { theme, setTheme, systemTheme, resolvedTheme } = useNextTheme();
 
-  if (context === undefined)
-    throw new Error('useTheme must be used within a ThemeProvider');
-
-  return context;
+  return {
+    theme: (theme || 'system') as 'light' | 'dark' | 'system',
+    setTheme,
+    systemTheme: systemTheme as 'light' | 'dark' | undefined,
+    resolvedTheme: resolvedTheme as 'light' | 'dark' | undefined,
+  };
 };

@@ -1,20 +1,31 @@
 /**
- * Product-related TypeScript types
- * Centralized type definitions for product domain
+ * Product-related TypeScript types for Next.js 16.
+ * Refactored from legacy types/product.ts.
+ * Centralized type definitions for the product domain.
  */
 
 export interface ProductImage {
-  id?: string;  // Optional for new images
+  id?: string;
   image_url: string;
   alt_text: string;
   position: number;
 }
 
 export interface ProductSpecification {
-  id?: string;  // Optional for new specifications
+  id?: string;
   key: string;
   value: string;
   position: number;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  parent_id?: string;
+  is_active: boolean;
+  created_at: string;
 }
 
 export interface Product {
@@ -29,7 +40,7 @@ export interface Product {
   featured_image: string;
   category_id: string;
   category_name: string;
-  category?: Category; // Full category object (from ProductDetailSerializer)
+  category?: Category;
   is_active: boolean;
   is_featured: boolean;
   in_stock: boolean;
@@ -41,16 +52,6 @@ export interface Product {
   is_low_stock?: boolean;
   images?: ProductImage[];
   specifications?: ProductSpecification[];
-}
-
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  parent_id?: string;
-  is_active: boolean;
-  created_at: string;
 }
 
 export interface ProductFilters {

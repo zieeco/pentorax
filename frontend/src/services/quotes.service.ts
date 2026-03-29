@@ -5,10 +5,10 @@
 import { apiClient } from '@/lib/axiosInstance';
 
 export const quotesApi = {
-  create: (data: { 
-    name: string; 
-    email: string; 
-    phone: string; 
+  create: (data: {
+    name: string;
+    email: string;
+    phone: string;
     message: string;
     products?: string[];
   }) => apiClient.post('/quotes/', data),

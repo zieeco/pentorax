@@ -1,4 +1,44 @@
-node_modules/
-dist/
-ignored-folder/
-ignored-file.sql
+# Dependencies
+node_modules
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Build outputs
+dist
+build
+.next
+out
+.output
+.vercel
+
+# Cache
+.cache
+.parcel-cache
+.turbo
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+
+# Logs
+*.log
+logs
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+
+# Test coverage
+coverage
+
+# Misc
+*.min.js
+*.min.css
+public/

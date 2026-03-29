@@ -1,10 +1,13 @@
+'use client';
+
 /**
  * ImageLightbox component - Full-screen image viewer with navigation
- * @module components/shop
+ * Ported to Next.js and premium shadcn/ui.
  */
-import { useState, useEffect } from 'react';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '../ui/button';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import Image from 'next/image';
+import { useCallback, useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 interface ImageData {
   image_url: string;
@@ -18,123 +21,102 @@ interface ImageLightboxProps {
   onClose: () => void;
 }
 
-export function ImageLightbox({ 
-  images, 
-  initialIndex, 
-  isOpen, 
-  onClose 
-}: ImageLightboxProps) {
+export function ImageLightbox({ images, initialIndex, isOpen, onClose }: ImageLightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
-  // Update index when initialIndex changes
   useEffect(() => {
     setCurrentIndex(initialIndex);
   }, [initialIndex]);
 
-  // Close on Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
-
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
     }
-
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, onClose]);
 
-  const goToPrevious = () => {
+  const goToPrevious = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
+  }, [images.length]);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
+  }, [images.length]);
 
-  // Keyboard navigation
   useEffect(() => {
     const handleKeyboard = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') goToPrevious();
       if (e.key === 'ArrowRight') goToNext();
     };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyboard);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyboard);
-    };
-  }, [isOpen, currentIndex]);
+    if (isOpen) document.addEventListener('keydown', handleKeyboard);
+    return () => document.removeEventListener('keydown', handleKeyboard);
+  }, [isOpen, goToPrevious, goToNext]);
 
   if (!isOpen) return null;
 
-  const currentImage = images[currentIndex];
-
   return (
-    <div 
-      className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+    <div
+      className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/95 backdrop-blur-xl duration-300"
       onClick={onClose}
     >
-      {/* Close Button */}
       <Button
         variant="ghost"
         size="icon"
-        className="absolute top-4 right-4 text-white hover:bg-white/10 z-10"
+        className="absolute top-6 right-6 z-50 h-12 w-12 rounded-2xl text-white hover:bg-white/10"
         onClick={onClose}
       >
         <X className="h-6 w-6" />
       </Button>
 
-      {/* Navigation Buttons */}
       {images.length > 1 && (
         <>
           <Button
             variant="ghost"
             size="icon"
-            className="absolute left-4 text-white hover:bg-white/10 z-10"
+            className="absolute left-6 z-50 h-16 w-16 rounded-3xl text-white transition-transform hover:bg-white/10 active:scale-90"
             onClick={(e) => {
               e.stopPropagation();
               goToPrevious();
             }}
           >
-            <ChevronLeft className="h-8 w-8" />
+            <ChevronLeft className="h-10 w-10" />
           </Button>
-
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-4 text-white hover:bg-white/10 z-10"
+            className="absolute right-6 z-50 h-16 w-16 rounded-3xl text-white transition-transform hover:bg-white/10 active:scale-90"
             onClick={(e) => {
               e.stopPropagation();
               goToNext();
             }}
           >
-            <ChevronRight className="h-8 w-8" />
+            <ChevronRight className="h-10 w-10" />
           </Button>
         </>
       )}
 
-      {/* Image */}
-      <div 
-        className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center p-4"
+      <div
+        className="relative flex h-full max-h-[85vh] w-full max-w-5xl items-center justify-center p-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <img
-          src={currentImage.image_url}
-          alt={currentImage.alt_text || `Product image ${currentIndex + 1}`}
-          className="max-w-full max-h-full object-contain"
+        <Image
+          src={images[currentIndex].image_url}
+          alt={images[currentIndex].alt_text || `Product image ${currentIndex + 1}`}
+          fill
+          className="animate-in zoom-in-95 object-contain duration-500"
+          priority
         />
       </div>
 
-      {/* Image Counter */}
       {images.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white bg-black/50 px-4 py-2 rounded-full text-sm">
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 rounded-2xl border border-white/10 bg-white/10 px-6 py-2 text-xs font-black text-white backdrop-blur-md">
           {currentIndex + 1} / {images.length}
         </div>
       )}

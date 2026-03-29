@@ -1,20 +1,14 @@
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Trash2, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
 export interface BulkAction {
   id: string;
   label: string;
   icon?: React.ComponentType<{ className?: string }>;
-  variant?:
-    | 'default'
-    | 'destructive'
-    | 'outline'
-    | 'secondary'
-    | 'ghost'
-    | 'link';
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
   onClick: (selectedIds: string[]) => void;
   disabled?: boolean;
   loading?: boolean;
@@ -44,8 +38,8 @@ export function BulkActionsToolbar({
   return (
     <div
       className={cn(
-        'mb-4 flex items-center justify-between rounded-lg border bg-muted/50 p-3 transition-all duration-200 animate-in slide-in-from-top-2',
-        className,
+        'bg-muted/50 animate-in slide-in-from-top-2 mb-4 flex items-center justify-between rounded-lg border p-3 transition-all duration-200',
+        className
       )}
     >
       <div className="flex items-center gap-3">
@@ -58,7 +52,7 @@ export function BulkActionsToolbar({
           variant="ghost"
           size="sm"
           onClick={onClearSelection}
-          className="h-7 px-2 text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground h-7 px-2"
         >
           <X className="mr-1 h-3 w-3" />
           Clear
@@ -78,10 +72,7 @@ export function BulkActionsToolbar({
               size="sm"
               onClick={() => action.onClick(selectedIds)}
               disabled={action.disabled || action.loading}
-              className={cn(
-                'h-8',
-                action.variant === 'destructive' && 'hover:bg-destructive/90',
-              )}
+              className={cn('h-8', action.variant === 'destructive' && 'hover:bg-destructive/90')}
             >
               {action.loading ? (
                 <div className="mr-2 h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />

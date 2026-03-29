@@ -1,207 +1,174 @@
+'use client';
+
 /**
- * CheckoutForm Component
- * Shipping information form for checkout
+ * CheckoutForm Component - Premium order details input
+ * Implements react-hook-form with premium shadcn/ui components.
  */
-import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Mail, User, Phone, MapPin, Building, Home, Lock } from 'lucide-react';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
-interface CheckoutFormData {
-  email: string;
-  shipping_name: string;
-  shipping_phone: string;
-  shipping_address: string;
-  shipping_city: string;
-  shipping_state: string;
-}
+const checkoutSchema = z.object({
+  shipping_name: z.string().min(2, 'Name is required'),
+  shipping_address: z.string().min(10, 'Full address is required'),
+  shipping_city: z.string().min(2, 'City is required'),
+  shipping_state: z.string().min(2, 'State is required'),
+  shipping_phone: z.string().min(11, 'Valid Nigerian phone number required'),
+});
+
+type CheckoutValues = z.infer<typeof checkoutSchema>;
 
 interface CheckoutFormProps {
-  onSubmit: (data: CheckoutFormData) => void;
-  isSubmitting?: boolean;
+  onSubmit: (data: CheckoutValues) => void;
+  isSubmitting: boolean;
 }
 
-export default function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
-  const [formData, setFormData] = useState<CheckoutFormData>({
-    email: '',
-    shipping_name: '',
-    shipping_phone: '',
-    shipping_address: '',
-    shipping_city: '',
-    shipping_state: '',
+export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
+  const form = useForm<CheckoutValues>({
+    resolver: zodResolver(checkoutSchema),
+    defaultValues: {
+      shipping_name: '',
+      shipping_address: '',
+      shipping_city: '',
+      shipping_state: 'Lagos',
+      shipping_phone: '',
+    },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(formData);
-  };
-
   return (
-    <Card className="p-8 shadow-xl rounded-3xl border-0 overflow-hidden relative">
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-blue-600" />
-      
-      <div className="flex items-center justify-between mb-8">
-        <div>
-           <h2 className="text-2xl font-bold">Shipping Details</h2>
-           <p className="text-muted-foreground text-sm">Where should we send your order?</p>
-        </div>
-        <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-          <MapPin className="w-5 h-5" />
-        </div>
+    <Card className="rounded-[2.5rem] border border-gray-100 bg-white p-8 shadow-xl shadow-gray-200/50 lg:p-12">
+      <div className="mb-10 flex items-center justify-between">
+        <h2 className="text-2xl font-black text-gray-900 italic">Delivery Protocol</h2>
+        <Badge className="bg-primary/10 text-primary rounded-full border-none px-4 text-[10px] font-black uppercase">
+          Official Shipment
+        </Badge>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Contact Info Group */}
-        <div className="space-y-4">
-           <h3 className="text-sm font-semibold text-muted-foreground tracking-wider uppercase">Contact Information</h3>
-           
-           <div className="grid md:grid-cols-2 gap-4">
-             {/* Full Name */}
-             <div className="space-y-2">
-               <Label htmlFor="shipping_name">Full Name</Label>
-               <div className="relative">
-                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                 <Input
-                   id="shipping_name"
-                   name="shipping_name"
-                   required
-                   value={formData.shipping_name}
-                   onChange={handleChange}
-                   placeholder="John Doe"
-                   className="pl-10 h-11 bg-muted/30 border-muted-foreground/20 focus:border-primary focus:bg-background transition-all"
-                 />
-               </div>
-             </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="grid gap-8 sm:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="shipping_name"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                    Full Name
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="h-12 rounded-xl border-none bg-gray-50 font-bold"
+                      placeholder="John Doe"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-[10px] font-black uppercase" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="shipping_phone"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                    Phone Number
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="h-12 rounded-xl border-none bg-gray-50 font-bold"
+                      placeholder="080... or 090..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-[10px] font-black uppercase" />
+                </FormItem>
+              )}
+            />
+          </div>
 
-             {/* Phone */}
-             <div className="space-y-2">
-               <Label htmlFor="shipping_phone">Phone Number</Label>
-               <div className="relative">
-                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                 <Input
-                   id="shipping_phone"
-                   name="shipping_phone"
-                   type="tel"
-                   required
-                   value={formData.shipping_phone}
-                   onChange={handleChange}
-                   placeholder="+234 800 000 0000"
-                   className="pl-10 h-11 bg-muted/30 border-muted-foreground/20 focus:border-primary focus:bg-background transition-all"
-                 />
-               </div>
-             </div>
-           </div>
+          <FormField
+            control={form.control}
+            name="shipping_address"
+            render={({ field }) => (
+              <FormItem className="space-y-3">
+                <FormLabel className="text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                  Logistics Address
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="h-12 rounded-xl border-none bg-gray-50 font-bold"
+                    placeholder="No. 12 Street, Area, LGA"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-[10px] font-black uppercase" />
+              </FormItem>
+            )}
+          />
 
-           {/* Email */}
-           <div className="space-y-2">
-             <Label htmlFor="email">Email Address</Label>
-             <div className="relative">
-               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-               <Input
-                 id="email"
-                 name="email"
-                 type="email"
-                 required
-                 value={formData.email}
-                 onChange={handleChange}
-                 placeholder="your@email.com"
-                 className="pl-10 h-11 bg-muted/30 border-muted-foreground/20 focus:border-primary focus:bg-background transition-all"
-               />
-             </div>
-           </div>
-        </div>
+          <div className="grid gap-8 sm:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="shipping_city"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                    City
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="h-12 rounded-xl border-none bg-gray-50 font-bold"
+                      placeholder="Ikeja"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-[10px] font-black uppercase" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="shipping_state"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                    State
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="h-12 rounded-xl border-none bg-gray-50 font-bold"
+                      placeholder="Lagos"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-[10px] font-black uppercase" />
+                </FormItem>
+              )}
+            />
+          </div>
 
-        <div className="h-px bg-border/50 my-6" />
-
-        {/* Address Group */}
-        <div className="space-y-4">
-           <h3 className="text-sm font-semibold text-muted-foreground tracking-wider uppercase">Delivery Address</h3>
-           
-           {/* Address */}
-           <div className="space-y-2">
-             <Label htmlFor="shipping_address">Street Address</Label>
-             <div className="relative">
-               <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-               <Input
-                 id="shipping_address"
-                 name="shipping_address"
-                 required
-                 value={formData.shipping_address}
-                 onChange={handleChange}
-                 placeholder="123 Main Street"
-                 className="pl-10 h-11 bg-muted/30 border-muted-foreground/20 focus:border-primary focus:bg-background transition-all"
-               />
-             </div>
-           </div>
-
-           {/* City & State */}
-           <div className="grid md:grid-cols-2 gap-4">
-             <div className="space-y-2">
-               <Label htmlFor="shipping_city">City</Label>
-               <div className="relative">
-                 <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                 <Input
-                   id="shipping_city"
-                   name="shipping_city"
-                   required
-                   value={formData.shipping_city}
-                   onChange={handleChange}
-                   placeholder="Lagos"
-                   className="pl-10 h-11 bg-muted/30 border-muted-foreground/20 focus:border-primary focus:bg-background transition-all"
-                 />
-               </div>
-             </div>
-
-             <div className="space-y-2">
-               <Label htmlFor="shipping_state">State</Label>
-               <div className="relative">
-                 <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                 <Input
-                   id="shipping_state"
-                   name="shipping_state"
-                   required
-                   value={formData.shipping_state}
-                   onChange={handleChange}
-                   placeholder="Lagos"
-                   className="pl-10 h-11 bg-muted/30 border-muted-foreground/20 focus:border-primary focus:bg-background transition-all"
-                 />
-               </div>
-             </div>
-           </div>
-        </div>
-
-        {/* Submit Button */}
-        <Button
-          type="submit"
-          size="lg"
-          className="w-full h-14 mt-8 text-lg font-medium shadow-lg hover:shadow-primary/25 transition-all rounded-xl"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <span className="flex items-center gap-2">
-              <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
-              Processing...
-            </span>
-          ) : (
-            <span className="flex items-center gap-2">
-              <Lock className="w-5 h-5" />
-              Pay Securely
-            </span>
-          )}
-        </Button>
-        <p className="text-center text-xs text-muted-foreground mt-4">
-          By clicking "Pay Securely", you agree to our Terms of Service.
-        </p>
-      </form>
+          <Button
+            type="submit"
+            className="shadow-primary/20 mt-6 h-14 w-full rounded-2xl text-sm font-black tracking-widest uppercase shadow-xl transition-all active:scale-95"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Initializing Payment...' : 'Finalize Delivery Protocol'}
+          </Button>
+        </form>
+      </Form>
     </Card>
   );
 }

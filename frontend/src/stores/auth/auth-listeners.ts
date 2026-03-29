@@ -1,7 +1,7 @@
+import { authApi } from '@/services/auth.service';
 import { extractUserMetadata } from '@/utils/authHelpers';
 import type { AuthStoreSetter } from './auth-types';
 import { debounce } from './auth-utils';
-import { authApi } from '@/services/auth.service';
 
 // CROSS-TAB SYNC (Using BroadcastChannel instead of localStorage)
 const AUTH_CHANNEL = 'pentorax-auth-channel';
@@ -14,7 +14,7 @@ export const setupCrossTabSync = (set: AuthStoreSetter) => {
   channel.onmessage = async (event) => {
     if (event.data === 'LOGIN' || event.data === 'LOGOUT') {
       console.log(`[AuthStore] Auth change detected in another tab: ${event.data}`);
-      
+
       try {
         // When auth changes in another tab, re-verify locally
         if (event.data === 'LOGIN') {
@@ -24,7 +24,7 @@ export const setupCrossTabSync = (set: AuthStoreSetter) => {
             const session = {
               access_token: data.access_token,
               token_type: data.token_type,
-              user: data.user
+              user: data.user,
             };
 
             set({
@@ -56,7 +56,7 @@ export const setupCrossTabSync = (set: AuthStoreSetter) => {
   return () => channel.close();
 };
 
-// Helper to notify other tabs (used in login/logout actions if needed, 
+// Helper to notify other tabs (used in login/logout actions if needed,
 // but currently we rely on page refreshes or explicit calls)
 export const broadcastAuthChange = (type: 'LOGIN' | 'LOGOUT') => {
   if (typeof window !== 'undefined') {

@@ -1,23 +1,16 @@
 /**
  * Core API Service
- * Handles team, FAQs, case studies, contact, support, and warranty
+ * Precision-engineered interfaces for team, faqs, and support.
  */
-import { apiClient } from '@/lib/axiosInstance';
+import { apiClient } from '@/lib/api-client';
 
 export const coreApi = {
-  // Team
-  team: () => 
-    apiClient.get('/team/'),
-  
-  // FAQs
-  faqs: (params?: { category?: string; search?: string }) =>
-    apiClient.get('/faqs/', { params }),
-  
-  // Case Studies
-  caseStudies: () => 
-    apiClient.get('/case-studies/'),
-  
-  // Contact Form
+  team: () => apiClient.get('/team/'),
+
+  faqs: (params?: { category?: string; search?: string }) => apiClient.get('/faqs/', { params }),
+
+  caseStudies: () => apiClient.get('/case-studies/'),
+
   submitContact: (data: {
     name: string;
     email: string;
@@ -25,8 +18,7 @@ export const coreApi = {
     subject: string;
     message: string;
   }) => apiClient.post('/contact/', data),
-  
-  // Support Tickets
+
   submitTicket: (data: {
     subject: string;
     category: string;
@@ -35,8 +27,7 @@ export const coreApi = {
     customer_email: string;
     customer_phone?: string;
   }) => apiClient.post('/support/tickets/', data),
-  
-  // Warranty Check
+
   checkWarranty: (serialNumber: string) =>
     apiClient.post('/support/warranty/check/', { serial_number: serialNumber }),
 };
