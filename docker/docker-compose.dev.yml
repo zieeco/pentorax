@@ -1,18 +1,48 @@
 name: pentorax
 
 services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      POSTGRES_DB: pentorax
+      POSTGRES_USER: pentorax
+      POSTGRES_PASSWORD: pentorax
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+
   backend:
     build:
       context: ../backend
       target: development
+      dockerfile: Dockerfile
     volumes:
       - ../backend:/app
+      - backend_venv:/venv
     ports:
-      - "8000:8000"
+      - "8080:8080"
     env_file:
       - ../.env
-    command: python manage.py runserver 0.0.0.0:8000
-    
+    environment:
+      - VIRTUAL_ENV=/venv
+      - PATH=/venv/bin:$PATH
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - UV_PROJECT_ENVIRONMENT=/venv
+    depends_on:
+      - db
+      - redis
+
   frontend:
     build:
       context: ../frontend
@@ -25,4 +55,11 @@ services:
     env_file:
       - ../.env
     environment:
-      - VITE_API_URL=http://localhost:8000/api
+      - NEXT_PUBLIC_API_URL=http://localhost:8080/api
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  redis_data:
+  backend_venv:
