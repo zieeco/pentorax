@@ -9,7 +9,7 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
-        exclude: 'backend/uv.lock|frontend_next/package-lock.json'
+        exclude: 'backend/uv.lock|frontend/package-lock.json'
       - id: check-added-large-files
         args: ['--maxkb=5000']
       - id: check-json
@@ -56,12 +56,12 @@ repos:
     rev: v10.0.0-beta.0
     hooks:
       - id: eslint
-        files: ^frontend_next/.*\.[jt]sx?$
-        exclude: ^frontend_next/(node_modules|dist|build|\.next)/
+        files: ^frontend/.*\.[jt]sx?$
+        exclude: ^frontend/(node_modules|dist|build|\.next)/
         types: [file]
         args:
           - --fix
-          - --config=frontend_next/eslint.config.mjs
+          - --config=frontend/eslint.config.mjs
         additional_dependencies:
           - eslint@9.17.0
           - globals
@@ -79,9 +79,9 @@ repos:
     hooks:
       - id: prettier
         name: prettier
-        entry: bash -c 'cd frontend_next && npx prettier --write --ignore-unknown "${@#frontend_next/}"' --
+        entry: bash -c 'cd frontend && npx prettier --write --ignore-unknown "${@#frontend/}"' --
         language: system
-        files: ^frontend_next/
+        files: ^frontend/
         types_or: [javascript, jsx, ts, tsx, json, css, scss, markdown]
 
   # Dockerfile linting
