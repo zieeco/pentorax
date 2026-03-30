@@ -3,7 +3,13 @@
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { useIsAdmin, useIsAuthenticated, useIsLoading, useIsStaff } from '@/stores/auth';
+import {
+  useAuthStore,
+  useIsAdmin,
+  useIsAuthenticated,
+  useIsLoading,
+  useIsStaff,
+} from '@/stores/auth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -24,12 +30,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const router = useRouter();
   const isAuthenticated = useIsAuthenticated();
   const isLoading = useIsLoading();
+  const isInitialized = useAuthStore((state) => state.isInitialized);
   const isAdmin = useIsAdmin();
   const isStaff = useIsStaff();
 
   useEffect(() => {
-    // Redirect logic after auth has initialized
-    if (!isLoading) {
+    // Redirect logic after auth has initialized AND not currently checking state
+    if (isInitialized && !isLoading) {
       if (!isAuthenticated) {
         router.replace('/auth/login');
       } else if (requireAdmin && !isAdmin) {
@@ -38,15 +45,29 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         router.replace('/dashboard');
       }
     }
-  }, [isLoading, isAuthenticated, isAdmin, isStaff, requireAdmin, requireStaff, router]);
+  }, [
+    isInitialized,
+    isLoading,
+    isAuthenticated,
+    isAdmin,
+    isStaff,
+    requireAdmin,
+    requireStaff,
+    router,
+  ]);
 
   // Wait for auth to initialize or handle redirects
-  if (isLoading || !isAuthenticated || (requireAdmin && !isAdmin) || (requireStaff && !isStaff)) {
+  if (!isInitialized || isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50/50">
         <LoadingSpinner size="lg" />
       </div>
     );
+  }
+
+  // Handle unauthorized states directly in render to prevent flicker
+  if (!isAuthenticated || (requireAdmin && !isAdmin) || (requireStaff && !isStaff)) {
+    return null; // The useEffect will handle redirection
   }
 
   return <>{children}</>;

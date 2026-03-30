@@ -192,6 +192,25 @@ export const createCheckUserAction = (set: AuthStoreSetter) => async () => {
 };
 
 // REFRESH SESSION
-export const createRefreshSessionAction = (_set: AuthStoreSetter) => async (): Promise<void> => {
-  console.log('[AuthStore] Refresh session not required for server-side sessions');
+export const createRefreshSessionAction = (set: AuthStoreSetter) => async (): Promise<void> => {
+  try {
+    const data = await authApi.getCurrentUser();
+    if (data.user) {
+      const metadata = extractUserMetadata(data.user);
+      const session = {
+        access_token: data.access_token,
+        token_type: data.token_type,
+        user: data.user,
+      };
+
+      set({
+        session,
+        user: data.user,
+        role: metadata.role,
+        isAuthenticated: true,
+      });
+    }
+  } catch (error) {
+    console.log('[AuthStore] Ghost refresh failed');
+  }
 };

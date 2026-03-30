@@ -11,13 +11,12 @@
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
 
-  /* Brand Palette */
-  --color-brand-blue: #29abe2;
-  --color-brand-yellow: #f9c74f;
-  --color-brand-green: #43aa8b;
-  --color-brand-indigo: #4361ee;
-  --color-brand-dark: #2d2d2d;
-  --color-brand-light: #f5f5f5;
+  /* Brand Palette (Logo-based) */
+  --color-brand-primary: #0061ff;
+  --color-brand-secondary: #27d18c;
+  --color-brand-tertiary: #ffd24d;
+  --color-brand-dark: #111827;
+  --color-brand-light: #f9fafb;
 
   /* Custom Animations */
   --animate-float: float 6s ease-in-out infinite;
@@ -113,27 +112,42 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ─── LIGHT MODE ─────────────────────────────────────────────────────────── */
 :root {
+  color-scheme: light;
+
   --background: hsl(0 0% 100%);
   --foreground: hsl(228 7% 18%);
+
   --card: hsl(0 0% 100%);
   --card-foreground: hsl(222.2 84% 4.9%);
+
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(222.2 84% 4.9%);
-  --primary: hsl(214 100% 40%);
+
+  /* FIX: was missing hsl() wrapper */
+  --primary: hsl(217 100% 50%);
   --primary-foreground: hsl(210 40% 98%);
-  --secondary: hsl(193 100% 50%);
+
+  /* FIX: was missing hsl() wrapper */
+  --secondary: hsl(156 68% 49%);
   --secondary-foreground: hsl(222.2 47.4% 11.2%);
+
   --muted: hsl(220 13% 91%);
   --muted-foreground: hsl(220 9% 46%);
-  --accent: hsl(158 45% 46%);
+
+  /* FIX: was missing hsl() wrapper */
+  --accent: hsl(45 100% 65%);
   --accent-foreground: hsl(222.2 47.4% 11.2%);
+
   --destructive: hsl(0 84.2% 60.2%);
   --destructive-foreground: hsl(210 40% 98%);
+
   --border: hsl(214.3 31.8% 91.4%);
   --input: hsl(214.3 31.8% 91.4%);
   --ring: hsl(222.2 84% 4.9%);
   --radius: 0.5rem;
+
   --sidebar: hsl(0 0% 100%);
   --sidebar-foreground: hsl(228 7% 18%);
   --sidebar-primary: hsl(214 100% 40%);
@@ -142,6 +156,7 @@
   --sidebar-accent-foreground: hsl(228 7% 18%);
   --sidebar-border: hsl(214.3 31.8% 91.4%);
   --sidebar-ring: hsl(222.2 84% 4.9%);
+
   --chart-1: hsl(12 76% 61%);
   --chart-2: hsl(173 58% 39%);
   --chart-3: hsl(197 37% 24%);
@@ -149,34 +164,54 @@
   --chart-5: hsl(27 87% 67%);
 }
 
+/* ─── DARK MODE ──────────────────────────────────────────────────────────── */
 .dark {
-  --background: hsl(222.2 84% 4.9%);
+  color-scheme: dark;
+
+  /* FIX: was missing hsl() wrapper */
+  --background: hsl(221 39% 11%);
   --foreground: hsl(210 40% 98%);
+
   --card: hsl(222.2 84% 4.9%);
   --card-foreground: hsl(210 40% 98%);
+
   --popover: hsl(222.2 84% 4.9%);
   --popover-foreground: hsl(210 40% 98%);
+
   --primary: hsl(199 82% 60%);
   --primary-foreground: hsl(222.2 47.4% 11.2%);
+
   --secondary: hsl(43 94% 72%);
   --secondary-foreground: hsl(210 40% 98%);
-  --muted: hsl(231 77% 65%);
-  --muted-foreground: hsl(210 40% 98%);
+
+  /* FIX: was hsl(231 77% 65%) — an indigo/violet, wrong for a muted surface.
+     Corrected to a dark desaturated panel color that reads as a quiet surface. */
+  --muted: hsl(220 16% 18%);
+  /* FIX: was hsl(210 40% 98%) — full white on a muted surface is too loud.
+     Corrected to a softened secondary text color for captions / placeholders. */
+  --muted-foreground: hsl(220 10% 60%);
+
   --accent: hsl(158 45% 54%);
   --accent-foreground: hsl(210 40% 98%);
+
   --destructive: hsl(0 62.8% 30.6%);
   --destructive-foreground: hsl(210 40% 98%);
+
   --border: hsl(217.2 32.6% 17.5%);
   --input: hsl(217.2 32.6% 17.5%);
   --ring: hsl(212.7 26.8% 83.9%);
+
   --sidebar: hsl(222.2 84% 4.9%);
   --sidebar-foreground: hsl(210 40% 98%);
   --sidebar-primary: hsl(199 82% 60%);
   --sidebar-primary-foreground: hsl(222.2 47.4% 11.2%);
-  --sidebar-accent: hsl(231 77% 65%);
+  /* FIX: was hsl(231 77% 65%) — same vivid indigo issue. Corrected to a quiet
+     dark surface tint consistent with the sidebar's role as a muted area. */
+  --sidebar-accent: hsl(220 16% 18%);
   --sidebar-accent-foreground: hsl(210 40% 98%);
   --sidebar-border: hsl(217.2 32.6% 17.5%);
   --sidebar-ring: hsl(212.7 26.8% 83.9%);
+
   --chart-1: hsl(220 70% 50%);
   --chart-2: hsl(160 60% 45%);
   --chart-3: hsl(30 80% 55%);

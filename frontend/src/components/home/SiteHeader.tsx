@@ -71,11 +71,11 @@ export function SiteHeader() {
               <Image
                 src="/pentorax.jpeg"
                 alt="PentoraX Logo"
-                width={70}
-                height={70}
-                className="mt-[-10px] object-contain"
+                width={90}
+                height={90}
+                className="mt-[-16px] object-contain"
               />
-              <span className="font-quicksand text-primary mt-[-8px] ml-[-20px] text-[2rem] font-extrabold">
+              <span className="font-quicksand text-primary mt-[-8px] ml-[-30px] text-[2rem] font-extrabold">
                 PentoraX
               </span>
             </Link>

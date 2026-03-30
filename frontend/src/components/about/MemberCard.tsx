@@ -5,8 +5,8 @@
  * Precision-engineered card for team member visualization.
  * Adheres to 150-line rule.
  */
-import { Linkedin } from 'lucide-react';
 import Image from 'next/image';
+import { FaLinkedin } from 'react-icons/fa';
 import { Card } from '@/components/ui/card';
 import { TeamMember } from '@/hooks/core-hooks';
 
@@ -36,7 +36,7 @@ export function MemberCard({ member }: MemberCardProps) {
                 rel="noopener noreferrer"
                 className="hover:bg-primary flex h-10 w-10 items-center justify-center rounded-xl bg-white text-gray-900 transition-colors hover:text-white"
               >
-                <Linkedin className="h-5 w-5" />
+                <FaLinkedin className="h-5 w-5" />
               </a>
             )}
           </div>

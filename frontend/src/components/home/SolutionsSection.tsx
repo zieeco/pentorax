@@ -8,7 +8,7 @@ import { SolutionCard } from './SolutionCard';
 
 const SOLUTIONS = [
   {
-    image: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=400&q=80',
+    image: '/roof.png',
     title: 'Residential Solar Solutions',
     ratingScore: 5,
     description:
@@ -28,7 +28,7 @@ const SOLUTIONS = [
     link: '/solutions/residential',
   },
   {
-    image: 'https://images.unsplash.com/photo-1497440001374-f26997328c1b?w=400&q=80',
+    image: '/commercial.png',
     title: 'Commercial Solar Solutions',
     ratingScore: 5,
     description:
@@ -47,7 +47,7 @@ const SOLUTIONS = [
     link: '/solutions/commercial',
   },
   {
-    image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=400&q=80',
+    image: '/industrial.png',
     title: 'Industrial Solar Solutions',
     ratingScore: 4,
     description: 'Power factories and large-scale operations with high-capacity solar energy.',
@@ -65,7 +65,7 @@ const SOLUTIONS = [
     link: '/solutions/industrial',
   },
   {
-    image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80',
+    image: '/grid.png',
     title: 'Off-Grid Solar Systems',
     ratingScore: 5,
     description: 'Stay powered in remote areas with fully independent off-grid solar systems.',

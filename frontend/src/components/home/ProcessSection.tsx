@@ -3,6 +3,7 @@
  * Original: frontend/src/components/landing/Process.tsx (288 → decomposed)
  * ProcessStep extracted as sub-component for 150-line rule compliance
  */
+
 import { ProcessStep } from './ProcessStep';
 
 const STEPS = [
@@ -18,7 +19,7 @@ const STEPS = [
       'Financial analysis and ROI calculation',
     ],
     duration: '1-2 days',
-    backgroundImage: 'https://images.unsplash.com/photo-1503428593586-e225b39bddfe?w=400&q=80',
+    backgroundImage: '/consultation.png',
   },
   {
     step: 2,
@@ -32,7 +33,7 @@ const STEPS = [
       'Installation timeline planning',
     ],
     duration: '3-5 days',
-    backgroundImage: 'https://images.unsplash.com/photo-1581287053822-fd7bf4f4bfec?w=400&q=80',
+    backgroundImage: '/system-design.jpeg',
   },
   {
     step: 3,
@@ -46,7 +47,7 @@ const STEPS = [
       'System commissioning and optimization',
     ],
     duration: '1-3 days',
-    backgroundImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&q=80',
+    backgroundImage: '/installation.png',
   },
   {
     step: 4,
@@ -60,7 +61,7 @@ const STEPS = [
       '24/7 technical support hotline',
     ],
     duration: '25+ years',
-    backgroundImage: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=400&q=80',
+    backgroundImage: '/maintenance.png',
   },
 ];
 

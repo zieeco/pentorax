@@ -100,12 +100,14 @@ export default function StockNotificationsPage() {
       />
 
       {page.notifications.length === 0 ? (
-        <div className="rounded-[2.5rem] border border-gray-100 bg-white p-24 text-center shadow-sm">
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-50">
-            <Bell className="h-10 w-10 text-gray-200" />
+        <div className="border-border bg-card rounded-[2.5rem] border p-24 text-center shadow-sm">
+          <div className="bg-muted/20 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full">
+            <Bell className="text-muted-foreground/30 h-10 w-10" />
           </div>
-          <p className="text-xl font-black text-gray-900">Quiet for now</p>
-          <p className="font-medium text-gray-500">No stock alerts found matching your criteria</p>
+          <p className="text-foreground text-xl font-black">Quiet for now</p>
+          <p className="text-muted-foreground font-medium">
+            No stock alerts found matching your criteria
+          </p>
         </div>
       ) : (
         <>

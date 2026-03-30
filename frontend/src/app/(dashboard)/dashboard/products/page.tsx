@@ -125,7 +125,7 @@ export default function ProductsPage() {
         selectedIds={selectedIds}
         resourceName="product"
       />
-      <div className="overflow-hidden rounded-[2.5rem] border border-gray-100 bg-white shadow-sm">
+      <div className="border-border bg-card overflow-hidden rounded-[2.5rem] border shadow-sm">
         <ProductTable
           products={products}
           isLoading={isLoading}

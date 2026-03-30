@@ -2,8 +2,10 @@
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
+import { useEffect } from 'react';
 import { Toaster } from '@/components/ui/sonner';
 import { queryClient } from '@/lib/react-query';
+import { useAuthStore } from '@/stores/auth';
 import { ThemeProvider } from './ThemeProvider';
 
 interface AppProviderProps {
@@ -15,6 +17,11 @@ interface AppProviderProps {
  * Refactored for Next.js 15 and modern state management.
  */
 export function AppProvider({ children }: AppProviderProps) {
+  useEffect(() => {
+    const cleanup = useAuthStore.getState().initialize();
+    return () => cleanup();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>

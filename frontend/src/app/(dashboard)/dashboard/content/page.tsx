@@ -31,11 +31,11 @@ export default function ContentPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-gray-900">
+          <h1 className="text-foreground flex items-center gap-3 text-3xl font-black tracking-tight">
             <Layout className="text-primary h-8 w-8" />
             Content Management
           </h1>
-          <p className="mt-1 font-medium text-gray-500">
+          <p className="text-muted-foreground mt-1 font-medium">
             Publish and manage your blog posts, articles, and case studies.
           </p>
         </div>
@@ -47,8 +47,8 @@ export default function ContentPage() {
 
       {/* Tabs / Filters Sidebar-like card */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-        <Card className="h-fit rounded-[2rem] border-gray-100 bg-white p-6 shadow-sm">
-          <p className="mb-4 px-2 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+        <Card className="border-border bg-card h-fit rounded-[2rem] p-6 shadow-sm">
+          <p className="text-muted-foreground mb-4 px-2 text-[10px] font-black tracking-widest uppercase">
             Content Types
           </p>
           <div className="space-y-1">
@@ -56,26 +56,26 @@ export default function ContentPage() {
               <Button
                 key={i}
                 variant={i === 0 ? 'secondary' : 'ghost'}
-                className={`h-11 w-full justify-start rounded-xl text-sm font-bold ${i === 0 ? 'bg-primary/5 text-primary hover:bg-primary/10' : 'hover:text-primary text-gray-500 hover:bg-gray-50'}`}
+                className={`h-11 w-full justify-start rounded-xl text-sm font-bold ${i === 0 ? 'bg-primary/5 text-primary hover:bg-primary/10' : 'hover:text-primary text-muted-foreground hover:bg-muted'}`}
               >
                 {item}
               </Button>
             ))}
           </div>
-          <Separator className="my-6 bg-gray-50" />
-          <p className="mb-4 px-2 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+          <Separator className="bg-border/50 my-6" />
+          <p className="text-muted-foreground mb-4 px-2 text-[10px] font-black tracking-widest uppercase">
             Status
           </p>
           <div className="space-y-1">
             {['Published', 'Drafts', 'Scheduled', 'Archived'].map((item, i) => (
               <div
                 key={i}
-                className="group flex cursor-pointer items-center justify-between rounded-lg px-2 py-2 transition-colors hover:bg-gray-50"
+                className="group hover:bg-muted flex cursor-pointer items-center justify-between rounded-lg px-2 py-2 transition-colors"
               >
-                <span className="group-hover:text-primary text-xs font-bold text-gray-500">
+                <span className="group-hover:text-primary text-muted-foreground text-xs font-bold">
                   {item}
                 </span>
-                <Badge className="border-none bg-gray-100 text-[10px] font-bold text-gray-400 shadow-none">
+                <Badge className="bg-muted text-muted-foreground border-none text-[10px] font-bold shadow-none">
                   0
                 </Badge>
               </div>
@@ -84,23 +84,25 @@ export default function ContentPage() {
         </Card>
 
         {/* List Card */}
-        <Card className="overflow-hidden rounded-[2.5rem] border-gray-100 bg-white shadow-sm lg:col-span-3">
-          <div className="flex flex-col items-center justify-between gap-4 border-b border-gray-50 bg-gray-50/30 p-8 md:flex-row">
+        <Card className="border-border bg-card overflow-hidden rounded-[2.5rem] shadow-sm lg:col-span-3">
+          <div className="border-border/50 bg-muted/20 flex flex-col items-center justify-between gap-4 border-b p-8 md:flex-row">
             <div className="group relative w-full md:w-80">
-              <Search className="group-focus-within:text-primary absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-gray-400 transition-colors" />
+              <Search className="group-focus-within:text-primary text-muted-foreground absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 transition-colors" />
               <Input
                 placeholder="Search content..."
-                className="focus:border-primary rounded-2xl border-gray-100 bg-white py-6 pr-4 pl-11 text-sm font-bold shadow-none"
+                className="focus:border-primary border-border bg-background rounded-2xl py-6 pr-4 pl-11 text-sm font-bold shadow-none"
               />
             </div>
           </div>
 
           <div className="p-24 text-center">
-            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gray-50">
-              <FileEdit className="h-10 w-10 text-gray-200" />
+            <div className="bg-muted/20 mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full">
+              <FileEdit className="text-muted-foreground/30 h-10 w-10" />
             </div>
-            <h3 className="text-2xl font-black text-gray-900">Your content engine is warming up</h3>
-            <p className="mx-auto mt-2 max-w-sm font-medium text-gray-500">
+            <h3 className="text-foreground text-2xl font-black">
+              Your content engine is warming up
+            </h3>
+            <p className="text-muted-foreground mx-auto mt-2 max-w-sm font-medium">
               The Next.js 16 blog architecture is currently being finalized. Soon you&apos;ll have a
               glassmorphic editor and AI-assisted drafting tools.
             </p>

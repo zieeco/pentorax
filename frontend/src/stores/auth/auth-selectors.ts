@@ -42,6 +42,12 @@ export const useIsLoading = (): boolean => useAuthStore((state) => state.isLoadi
  */
 export const useIsAuthenticated = (): boolean => useAuthStore((state) => state.isAuthenticated);
 
+/**
+ * Get initialization status
+ * @returns True if initial auth check has completed
+ */
+export const useIsInitialized = (): boolean => useAuthStore((state) => state.isInitialized);
+
 // ============================================
 // ACTION SELECTORS
 // ============================================

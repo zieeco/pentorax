@@ -61,18 +61,18 @@ export default function DashboardPage() {
     <div className="animate-in fade-in space-y-8 duration-700">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-gray-900">
+          <h1 className="text-foreground text-3xl font-black tracking-tight">
             Welcome back,{' '}
             {user?.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'there'}! 👋
           </h1>
-          <p className="mt-1 font-medium text-gray-500">
+          <p className="text-muted-foreground mt-1 font-medium">
             Here&apos;s a quick overview of your business performance today.
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
-            className="rounded-xl border-gray-100 bg-white font-bold shadow-sm"
+            className="border-border bg-background rounded-xl font-bold shadow-sm"
           >
             Download Report
           </Button>

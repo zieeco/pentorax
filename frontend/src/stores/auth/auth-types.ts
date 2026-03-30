@@ -8,11 +8,13 @@ export interface AuthState {
   role: UserRole | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isInitialized: boolean;
 
   // State setters
   setSession: (session: Session | null) => void;
   setUser: (user: User | null) => void;
   setRole: (role: UserRole | null) => void;
+  initialize: () => () => void;
 
   // Auth actions
   signIn: (email: string, password: string) => Promise<AuthResponse<User>>;

@@ -2,7 +2,7 @@
  * Core API Service
  * Precision-engineered interfaces for team, faqs, and support.
  */
-import { apiClient } from '@/lib/api-client';
+import { apiClient } from '@/lib/axiosInstance';
 
 export const coreApi = {
   team: () => apiClient.get('/team/'),

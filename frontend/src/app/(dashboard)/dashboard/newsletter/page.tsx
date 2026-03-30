@@ -86,16 +86,16 @@ export default function NewsletterSubscribersPage() {
         onStatusFilterChange={setStatusFilter}
       />
       <SubscriberTable subscribers={subscribers} isLoading={isLoading} />
-      <Card className="bg-brand-indigo/[0.03] border-brand-indigo/10 rounded-[2rem] shadow-none">
+      <Card className="bg-primary/5 border-primary/10 rounded-[2rem] shadow-none">
         <CardContent className="flex items-center gap-4 p-6">
-          <div className="bg-brand-indigo/10 rounded-2xl p-3">
-            <TrendingUp className="text-brand-indigo h-5 w-5" />
+          <div className="bg-primary/10 rounded-2xl p-3">
+            <TrendingUp className="text-primary h-5 w-5" />
           </div>
           <div>
-            <p className="text-brand-indigo text-sm font-black tracking-wider uppercase">
+            <p className="text-primary text-sm font-black tracking-wider uppercase">
               Retention Optimizer
             </p>
-            <p className="mt-0.5 text-xs font-medium text-gray-500">
+            <p className="text-muted-foreground mt-0.5 text-xs font-medium">
               Your audience has grown by 12% this month. Strategy: Target unsubscribed users with a
               custom re-engagement offer.
             </p>

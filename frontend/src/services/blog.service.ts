@@ -2,7 +2,7 @@
  * Blog API Service
  * Precision-engineered interfaces for blog posts and categories.
  */
-import { apiClient } from '@/lib/api-client';
+import { apiClient } from '@/lib/axiosInstance';
 
 export interface BlogPost {
   id: string;
