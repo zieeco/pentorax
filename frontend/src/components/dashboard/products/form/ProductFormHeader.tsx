@@ -30,15 +30,15 @@ export function ProductFormHeader({
           variant="ghost"
           size="icon"
           onClick={onBack}
-          className="rounded-md transition-colors hover:bg-gray-200"
+          className="hover:bg-muted rounded-md transition-colors"
         >
-          <ArrowLeft className="h-6 w-6 text-gray-600" />
+          <ArrowLeft className="text-muted-foreground h-6 w-6" />
         </Button>
         <div>
-          <h1 className="text-2xl font-black text-gray-900">
+          <h1 className="text-foreground text-2xl font-black">
             {isEditMode ? 'Edit Product' : 'New Product'}
           </h1>
-          <p className="text-sm font-medium text-gray-500">
+          <p className="text-muted-foreground text-sm font-medium">
             {isEditMode ? 'Update product details' : 'Create a new product for your catalog'}
           </p>
         </div>

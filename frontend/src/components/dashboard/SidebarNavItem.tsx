@@ -27,8 +27,8 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
         className={cn(
           'flex items-center justify-center rounded-xl p-3 transition-all',
           isActive
-            ? 'bg-primary shadow-primary/20 text-white shadow-lg'
-            : 'text-gray-400 hover:bg-white/5 hover:text-white'
+            ? 'bg-brand-primary shadow-brand-primary/20 text-brand-light shadow-lg'
+            : 'text-brand-light/40 hover:bg-brand-light/5 hover:text-brand-light'
         )}
         title={label}
       >
@@ -43,8 +43,8 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       className={cn(
         'flex w-full items-center space-x-3 rounded-xl px-4 py-3 transition-all',
         isActive
-          ? 'bg-primary shadow-primary/20 text-white shadow-lg'
-          : 'text-gray-400 hover:bg-white/5 hover:text-white'
+          ? 'bg-brand-primary shadow-brand-primary/20 text-brand-light shadow-lg'
+          : 'text-brand-light/40 hover:bg-brand-light/5 hover:text-brand-light'
       )}
     >
       <Icon className="h-5 w-5" />

@@ -67,25 +67,25 @@ export function ProductSpecificationsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] max-w-4xl gap-0 overflow-y-auto rounded-[2.5rem] border-gray-100 p-0 shadow-2xl">
-        <DialogHeader className="border-b border-gray-100 bg-gray-50/30 p-8">
-          <DialogTitle className="flex items-center gap-3 text-2xl font-black text-gray-900">
+      <DialogContent className="border-border bg-card max-h-[90vh] max-w-4xl gap-0 overflow-y-auto rounded-[2.5rem] p-0 shadow-2xl">
+        <DialogHeader className="border-border bg-muted/20 border-b p-8">
+          <DialogTitle className="text-foreground flex items-center gap-3 text-2xl font-black">
             <ListTree className="text-primary h-8 w-8" />
             Product Specifications
           </DialogTitle>
-          <DialogDescription className="font-medium text-gray-500">
+          <DialogDescription className="text-muted-foreground font-medium">
             Add technical parameters and performance details
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-8 p-8">
-          <div className="space-y-6 rounded-[2rem] border border-gray-100 bg-gray-50/50 p-8">
-            <h4 className="text-xs font-black tracking-wider text-gray-900 uppercase">
+          <div className="border-border bg-muted/20 space-y-6 rounded-[2rem] border p-8">
+            <h4 className="text-foreground text-xs font-black tracking-wider uppercase">
               Add New Parameter
             </h4>
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label className="ml-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                <Label className="text-muted-foreground ml-1 text-[10px] font-black tracking-widest uppercase">
                   Attribute Name
                 </Label>
                 <Input
@@ -93,11 +93,11 @@ export function ProductSpecificationsModal({
                   onChange={(e) => setNewKey(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
                   placeholder="e.g., Efficiency"
-                  className="h-12 rounded-xl border-gray-100 bg-white font-bold"
+                  className="border-border bg-background h-12 rounded-xl font-bold"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="ml-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                <Label className="text-muted-foreground ml-1 text-[10px] font-black tracking-widest uppercase">
                   Attribute Value
                 </Label>
                 <Input
@@ -105,7 +105,7 @@ export function ProductSpecificationsModal({
                   onChange={(e) => setNewValue(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
                   placeholder="e.g., 22.5%"
-                  className="h-12 rounded-xl border-gray-100 bg-white font-bold"
+                  className="border-border bg-background h-12 rounded-xl font-bold"
                 />
               </div>
             </div>
@@ -119,14 +119,14 @@ export function ProductSpecificationsModal({
           </div>
 
           <div className="space-y-4">
-            <h4 className="px-1 text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase">
+            <h4 className="text-muted-foreground px-1 text-[10px] font-black tracking-[0.2em] uppercase">
               Active Specifications ({specifications.length})
             </h4>
             <div className="grid gap-3">
               {specifications.map((spec, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-4 rounded-[1.5rem] border border-gray-100 bg-white p-4 transition-all duration-300 hover:shadow-lg hover:shadow-gray-200/50"
+                  className="border-border bg-card hover:shadow-primary/5 flex items-center gap-4 rounded-[1.5rem] border p-4 transition-all duration-300 hover:shadow-lg"
                 >
                   <div className="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-xs font-black">
                     #{i + 1}
@@ -135,12 +135,12 @@ export function ProductSpecificationsModal({
                     <Input
                       value={spec.key}
                       onChange={(e) => handleUpdate(i, 'key', e.target.value)}
-                      className="h-10 rounded-xl border-none bg-gray-50/50 font-bold"
+                      className="bg-muted/20 h-10 rounded-xl border-none font-bold"
                     />
                     <Input
                       value={spec.value}
                       onChange={(e) => handleUpdate(i, 'value', e.target.value)}
-                      className="h-10 rounded-xl border-none bg-gray-50/50 font-bold"
+                      className="bg-muted/20 h-10 rounded-xl border-none font-bold"
                     />
                   </div>
                   <div className="flex shrink-0">
@@ -167,7 +167,7 @@ export function ProductSpecificationsModal({
                     variant="ghost"
                     size="icon"
                     onClick={() => handleDelete(i)}
-                    className="hover:bg-destructive/10 hover:text-destructive h-10 w-10 shrink-0 rounded-xl text-gray-300"
+                    className="hover:bg-destructive/10 hover:text-destructive text-muted-foreground/30 h-10 w-10 shrink-0 rounded-xl"
                   >
                     <Trash2 className="h-5 w-5" />
                   </Button>
@@ -177,7 +177,7 @@ export function ProductSpecificationsModal({
           </div>
         </div>
 
-        <div className="flex justify-end border-t border-gray-100 bg-gray-50/50 p-6">
+        <div className="border-border bg-muted/20 flex justify-end border-t p-6">
           <Button onClick={onClose} className="rounded-xl px-8 font-bold">
             Save Specs
           </Button>

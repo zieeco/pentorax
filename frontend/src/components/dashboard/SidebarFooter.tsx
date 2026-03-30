@@ -21,8 +21,8 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({ collapsed, isActiv
           className={cn(
             'flex items-center justify-center rounded-xl p-3 transition-all',
             isActive('/dashboard/settings')
-              ? 'bg-primary shadow-primary/20 text-white shadow-lg'
-              : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              ? 'bg-brand-primary shadow-brand-primary/20 text-brand-light shadow-lg'
+              : 'text-brand-light/40 hover:bg-brand-light/5 hover:text-brand-light'
           )}
           title="Settings"
         >
@@ -32,7 +32,7 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({ collapsed, isActiv
           variant="ghost"
           size="icon"
           onClick={onSignOut}
-          className="w-full text-rose-400 hover:bg-rose-500/10 hover:text-rose-400"
+          className="text-destructive hover:bg-destructive/10 hover:text-destructive w-full"
           title="Sign Out"
         >
           <LogOut className="h-5 w-5" />
@@ -48,8 +48,8 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({ collapsed, isActiv
         className={cn(
           'flex w-full items-center space-x-3 rounded-xl px-4 py-3 transition-all',
           isActive('/dashboard/settings')
-            ? 'bg-primary shadow-primary/20 text-white shadow-lg'
-            : 'text-gray-400 hover:bg-white/5 hover:text-white'
+            ? 'bg-brand-primary shadow-brand-primary/20 text-brand-light shadow-lg'
+            : 'text-brand-light/40 hover:bg-brand-light/5 hover:text-brand-light'
         )}
       >
         <Settings className="h-5 w-5" />
@@ -58,7 +58,7 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({ collapsed, isActiv
       <Button
         variant="ghost"
         onClick={onSignOut}
-        className="group flex w-full items-center justify-start space-x-3 rounded-xl px-4 py-3 text-rose-400 hover:bg-rose-500/10 hover:text-rose-400"
+        className="group text-destructive hover:bg-destructive/10 hover:text-destructive flex w-full items-center justify-start space-x-3 rounded-xl px-4 py-3"
       >
         <LogOut className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
         <span className="font-bold">Sign Out</span>

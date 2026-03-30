@@ -18,15 +18,15 @@ const DashboardHeader: React.FC = () => {
   const role = useRole();
 
   return (
-    <header className="flex h-20 shrink-0 items-center justify-between border-b border-gray-100 bg-white px-8 transition-shadow duration-300">
+    <header className="border-border bg-card flex h-20 shrink-0 items-center justify-between border-b px-8 transition-shadow duration-300">
       {/* Search */}
       <div className="flex flex-1 items-center space-x-4">
         <div className="group relative w-96">
-          <Search className="group-focus-within:text-primary absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400 transition-colors" />
+          <Search className="group-focus-within:text-primary text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transition-colors" />
           <Input
             type="text"
             placeholder="Search products, orders, customers..."
-            className="focus-visible:ring-primary/20 focus-visible:border-primary w-full rounded-xl border border-gray-100 bg-gray-50 py-2.5 pr-4 pl-10 text-sm transition-all outline-none placeholder:text-gray-400 focus-visible:ring-2"
+            className="focus-visible:ring-primary/20 focus-visible:border-primary border-border bg-muted/30 placeholder:text-muted-foreground w-full rounded-xl border py-2.5 pr-4 pl-10 text-sm transition-all outline-none focus-visible:ring-2"
           />
         </div>
       </div>
@@ -37,16 +37,16 @@ const DashboardHeader: React.FC = () => {
         <Button
           variant="ghost"
           size="icon"
-          className="hover:text-primary relative rounded-xl transition-all hover:bg-gray-50"
+          className="hover:text-primary hover:bg-muted relative rounded-xl transition-all"
         >
           <Bell className="h-5 w-5" />
-          <span className="absolute top-2.5 right-2.5 h-2 w-2 animate-pulse rounded-full border-2 border-white bg-rose-500 ring-1 ring-rose-500/20"></span>
+          <span className="border-background absolute top-2.5 right-2.5 h-2 w-2 animate-pulse rounded-full border-2 bg-rose-500 ring-1 ring-rose-500/20"></span>
         </Button>
 
         {/* User Profile */}
-        <div className="flex items-center space-x-3 border-l border-gray-100 pl-6">
+        <div className="border-border flex items-center space-x-3 border-l pl-6">
           <div className="text-right">
-            <p className="text-sm leading-none font-bold text-gray-900">
+            <p className="text-foreground text-sm leading-none font-bold">
               {user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'}
             </p>
             <p className="text-primary mt-1.5 flex items-center justify-end text-[10px] font-black tracking-wider uppercase">

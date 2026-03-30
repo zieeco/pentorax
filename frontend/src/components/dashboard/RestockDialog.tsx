@@ -36,22 +36,22 @@ export function RestockDialog({
     <Dialog open={!!item} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="rounded-3xl border-none shadow-2xl sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl font-black">Adjust Inventory</DialogTitle>
+          <DialogTitle className="text-foreground text-xl font-black">Adjust Inventory</DialogTitle>
         </DialogHeader>
         <div className="py-6">
-          <p className="mb-4 text-sm font-medium text-gray-500">
-            Updating stock for <span className="font-black text-gray-900">{item?.name}</span>.{' '}
+          <p className="text-muted-foreground mb-4 text-sm font-medium">
+            Updating stock for <span className="text-foreground font-black">{item?.name}</span>.{' '}
             Currently <span className="text-primary font-black">{item?.stock} units</span> in
             warehouse.
           </p>
           <div className="space-y-2">
-            <Label className="text-[10px] font-black tracking-widest text-gray-400 uppercase">
+            <Label className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
               New Stock Quantity
             </Label>
             <Input
               type="number"
               placeholder="Enter units..."
-              className="focus-visible:ring-primary/20 focus-visible:border-primary rounded-xl border-gray-100 bg-gray-50 py-6 text-lg font-bold"
+              className="focus-visible:ring-primary/20 focus-visible:border-primary border-border bg-muted/30 rounded-xl py-6 text-lg font-bold"
               value={newStock}
               onChange={(e) => onStockChange(e.target.value)}
             />

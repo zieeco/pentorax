@@ -51,9 +51,9 @@ export function ProductTable({
   onDuplicate,
 }: ProductTableProps) {
   return (
-    <Card className="overflow-hidden rounded-[2.5rem] border-gray-100 bg-white shadow-sm">
+    <Card className="border-border bg-card overflow-hidden rounded-[2.5rem] shadow-sm">
       <Table>
-        <TableHeader className="bg-gray-50/50">
+        <TableHeader className="bg-muted/30">
           <TableRow className="border-none hover:bg-transparent">
             <TableHead className="w-12 px-6">
               <Checkbox
@@ -65,16 +65,16 @@ export function ProductTable({
             <TableHead className="px-4 py-4 text-[10px] font-black tracking-widest text-gray-400 uppercase">
               Product Details
             </TableHead>
-            <TableHead className="px-4 py-4 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+            <TableHead className="text-muted-foreground px-4 py-4 text-[10px] font-black tracking-widest uppercase">
               Inventory
             </TableHead>
-            <TableHead className="px-4 py-4 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+            <TableHead className="text-muted-foreground px-4 py-4 text-[10px] font-black tracking-widest uppercase">
               Pricing
             </TableHead>
-            <TableHead className="px-4 py-4 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+            <TableHead className="text-muted-foreground px-4 py-4 text-[10px] font-black tracking-widest uppercase">
               Status
             </TableHead>
-            <TableHead className="px-6 py-4 text-right text-[10px] font-black tracking-widest text-gray-400 uppercase">
+            <TableHead className="text-muted-foreground px-6 py-4 text-right text-[10px] font-black tracking-widest uppercase">
               Actions
             </TableHead>
           </TableRow>
@@ -86,19 +86,19 @@ export function ProductTable({
               .map((_, i) => (
                 <TableRow key={i} className="border-gray-50">
                   <TableCell className="px-6 py-4">
-                    <div className="h-4 w-4 animate-pulse rounded bg-gray-100" />
+                    <div className="bg-muted h-4 w-4 animate-pulse rounded" />
                   </TableCell>
                   <TableCell className="px-4 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-12 w-12 animate-pulse rounded-xl bg-gray-100" />
+                      <div className="bg-muted h-12 w-12 animate-pulse rounded-xl" />
                       <div className="space-y-2">
-                        <div className="h-4 w-32 animate-pulse rounded bg-gray-100" />
-                        <div className="h-3 w-20 animate-pulse rounded bg-gray-100" />
+                        <div className="bg-muted h-4 w-32 animate-pulse rounded" />
+                        <div className="bg-muted h-3 w-20 animate-pulse rounded" />
                       </div>
                     </div>
                   </TableCell>
                   <TableCell colSpan={4}>
-                    <div className="h-4 w-full animate-pulse rounded bg-gray-100" />
+                    <div className="bg-muted h-4 w-full animate-pulse rounded" />
                   </TableCell>
                 </TableRow>
               ))
@@ -106,12 +106,12 @@ export function ProductTable({
             <TableRow>
               <TableCell colSpan={6} className="h-96 text-center">
                 <div className="flex flex-col items-center justify-center space-y-4">
-                  <div className="rounded-full bg-gray-50 p-6">
-                    <Package className="h-10 w-10 text-gray-300" />
+                  <div className="bg-muted/30 rounded-full p-6">
+                    <Package className="text-muted-foreground/50 h-10 w-10" />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-lg font-black text-gray-900">No products found</p>
-                    <p className="text-sm font-medium text-gray-500">
+                    <p className="text-foreground text-lg font-black">No products found</p>
+                    <p className="text-muted-foreground text-sm font-medium">
                       Try adjusting your search or filters.
                     </p>
                   </div>

@@ -63,11 +63,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
 
   return (
     <aside
-      className={`${collapsed ? 'w-20' : 'w-64'} flex shrink-0 flex-col overflow-hidden bg-gray-900 text-white transition-all duration-300`}
+      className={`${collapsed ? 'w-20' : 'w-64'} bg-brand-dark text-brand-light flex shrink-0 flex-col overflow-hidden transition-all duration-300`}
     >
       <Link
         href="/"
-        className={`block border-b border-gray-800 p-6 transition-colors hover:bg-gray-800/50 ${collapsed ? 'flex justify-center' : ''}`}
+        className={`border-brand-light/5 hover:bg-brand-light/5 block border-b p-6 transition-colors ${collapsed ? 'flex justify-center' : ''}`}
       >
         <div className="flex items-center space-x-3">
           <Image
@@ -80,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
           {!collapsed && (
             <div className="overflow-hidden">
               <h1 className="text-xl font-bold whitespace-nowrap">Pentorax</h1>
-              <p className="text-xs font-black tracking-widest whitespace-nowrap text-gray-400 uppercase">
+              <p className="text-brand-light/60 text-xs font-black tracking-widest whitespace-nowrap uppercase">
                 Solar Energy
               </p>
             </div>

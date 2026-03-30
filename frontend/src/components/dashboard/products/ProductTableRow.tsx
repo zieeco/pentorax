@@ -33,7 +33,7 @@ export function ProductTableRow({
   onDuplicate,
 }: ProductTableRowProps) {
   return (
-    <TableRow className="group border-gray-50 transition-colors hover:bg-gray-50/30">
+    <TableRow className="group border-border/50 hover:bg-muted/30 transition-colors">
       <TableCell className="px-6 py-5">
         <Checkbox
           checked={isSelected}
@@ -43,7 +43,7 @@ export function ProductTableRow({
       </TableCell>
       <TableCell className="px-4 py-5">
         <div className="flex items-center gap-4">
-          <div className="relative h-14 w-14 overflow-hidden rounded-2xl border border-gray-50 bg-gray-100 transition-shadow group-hover:shadow-md">
+          <div className="border-border bg-muted relative h-14 w-14 overflow-hidden rounded-2xl border transition-shadow group-hover:shadow-md">
             {product.featured_image ? (
               <Image
                 src={product.featured_image}
@@ -53,29 +53,29 @@ export function ProductTableRow({
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center">
-                <Package className="h-6 w-6 text-gray-300" />
+                <Package className="text-muted-foreground/40 h-6 w-6" />
               </div>
             )}
             {!product.is_active && (
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 backdrop-blur-[1px]">
-                <span className="text-[8px] font-black tracking-tighter text-gray-500 uppercase">
+              <div className="bg-background/60 absolute inset-0 z-10 flex items-center justify-center backdrop-blur-[1px]">
+                <span className="text-muted-foreground text-[8px] font-black tracking-tighter uppercase">
                   Draft
                 </span>
               </div>
             )}
           </div>
           <div className="min-w-0">
-            <div className="group-hover:text-primary max-w-[240px] truncate font-black text-gray-900 transition-colors">
+            <div className="group-hover:text-primary text-foreground max-w-[240px] truncate font-black transition-colors">
               {product.name}
             </div>
             <div className="mt-1 flex items-center gap-2">
               <Badge
                 variant="secondary"
-                className="border-none bg-gray-50 px-1.5 py-0 text-[9px] font-bold text-gray-500 uppercase"
+                className="bg-muted text-muted-foreground border-none px-1.5 py-0 text-[9px] font-bold uppercase"
               >
                 {product.category_name}
               </Badge>
-              <span className="text-[10px] font-medium text-gray-300">
+              <span className="text-muted-foreground/40 text-[10px] font-medium">
                 #{product.sku || 'NO-SKU'}
               </span>
             </div>
@@ -86,26 +86,26 @@ export function ProductTableRow({
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <div
-              className={`h-1.5 w-1.5 rounded-full ${product.stock_quantity > 10 ? 'bg-brand-green' : 'bg-brand-yellow'}`}
+              className={`h-1.5 w-1.5 rounded-full ${product.stock_quantity > 10 ? 'bg-secondary' : 'bg-accent'}`}
             />
-            <span className="text-sm font-black text-gray-600">
+            <span className="text-muted-foreground text-sm font-black">
               {product.stock_quantity} in stock
             </span>
           </div>
-          <div className="h-1 w-24 overflow-hidden rounded-full bg-gray-100">
+          <div className="bg-muted h-1 w-24 overflow-hidden rounded-full">
             <div
-              className={`h-full rounded-full ${product.stock_quantity > 10 ? 'bg-brand-green' : 'bg-brand-yellow'}`}
+              className={`h-full rounded-full ${product.stock_quantity > 10 ? 'bg-secondary' : 'bg-accent'}`}
               style={{ width: `${Math.min(100, (product.stock_quantity / 50) * 100)}%` }}
             />
           </div>
         </div>
       </TableCell>
       <TableCell className="px-4 py-5">
-        <div className="text-base font-black text-gray-900">
+        <div className="text-foreground text-base font-black">
           ₦{Number(product.price).toLocaleString()}
         </div>
         {product.compare_at_price && (
-          <div className="text-[11px] font-bold text-gray-400 line-through">
+          <div className="text-muted-foreground text-[11px] font-bold line-through">
             ₦{Number(product.compare_at_price).toLocaleString()}
           </div>
         )}
@@ -113,12 +113,12 @@ export function ProductTableRow({
       <TableCell className="px-4 py-5">
         <div className="flex flex-col gap-1.5">
           <Badge
-            className={`w-fit rounded-xl border px-3 py-1 text-[9px] font-black uppercase shadow-none ${product.is_active ? 'bg-brand-green/10 text-brand-green border-brand-green/20' : 'border-gray-200 bg-gray-100 text-gray-500'}`}
+            className={`w-fit rounded-xl border px-3 py-1 text-[9px] font-black uppercase shadow-none ${product.is_active ? 'bg-secondary/10 text-secondary border-secondary/20' : 'border-border bg-muted text-muted-foreground'}`}
           >
             {product.is_active ? 'Active' : 'Draft'}
           </Badge>
           {product.is_featured && (
-            <Badge className="bg-brand-indigo/10 text-brand-indigo border-brand-indigo/20 w-fit rounded-xl border px-3 py-1 text-[9px] font-black uppercase shadow-none">
+            <Badge className="bg-primary/10 text-primary border-primary/20 w-fit rounded-xl border px-3 py-1 text-[9px] font-black uppercase shadow-none">
               Featured
             </Badge>
           )}
@@ -130,35 +130,32 @@ export function ProductTableRow({
             <Button
               variant="ghost"
               size="icon"
-              className="h-10 w-10 rounded-xl text-gray-400 hover:bg-gray-100 hover:text-gray-900"
+              className="text-muted-foreground hover:bg-muted hover:text-foreground h-10 w-10 rounded-xl"
             >
               <MoreHorizontal className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-56 rounded-2xl border-gray-100 p-2 shadow-xl"
-          >
-            <DropdownMenuLabel className="px-3 py-2 text-[10px] font-black text-gray-400 uppercase">
+          <DropdownMenuContent align="end" className="border-border w-56 rounded-2xl p-2 shadow-xl">
+            <DropdownMenuLabel className="text-muted-foreground px-3 py-2 text-[10px] font-black uppercase">
               Quick Actions
             </DropdownMenuLabel>
             <DropdownMenuItem asChild className="cursor-pointer rounded-xl py-2.5 font-bold">
               <Link href={`/dashboard/products/${product.slug}/edit`}>
-                <Edit className="mr-3 h-4 w-4 text-gray-400" /> Edit Product
+                <Edit className="text-muted-foreground mr-3 h-4 w-4" /> Edit Product
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem
               className="cursor-pointer rounded-xl py-2.5 font-bold"
               onClick={() => onDuplicate(product.slug)}
             >
-              <Copy className="mr-3 h-4 w-4 text-gray-400" /> Duplicate
+              <Copy className="text-muted-foreground mr-3 h-4 w-4" /> Duplicate
             </DropdownMenuItem>
             <DropdownMenuItem asChild className="cursor-pointer rounded-xl py-2.5 font-bold">
               <Link href={`/shop/${product.slug}`} target="_blank">
-                <Eye className="mr-3 h-4 w-4 text-gray-400" /> Preview Live
+                <Eye className="text-muted-foreground mr-3 h-4 w-4" /> Preview Live
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="my-2 bg-gray-50" />
+            <DropdownMenuSeparator className="bg-border/50 my-2" />
             <DropdownMenuItem
               className="text-destructive focus:bg-destructive/5 focus:text-destructive cursor-pointer rounded-xl py-2.5 font-bold"
               onClick={() => onDelete(product.slug)}

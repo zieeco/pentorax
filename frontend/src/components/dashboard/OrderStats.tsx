@@ -14,18 +14,18 @@ export function OrderHeader() {
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div>
-        <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-gray-900">
+        <h1 className="text-foreground flex items-center gap-3 text-3xl font-black tracking-tight">
           <ShoppingBag className="text-primary h-8 w-8" />
           Order Management
         </h1>
-        <p className="mt-1 font-medium text-gray-500">
+        <p className="text-muted-foreground mt-1 font-medium">
           Track and fulfill customer orders globally.
         </p>
       </div>
       <div className="flex items-center gap-3">
         <Button
           variant="outline"
-          className="gap-2 rounded-xl border-gray-100 bg-white font-bold shadow-sm"
+          className="border-border bg-background gap-2 rounded-xl font-bold shadow-sm"
         >
           <FileText className="h-4 w-4" />
           Export CSV
@@ -38,21 +38,21 @@ export function OrderHeader() {
 export function OrderStats({ total, pending, revenue }: OrderStatsProps) {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-      <Card className="bg-primary rounded-3xl border-gray-100 p-6 text-white shadow-sm">
+      <Card className="bg-primary border-border shadow-primary/20 rounded-3xl p-6 text-white shadow-sm">
         <p className="text-[10px] font-black tracking-widest uppercase opacity-60">Total Orders</p>
         <p className="mt-1 text-3xl font-black">{total}</p>
       </Card>
-      <Card className="rounded-3xl border-gray-100 p-6 shadow-sm">
-        <p className="text-[10px] font-black tracking-widest text-gray-400 uppercase">
+      <Card className="border-border rounded-3xl p-6 shadow-sm">
+        <p className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
           Pending Fulfillment
         </p>
-        <p className="mt-1 text-3xl font-black text-gray-900">{pending}</p>
+        <p className="text-foreground mt-1 text-3xl font-black">{pending}</p>
       </Card>
-      <Card className="rounded-3xl border-gray-100 p-6 shadow-sm">
-        <p className="text-[10px] font-black tracking-widest text-gray-400 uppercase">
+      <Card className="border-border rounded-3xl p-6 shadow-sm">
+        <p className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
           Total Sales
         </p>
-        <p className="mt-1 text-3xl font-black text-gray-900">₦{revenue.toLocaleString()}</p>
+        <p className="text-foreground mt-1 text-3xl font-black">₦{revenue.toLocaleString()}</p>
       </Card>
     </div>
   );

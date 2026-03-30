@@ -52,19 +52,19 @@ export function ProductDeleteButton({
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="rounded-[2rem] border-gray-100 p-8 shadow-2xl">
+      <AlertDialogContent className="border-border bg-card rounded-[2rem] p-8 shadow-2xl">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-2xl font-black tracking-tight text-gray-900">
+          <AlertDialogTitle className="text-foreground text-2xl font-black tracking-tight">
             Destructive Action
           </AlertDialogTitle>
-          <AlertDialogDescription className="pt-2 font-medium text-gray-500">
+          <AlertDialogDescription className="text-muted-foreground pt-2 font-medium">
             Are you absolutely sure you want to permanently delete{' '}
-            <span className="font-black text-gray-900">&quot;{productName}&quot;</span>? This data
+            <span className="text-foreground font-black">&quot;{productName}&quot;</span>? This data
             will be wiped from our catalog and cannot be recovered.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="gap-3 pt-6">
-          <AlertDialogCancel className="h-12 rounded-xl border-gray-100 font-bold hover:bg-gray-50">
+          <AlertDialogCancel className="border-border hover:bg-muted h-12 rounded-xl font-bold">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction

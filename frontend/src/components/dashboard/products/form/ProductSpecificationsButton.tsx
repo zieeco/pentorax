@@ -18,11 +18,11 @@ export function ProductSpecificationsButton({
   onClick,
 }: ProductSpecificationsButtonProps) {
   return (
-    <Card className="overflow-hidden rounded-[2rem] border-gray-100 shadow-sm">
-      <CardHeader className="border-b border-gray-100/50 bg-gray-50/50 p-6">
-        <CardTitle className="flex items-center justify-between text-lg font-black text-gray-900">
+    <Card className="border-border bg-card overflow-hidden rounded-[2rem] shadow-sm">
+      <CardHeader className="border-border/50 bg-muted/20 border-b p-6">
+        <CardTitle className="text-foreground flex items-center justify-between text-lg font-black">
           <span>Specifications</span>
-          <ListTree className="h-5 w-5 text-gray-300" />
+          <ListTree className="text-muted-foreground/30 h-5 w-5" />
         </CardTitle>
       </CardHeader>
 
@@ -31,7 +31,7 @@ export function ProductSpecificationsButton({
           type="button"
           variant="outline"
           onClick={onClick}
-          className="h-auto w-full gap-3 rounded-xl border-gray-100 bg-white py-6 font-bold shadow-sm hover:bg-gray-50"
+          className="border-border bg-card hover:bg-muted h-auto w-full gap-3 rounded-xl py-6 font-bold shadow-sm"
         >
           <ListTree className="text-primary h-5 w-5" />
           <span>Manage Specs</span>
@@ -41,7 +41,7 @@ export function ProductSpecificationsButton({
             </span>
           )}
         </Button>
-        <p className="mt-3 text-center text-[10px] leading-relaxed font-bold tracking-widest text-gray-400 uppercase">
+        <p className="text-muted-foreground mt-3 text-center text-[10px] leading-relaxed font-bold tracking-widest uppercase">
           {specCount === 0 ? 'No specifications' : `${specCount} tech details`}
         </p>
       </CardContent>

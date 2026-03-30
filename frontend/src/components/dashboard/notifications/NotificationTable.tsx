@@ -43,10 +43,10 @@ export function NotificationTable({
   onOpenEmail,
 }: NotificationTableProps) {
   return (
-    <div className="mt-6 overflow-hidden rounded-[2.5rem] border border-gray-100 bg-white shadow-sm">
+    <div className="border-border bg-card mt-6 overflow-hidden rounded-[2.5rem] border shadow-sm">
       <Table>
         <TableHeader>
-          <TableRow className="border-b-gray-100 bg-gray-50/80 hover:bg-gray-50/80">
+          <TableRow className="border-b-border/50 bg-muted/30 hover:bg-muted/30">
             <TableHead className="w-16 text-center">
               <Checkbox
                 checked={isAllSelected}
@@ -54,22 +54,22 @@ export function NotificationTable({
                 className="rounded-md border-gray-300"
               />
             </TableHead>
-            <TableHead className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
+            <TableHead className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
               Status
             </TableHead>
-            <TableHead className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
+            <TableHead className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
               Product
             </TableHead>
-            <TableHead className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
+            <TableHead className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
               Subscriber
             </TableHead>
-            <TableHead className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
+            <TableHead className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
               Availability
             </TableHead>
-            <TableHead className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
+            <TableHead className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
               Date
             </TableHead>
-            <TableHead className="pr-8 text-right text-[10px] font-black tracking-widest text-gray-500 uppercase">
+            <TableHead className="text-muted-foreground pr-8 text-right text-[10px] font-black tracking-widest uppercase">
               Actions
             </TableHead>
           </TableRow>
@@ -78,7 +78,7 @@ export function NotificationTable({
           {notifications.map((notification) => (
             <TableRow
               key={notification.id}
-              className="border-b-gray-50 transition-colors hover:bg-gray-50/30"
+              className="border-b-border/50 hover:bg-muted/30 transition-colors"
             >
               <TableCell className="text-center">
                 <Checkbox
@@ -114,7 +114,7 @@ export function NotificationTable({
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-3">
-                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
+                  <div className="border-border bg-muted/20 relative h-10 w-10 shrink-0 overflow-hidden rounded-xl border">
                     {notification.product_image ? (
                       <Image
                         src={notification.product_image}
@@ -123,32 +123,32 @@ export function NotificationTable({
                         className="object-cover"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-gray-100 text-[10px] text-gray-400 italic">
+                      <div className="bg-muted text-muted-foreground/40 flex h-full w-full items-center justify-center text-[10px] italic">
                         No Img
                       </div>
                     )}
                   </div>
-                  <span className="line-clamp-1 font-bold text-gray-900">
+                  <span className="text-foreground line-clamp-1 font-bold">
                     {notification.product_name}
                   </span>
                 </div>
               </TableCell>
-              <TableCell className="max-w-[200px] truncate text-sm font-medium text-gray-600">
+              <TableCell className="text-muted-foreground max-w-[200px] truncate text-sm font-medium">
                 {notification.email}
               </TableCell>
               <TableCell>
                 {notification.product_in_stock ? (
-                  <Badge className="flex w-fit items-center gap-1.5 rounded-full border-none bg-green-500/10 px-3 py-1 text-[10px] font-bold text-green-700">
-                    <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500" />{' '}
+                  <Badge className="bg-secondary/10 text-secondary flex w-fit items-center gap-1.5 rounded-full border-none px-3 py-1 text-[10px] font-bold">
+                    <div className="bg-secondary h-1.5 w-1.5 animate-pulse rounded-full" />{' '}
                     Available
                   </Badge>
                 ) : (
-                  <Badge className="flex w-fit items-center gap-1.5 rounded-full border-none bg-gray-100 px-3 py-1 text-[10px] font-bold text-gray-500">
-                    <div className="h-1.5 w-1.5 rounded-full bg-gray-400" /> Out of Stock
+                  <Badge className="bg-muted text-muted-foreground flex w-fit items-center gap-1.5 rounded-full border-none px-3 py-1 text-[10px] font-bold">
+                    <div className="bg-muted-foreground/30 h-1.5 w-1.5 rounded-full" /> Out of Stock
                   </Badge>
                 )}
               </TableCell>
-              <TableCell className="text-xs font-medium text-gray-400">
+              <TableCell className="text-muted-foreground text-xs font-medium">
                 {format(new Date(notification.created_at), 'MMM d, yyyy')}
               </TableCell>
               <TableCell className="pr-8 text-right">
@@ -157,7 +157,7 @@ export function NotificationTable({
                     variant="ghost"
                     size="icon"
                     onClick={() => onOpenEmail(notification.id)}
-                    className="hover:text-primary h-8 w-8 text-gray-400 transition-colors"
+                    className="hover:text-primary text-muted-foreground h-8 w-8 transition-colors"
                   >
                     <Mail className="h-4 w-4" />
                   </Button>
@@ -166,7 +166,7 @@ export function NotificationTable({
                       variant="ghost"
                       size="icon"
                       onClick={() => onMarkRead(notification.id)}
-                      className="h-8 w-8 text-gray-400 hover:text-green-600"
+                      className="text-muted-foreground hover:text-secondary h-8 w-8"
                     >
                       <CheckCircle className="h-4 w-4" />
                     </Button>
@@ -175,7 +175,7 @@ export function NotificationTable({
                       variant="ghost"
                       size="icon"
                       onClick={() => onMarkUnread(notification.id)}
-                      className="h-8 w-8 text-gray-400 hover:text-yellow-600"
+                      className="text-muted-foreground hover:text-accent h-8 w-8"
                     >
                       <Circle className="h-4 w-4" />
                     </Button>
@@ -185,7 +185,7 @@ export function NotificationTable({
                       variant="ghost"
                       size="icon"
                       onClick={() => onArchive(notification.id)}
-                      className="h-8 w-8 text-gray-400 hover:text-rose-600"
+                      className="text-muted-foreground hover:text-destructive h-8 w-8"
                     >
                       <Archive className="h-4 w-4" />
                     </Button>
@@ -194,7 +194,7 @@ export function NotificationTable({
                       variant="ghost"
                       size="icon"
                       onClick={() => onUnarchive(notification.id)}
-                      className="h-8 w-8 text-gray-400 hover:text-indigo-600"
+                      className="text-muted-foreground hover:text-primary h-8 w-8"
                     >
                       <ArchiveRestore className="h-4 w-4" />
                     </Button>

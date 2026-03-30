@@ -32,20 +32,20 @@ interface SubscriberTableProps {
 
 export function SubscriberTable({ subscribers, isLoading }: SubscriberTableProps) {
   return (
-    <Card className="overflow-hidden rounded-[2.5rem] border-gray-100 bg-white shadow-sm">
+    <Card className="border-border bg-card overflow-hidden rounded-[2.5rem] shadow-sm">
       <Table>
-        <TableHeader className="bg-gray-50/50">
+        <TableHeader className="bg-muted/30">
           <TableRow className="border-none hover:bg-transparent">
-            <TableHead className="px-8 py-5 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+            <TableHead className="text-muted-foreground px-8 py-5 text-[10px] font-black tracking-widest uppercase">
               Subscriber Information
             </TableHead>
-            <TableHead className="px-6 py-5 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+            <TableHead className="text-muted-foreground px-6 py-5 text-[10px] font-black tracking-widest uppercase">
               Email Address
             </TableHead>
-            <TableHead className="px-6 py-5 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+            <TableHead className="text-muted-foreground px-6 py-5 text-[10px] font-black tracking-widest uppercase">
               Date Joined <ArrowUpDown className="ml-1 inline h-2.5 w-2.5" />
             </TableHead>
-            <TableHead className="px-8 py-5 text-right text-[10px] font-black tracking-widest text-gray-400 uppercase">
+            <TableHead className="text-muted-foreground px-8 py-5 text-right text-[10px] font-black tracking-widest uppercase">
               Status
             </TableHead>
           </TableRow>
@@ -55,15 +55,15 @@ export function SubscriberTable({ subscribers, isLoading }: SubscriberTableProps
             Array(8)
               .fill(0)
               .map((_, i) => (
-                <TableRow key={i} className="border-gray-50">
+                <TableRow key={i} className="border-border/50">
                   <TableCell className="px-8 py-5">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 animate-pulse rounded-full bg-gray-100" />
-                      <div className="h-4 w-32 animate-pulse rounded-lg bg-gray-100" />
+                      <div className="bg-muted h-10 w-10 animate-pulse rounded-full" />
+                      <div className="bg-muted h-4 w-32 animate-pulse rounded-lg" />
                     </div>
                   </TableCell>
                   <TableCell colSpan={3} className="px-6 py-5">
-                    <div className="h-4 w-full animate-pulse rounded-lg bg-gray-50" />
+                    <div className="bg-muted/30 h-4 w-full animate-pulse rounded-lg" />
                   </TableCell>
                 </TableRow>
               ))
@@ -71,14 +71,14 @@ export function SubscriberTable({ subscribers, isLoading }: SubscriberTableProps
             <TableRow>
               <TableCell colSpan={4} className="h-80 text-center">
                 <div className="flex flex-col items-center justify-center space-y-4">
-                  <div className="rounded-full border border-gray-100 bg-gray-50 p-6">
-                    <Mail className="h-8 w-8 text-gray-300" />
+                  <div className="border-border bg-muted/30 rounded-full border p-6">
+                    <Mail className="text-muted-foreground/40 h-8 w-8" />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-lg font-black text-gray-900">
+                    <p className="text-foreground text-lg font-black">
                       No subscribers matching your search
                     </p>
-                    <p className="text-sm font-medium text-gray-500">
+                    <p className="text-muted-foreground text-sm font-medium">
                       Try verifying your filters or search terms.
                     </p>
                   </div>
@@ -89,7 +89,7 @@ export function SubscriberTable({ subscribers, isLoading }: SubscriberTableProps
             subscribers.map((subscriber) => (
               <TableRow
                 key={subscriber.id}
-                className="group border-gray-50 transition-colors hover:bg-gray-50/50"
+                className="group border-border/50 hover:bg-muted/30 transition-colors"
               >
                 <TableCell className="px-8 py-5">
                   <div className="flex items-center">
@@ -97,27 +97,27 @@ export function SubscriberTable({ subscribers, isLoading }: SubscriberTableProps
                       {subscriber.full_name.charAt(0).toUpperCase()}
                     </div>
                     <div className="ml-4">
-                      <div className="group-hover:text-primary text-sm font-black text-gray-900 transition-colors">
+                      <div className="group-hover:text-primary text-foreground text-sm font-black transition-colors">
                         {subscriber.full_name}
                       </div>
-                      <div className="text-[10px] font-bold tracking-tighter text-gray-300 uppercase">
+                      <div className="text-muted-foreground/50 text-[10px] font-bold tracking-tighter uppercase">
                         Verified Member
                       </div>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell className="px-6 py-5">
-                  <div className="text-sm font-bold text-gray-600">{subscriber.email}</div>
+                  <div className="text-muted-foreground text-sm font-bold">{subscriber.email}</div>
                 </TableCell>
                 <TableCell className="px-6 py-5">
-                  <div className="flex items-center text-xs font-black text-gray-400">
+                  <div className="text-muted-foreground flex items-center text-xs font-black">
                     <Calendar className="mr-2 h-3.5 w-3.5" />
                     {format(new Date(subscriber.created_at), 'MMMM dd, yyyy')}
                   </div>
                 </TableCell>
                 <TableCell className="px-8 py-5 text-right">
                   <Badge
-                    className={`rounded-xl border px-3 py-1 text-[9px] font-black uppercase shadow-none ${subscriber.is_active ? 'bg-brand-green/10 text-brand-green border-brand-green/20' : 'border-gray-200 bg-gray-100 text-gray-400'}`}
+                    className={`rounded-xl border px-3 py-1 text-[9px] font-black uppercase shadow-none ${subscriber.is_active ? 'bg-secondary/10 text-secondary border-secondary/20' : 'border-border bg-muted text-muted-foreground'}`}
                   >
                     {subscriber.is_active ? 'Subscription Active' : 'Unsubscribed'}
                   </Badge>

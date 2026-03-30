@@ -32,12 +32,12 @@ import { TableCell, TableRow } from '@/components/ui/table';
 const statusConfig: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
   pending: {
     label: 'Pending',
-    color: 'bg-brand-yellow/10 text-brand-yellow border-brand-yellow/20',
+    color: 'bg-accent/10 text-accent border-accent/20',
     icon: <Clock className="h-3 w-3" />,
   },
   processing: {
     label: 'Processing',
-    color: 'bg-brand-indigo/10 text-brand-indigo border-brand-indigo/20',
+    color: 'bg-primary/10 text-primary border-primary/20',
     icon: <Package className="h-3 w-3" />,
   },
   shipped: {
@@ -47,7 +47,7 @@ const statusConfig: Record<string, { label: string; color: string; icon: React.R
   },
   delivered: {
     label: 'Delivered',
-    color: 'bg-brand-green/10 text-brand-green border-brand-green/20',
+    color: 'bg-secondary/10 text-secondary border-secondary/20',
     icon: <CheckCircle className="h-3 w-3" />,
   },
   cancelled: {
@@ -66,26 +66,26 @@ export function OrderTableRow({ order, onStatusChange }: OrderTableRowProps) {
   const config = statusConfig[order.status] || statusConfig.pending;
 
   return (
-    <TableRow className="group transition-colors hover:bg-gray-50/50">
+    <TableRow className="group hover:bg-muted/30 transition-colors">
       <TableCell className="px-8 py-5">
-        <div className="group-hover:text-primary font-black text-gray-900 transition-colors">
+        <div className="group-hover:text-primary text-foreground font-black transition-colors">
           #{order.id.slice(0, 8).toUpperCase()}
         </div>
       </TableCell>
       <TableCell className="px-6 py-5">
-        <div className="leading-none font-bold text-gray-900">{order.shipping_name}</div>
-        <div className="mt-1 text-[11px] font-medium tracking-tight text-gray-400 uppercase">
+        <div className="text-foreground leading-none font-bold">{order.shipping_name}</div>
+        <div className="text-muted-foreground mt-1 text-[11px] font-medium tracking-tight uppercase">
           {order.user || 'Guest Purchase'}
         </div>
       </TableCell>
       <TableCell className="px-6 py-5">
-        <div className="flex items-center text-xs font-bold text-gray-600">
-          <Calendar className="mr-2 h-3.5 w-3.5 text-gray-400" />
+        <div className="text-muted-foreground flex items-center text-xs font-bold">
+          <Calendar className="text-muted-foreground/60 mr-2 h-3.5 w-3.5" />
           {format(new Date(order.created_at), 'MMM d, h:mm a')}
         </div>
       </TableCell>
       <TableCell className="px-6 py-5">
-        <div className="text-sm font-black text-gray-900">
+        <div className="text-foreground text-sm font-black">
           ₦{Number(order.total).toLocaleString()}
         </div>
       </TableCell>
@@ -100,7 +100,7 @@ export function OrderTableRow({ order, onStatusChange }: OrderTableRowProps) {
       <TableCell className="px-6 py-5 text-center">
         <div className="flex items-center justify-center gap-2">
           <Select value={order.status} onValueChange={(val) => onStatusChange(order.id, val)}>
-            <SelectTrigger className="h-8 w-32 rounded-lg border-gray-100 bg-gray-50/50 text-[10px] font-bold shadow-none transition-colors hover:bg-gray-100">
+            <SelectTrigger className="border-border bg-muted/30 hover:bg-muted h-8 w-32 rounded-lg text-[10px] font-bold shadow-none transition-colors">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="rounded-xl p-1">
@@ -117,7 +117,7 @@ export function OrderTableRow({ order, onStatusChange }: OrderTableRowProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="hover:text-primary h-8 w-8 rounded-lg text-gray-400"
+                className="hover:text-primary text-muted-foreground h-8 w-8 rounded-lg"
               >
                 <MoreHorizontal className="h-4 w-4" />
               </Button>

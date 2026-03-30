@@ -12,18 +12,18 @@ export function ProductHeader() {
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div>
-        <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-gray-900">
+        <h1 className="text-foreground flex items-center gap-3 text-3xl font-black tracking-tight">
           <Package className="text-primary h-8 w-8" />
           Product Catalog
         </h1>
-        <p className="mt-1 font-medium text-gray-500">
+        <p className="text-muted-foreground mt-1 font-medium">
           Manage inventories, pricing, and AI-powered descriptions.
         </p>
       </div>
       <div className="flex items-center gap-3">
         <Button
           variant="outline"
-          className="gap-2 rounded-xl border-gray-100 bg-white font-bold shadow-sm"
+          className="border-border bg-card gap-2 rounded-xl font-bold shadow-sm"
         >
           <Download className="h-4 w-4" />
           Export

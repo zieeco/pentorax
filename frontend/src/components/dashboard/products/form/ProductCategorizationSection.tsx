@@ -20,17 +20,17 @@ export function ProductCategorizationSection({
   setValue,
 }: ProductCategorizationSectionProps) {
   return (
-    <Card className="overflow-hidden rounded-[2rem] border-gray-100 shadow-sm">
-      <CardHeader className="border-b border-gray-100/50 bg-gray-50/50 p-6">
-        <CardTitle className="text-lg font-black text-gray-900">Categorization</CardTitle>
+    <Card className="border-border bg-card overflow-hidden rounded-[2rem] shadow-sm">
+      <CardHeader className="border-border/50 bg-muted/20 border-b p-6">
+        <CardTitle className="text-foreground text-lg font-black">Categorization</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-6 p-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-bold text-gray-900">Active Status</p>
-              <p className="text-[10px] font-bold tracking-wider text-gray-400 uppercase">
+              <p className="text-foreground text-sm font-bold">Active Status</p>
+              <p className="text-muted-foreground text-[10px] font-bold tracking-wider uppercase">
                 Visible to customers
               </p>
             </div>
@@ -42,8 +42,8 @@ export function ProductCategorizationSection({
 
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-bold text-gray-900">Featured</p>
-              <p className="text-[10px] font-bold tracking-wider text-gray-400 uppercase">
+              <p className="text-foreground text-sm font-bold">Featured</p>
+              <p className="text-muted-foreground text-[10px] font-bold tracking-wider uppercase">
                 Top of catalog
               </p>
             </div>

@@ -16,26 +16,26 @@ export function NotificationStats({ stats }: NotificationStatsProps) {
   if (!stats) return null;
 
   const items = [
-    { label: 'Total', value: stats.total, color: 'bg-gray-50 text-gray-900 border-gray-100' },
+    { label: 'Total', value: stats.total, color: 'bg-muted/50 text-muted-foreground border-muted' },
     {
       label: 'Unread',
       value: stats.unread,
-      color: 'bg-yellow-50 text-yellow-700 border-yellow-100',
+      color: 'bg-accent/10 text-accent border-accent/20',
     },
     {
       label: 'Awaiting',
       value: stats.pending_restock,
-      color: 'bg-blue-50 text-blue-700 border-blue-100',
+      color: 'bg-primary/10 text-primary border-primary/20',
     },
     {
       label: 'Fulfilled',
       value: stats.notified,
-      color: 'bg-green-50 text-green-700 border-green-100',
+      color: 'bg-secondary/10 text-secondary border-secondary/20',
     },
     {
       label: 'Archived',
       value: stats.archived,
-      color: 'bg-purple-50 text-purple-700 border-purple-100',
+      color: 'bg-foreground/5 text-foreground border-foreground/10',
     },
   ];
 

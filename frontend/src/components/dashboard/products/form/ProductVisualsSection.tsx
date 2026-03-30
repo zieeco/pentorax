@@ -30,20 +30,20 @@ export function ProductVisualsSection({
   const displayImage = imagePreview || featuredImage;
 
   return (
-    <Card className="overflow-hidden rounded-[2rem] border-gray-100 shadow-sm">
-      <CardHeader className="border-b border-gray-100/50 bg-gray-50/50 p-6">
-        <CardTitle className="flex items-center justify-between text-lg font-black text-gray-900">
+    <Card className="border-border bg-card overflow-hidden rounded-[2rem] shadow-sm">
+      <CardHeader className="border-border/50 bg-muted/20 border-b p-6">
+        <CardTitle className="text-foreground flex items-center justify-between text-lg font-black">
           <span>Visuals</span>
-          <ImageIcon className="h-5 w-5 text-gray-300" />
+          <ImageIcon className="text-muted-foreground/50 h-5 w-5" />
         </CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-6 p-6">
         <div className="space-y-1.5">
-          <Label className="ml-1 text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+          <Label className="text-muted-foreground ml-1 text-[11px] font-bold tracking-widest uppercase">
             Featured Image
           </Label>
-          <div className="group relative flex aspect-square cursor-pointer items-center justify-center overflow-hidden rounded-[1.5rem] border border-gray-100 bg-gray-50 transition-all hover:bg-gray-100/50">
+          <div className="group border-border bg-muted/20 hover:bg-muted/30 relative flex aspect-square cursor-pointer items-center justify-center overflow-hidden rounded-[1.5rem] border transition-all">
             {displayImage ? (
               <Image
                 src={displayImage}
@@ -53,8 +53,10 @@ export function ProductVisualsSection({
               />
             ) : (
               <div className="p-6 text-center">
-                <ImageIcon className="mx-auto mb-2 h-10 w-10 text-gray-200" />
-                <p className="text-[10px] font-bold text-gray-300 uppercase">Image Preview</p>
+                <ImageIcon className="text-muted-foreground/30 mx-auto mb-2 h-10 w-10" />
+                <p className="text-muted-foreground/50 text-[10px] font-bold uppercase">
+                  Image Preview
+                </p>
               </div>
             )}
 
@@ -80,19 +82,19 @@ export function ProductVisualsSection({
               </Button>
             </div>
           </div>
-          <p className="mt-2 text-center text-[10px] font-bold text-gray-400 uppercase">
+          <p className="text-muted-foreground mt-2 text-center text-[10px] font-bold uppercase">
             Max 5MB, JPG/PNG/WEBP
           </p>
         </div>
 
         <div className="space-y-1.5">
-          <Label className="ml-1 text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+          <Label className="text-muted-foreground ml-1 text-[11px] font-bold tracking-widest uppercase">
             Or Paste External URL
           </Label>
           <Input
             type="url"
             placeholder="https://images.unsplash.com/..."
-            className="focus:border-primary rounded-xl border-gray-100 bg-gray-50/50 px-5 py-6 font-medium shadow-none focus:bg-white"
+            className="focus:border-primary border-border bg-muted/20 focus:bg-card rounded-xl px-5 py-6 font-medium shadow-none"
             {...register('featured_image')}
           />
         </div>

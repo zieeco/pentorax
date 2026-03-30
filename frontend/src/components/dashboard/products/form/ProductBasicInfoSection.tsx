@@ -58,9 +58,9 @@ export function ProductBasicInfoSection({
   };
 
   return (
-    <Card className="overflow-hidden rounded-[2rem] border-gray-100 shadow-sm">
-      <CardHeader className="border-b border-gray-100/50 bg-gray-50/50 p-6">
-        <CardTitle className="flex items-center space-x-2 text-lg font-black text-gray-900">
+    <Card className="border-border bg-card overflow-hidden rounded-[2rem] shadow-sm">
+      <CardHeader className="border-border/50 bg-muted/20 border-b p-6">
+        <CardTitle className="text-foreground flex items-center space-x-2 text-lg font-black">
           <Package className="text-primary h-5 w-5" />
           <span>Basic Information</span>
         </CardTitle>
@@ -69,46 +69,46 @@ export function ProductBasicInfoSection({
       <CardContent className="space-y-6 p-6">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-1.5">
-            <Label className="ml-1 text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+            <Label className="text-muted-foreground ml-1 text-[11px] font-bold tracking-widest uppercase">
               Product Name
             </Label>
             <Input
               placeholder="e.g., PX-550 Mono Panel"
-              className="focus:border-primary rounded-xl border-gray-100 bg-gray-50/50 px-5 py-6 font-medium shadow-none focus:bg-white"
+              className="focus:border-primary border-border bg-muted/20 focus:bg-card rounded-xl px-5 py-6 font-medium shadow-none"
               {...register('name', { required: 'Name is required' })}
             />
             {errors.name && (
-              <p className="mt-1 text-sm text-red-500">{errors.name.message as string}</p>
+              <p className="text-destructive mt-1 text-sm">{errors.name.message as string}</p>
             )}
           </div>
 
           <div className="space-y-1.5">
-            <Label className="ml-1 text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+            <Label className="text-muted-foreground ml-1 text-[11px] font-bold tracking-widest uppercase">
               Slug
             </Label>
             <Input
               placeholder="auto-generated-slug"
               disabled={isEditMode}
-              className="focus:border-primary rounded-xl border-gray-100 bg-gray-50/50 px-5 py-6 font-medium shadow-none focus:bg-white disabled:opacity-50"
+              className="focus:border-primary border-border bg-muted/20 focus:bg-card rounded-xl px-5 py-6 font-medium shadow-none disabled:opacity-50"
               {...register('slug')}
             />
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <Label className="ml-1 text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+          <Label className="text-muted-foreground ml-1 text-[11px] font-bold tracking-widest uppercase">
             Short Summary
           </Label>
           <Input
             placeholder="Brief summary for catalog cards"
-            className="focus:border-primary rounded-xl border-gray-100 bg-gray-50/50 px-5 py-6 font-medium shadow-none focus:bg-white"
+            className="focus:border-primary border-border bg-muted/20 focus:bg-card rounded-xl px-5 py-6 font-medium shadow-none"
             {...register('short_description')}
           />
         </div>
 
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <Label className="ml-1 text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+            <Label className="text-muted-foreground ml-1 text-[11px] font-bold tracking-widest uppercase">
               Full Description
             </Label>
             <Button
@@ -130,11 +130,11 @@ export function ProductBasicInfoSection({
           <Textarea
             rows={5}
             placeholder="Enter detailed technical specifications and benefits..."
-            className="focus:border-primary resize-none rounded-xl border-gray-100 bg-gray-50/50 px-5 py-4 font-medium shadow-none focus:bg-white"
+            className="focus:border-primary border-border bg-muted/20 focus:bg-card resize-none rounded-xl px-5 py-4 font-medium shadow-none"
             {...register('description', { required: 'Description is required' })}
           />
           {errors.description && (
-            <p className="mt-1 text-sm text-red-500">{errors.description.message as string}</p>
+            <p className="text-destructive mt-1 text-sm">{errors.description.message as string}</p>
           )}
         </div>
       </CardContent>

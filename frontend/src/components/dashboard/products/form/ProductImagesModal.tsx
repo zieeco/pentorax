@@ -84,13 +84,13 @@ export function ProductImagesModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] max-w-4xl gap-0 overflow-y-auto rounded-[2.5rem] border-gray-100 p-0 shadow-2xl">
-        <DialogHeader className="border-b border-gray-100 bg-gray-50/30 p-8">
-          <DialogTitle className="flex items-center gap-3 text-2xl font-black text-gray-900">
+      <DialogContent className="border-border bg-card max-h-[90vh] max-w-4xl gap-0 overflow-y-auto rounded-[2.5rem] p-0 shadow-2xl">
+        <DialogHeader className="border-border bg-muted/20 border-b p-8">
+          <DialogTitle className="text-foreground flex items-center gap-3 text-2xl font-black">
             <ImageIcon className="text-primary h-8 w-8" />
             Media Gallery
           </DialogTitle>
-          <DialogDescription className="font-medium text-gray-500">
+          <DialogDescription className="text-muted-foreground font-medium">
             Add and arrange product showcases
           </DialogDescription>
         </DialogHeader>
@@ -106,14 +106,14 @@ export function ProductImagesModal({
                 disabled={isUploading}
                 className="hidden"
               />
-              <div className="group-hover:border-primary group-hover:bg-primary/5 rounded-[2rem] border-2 border-dashed border-gray-200 p-12 text-center transition-all duration-300">
+              <div className="group-hover:border-primary group-hover:bg-primary/5 border-border bg-muted/20 rounded-[2rem] border-2 border-dashed p-12 text-center transition-all duration-300">
                 <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-2xl p-4 transition-transform group-hover:scale-110">
                   <Upload className="text-primary h-8 w-8" />
                 </div>
-                <p className="text-sm font-black tracking-wider text-gray-900 uppercase">
+                <p className="text-foreground text-sm font-black tracking-wider uppercase">
                   Drag & Drop or Click
                 </p>
-                <p className="mt-2 text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+                <p className="text-muted-foreground mt-2 text-[10px] font-bold tracking-widest uppercase">
                   Multi-select supported • PNG, JPG, WebP
                 </p>
               </div>
@@ -121,26 +121,26 @@ export function ProductImagesModal({
           </div>
 
           <div className="space-y-4">
-            <h4 className="px-1 text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase">
+            <h4 className="text-muted-foreground px-1 text-[10px] font-black tracking-[0.2em] uppercase">
               Managed Assets ({images.length})
             </h4>
             <div className="grid gap-3">
               {images.map((img, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-4 rounded-[1.5rem] border border-gray-100 bg-white p-4 transition-all duration-300 hover:shadow-lg hover:shadow-gray-200/50"
+                  className="border-border bg-card hover:shadow-primary/5 flex items-center gap-4 rounded-[1.5rem] border p-4 transition-all duration-300 hover:shadow-lg"
                 >
-                  <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-gray-50">
+                  <div className="border-border/50 relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border">
                     <Image src={img.image_url} alt={img.alt_text} fill className="object-cover" />
                   </div>
                   <div className="min-w-0 flex-1 space-y-2">
-                    <Label className="ml-1 text-[10px] font-black tracking-wider text-gray-400 uppercase">
+                    <Label className="text-muted-foreground ml-1 text-[10px] font-black tracking-wider uppercase">
                       SEO Alt Text
                     </Label>
                     <Input
                       value={img.alt_text}
                       onChange={(e) => handleAltTextChange(i, e.target.value)}
-                      className="h-10 rounded-xl border-gray-100 bg-gray-50/30 font-bold focus:bg-white"
+                      className="border-border bg-muted/20 focus:bg-card h-10 rounded-xl font-bold"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -149,7 +149,7 @@ export function ProductImagesModal({
                       size="icon"
                       onClick={() => handleMove(i, 'up')}
                       disabled={i === 0}
-                      className="h-8 w-8 rounded-lg hover:bg-gray-100"
+                      className="hover:bg-muted h-8 w-8 rounded-lg"
                     >
                       <ArrowUp className="h-3.5 w-3.5" />
                     </Button>
@@ -158,7 +158,7 @@ export function ProductImagesModal({
                       size="icon"
                       onClick={() => handleMove(i, 'down')}
                       disabled={i === images.length - 1}
-                      className="h-8 w-8 rounded-lg hover:bg-gray-100"
+                      className="hover:bg-muted h-8 w-8 rounded-lg"
                     >
                       <ArrowDown className="h-3.5 w-3.5" />
                     </Button>
@@ -167,7 +167,7 @@ export function ProductImagesModal({
                     variant="ghost"
                     size="icon"
                     onClick={() => handleDelete(i)}
-                    className="hover:bg-destructive/10 hover:text-destructive h-10 w-10 rounded-xl text-gray-300 transition-colors"
+                    className="hover:bg-destructive/10 hover:text-destructive text-muted-foreground/40 h-10 w-10 rounded-xl transition-colors"
                   >
                     <Trash2 className="h-5 w-5" />
                   </Button>
@@ -186,7 +186,7 @@ export function ProductImagesModal({
           )}
         </div>
 
-        <div className="flex justify-end border-t border-gray-100 bg-gray-50/50 p-6">
+        <div className="border-border bg-muted/30 flex justify-end border-t p-6">
           <Button onClick={onClose} className="rounded-xl px-8 font-bold">
             Save Changes
           </Button>
