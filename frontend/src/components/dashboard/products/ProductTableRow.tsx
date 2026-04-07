@@ -1,21 +1,12 @@
 'use client';
 
-import { Copy, Edit, Eye, MoreHorizontal, Package, Trash2 } from 'lucide-react';
+import { Package } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { TableCell, TableRow } from '@/components/ui/table';
+import { ProductActions } from './ProductActions';
 
 interface ProductTableRowProps {
   product: any;
@@ -53,7 +44,9 @@ export function ProductTableRow({
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center">
-                <Package className="text-muted-foreground/40 h-6 w-6" />
+                <div className="bg-primary/10 rounded-xl p-2">
+                  <Package className="text-primary h-6 w-6" />
+                </div>
               </div>
             )}
             {!product.is_active && (
@@ -125,45 +118,7 @@ export function ProductTableRow({
         </div>
       </TableCell>
       <TableCell className="px-6 py-5 text-right">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:bg-muted hover:text-foreground h-10 w-10 rounded-xl"
-            >
-              <MoreHorizontal className="h-5 w-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="border-border w-56 rounded-2xl p-2 shadow-xl">
-            <DropdownMenuLabel className="text-muted-foreground px-3 py-2 text-[10px] font-black uppercase">
-              Quick Actions
-            </DropdownMenuLabel>
-            <DropdownMenuItem asChild className="cursor-pointer rounded-xl py-2.5 font-bold">
-              <Link href={`/dashboard/products/${product.slug}/edit`}>
-                <Edit className="text-muted-foreground mr-3 h-4 w-4" /> Edit Product
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer rounded-xl py-2.5 font-bold"
-              onClick={() => onDuplicate(product.slug)}
-            >
-              <Copy className="text-muted-foreground mr-3 h-4 w-4" /> Duplicate
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild className="cursor-pointer rounded-xl py-2.5 font-bold">
-              <Link href={`/shop/${product.slug}`} target="_blank">
-                <Eye className="text-muted-foreground mr-3 h-4 w-4" /> Preview Live
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-border/50 my-2" />
-            <DropdownMenuItem
-              className="text-destructive focus:bg-destructive/5 focus:text-destructive cursor-pointer rounded-xl py-2.5 font-bold"
-              onClick={() => onDelete(product.slug)}
-            >
-              <Trash2 className="mr-3 h-4 w-4" /> Delete Permanently
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ProductActions product={product} onDelete={onDelete} onDuplicate={onDuplicate} />
       </TableCell>
     </TableRow>
   );
