@@ -1,8 +1,14 @@
 'use client';
 
-import { Archive, Bell, Mail } from 'lucide-react';
+/**
+ * Stock Notifications Management Page
+ * Refactored: Header, Stats, Filters, Table, EmptyState, SendEmail extracted
+ * Status: Refactored to < 140 lines
+ */
+import { Archive, Mail } from 'lucide-react';
 import { useState } from 'react';
 import { DashboardPagination } from '@/components/dashboard/DashboardPagination';
+import { NotificationEmptyState } from '@/components/dashboard/notifications/NotificationEmptyState';
 import { NotificationFilters } from '@/components/dashboard/notifications/NotificationFilters';
 import { NotificationHeader } from '@/components/dashboard/notifications/NotificationHeader';
 import { NotificationStats } from '@/components/dashboard/notifications/NotificationStats';
@@ -100,15 +106,7 @@ export default function StockNotificationsPage() {
       />
 
       {page.notifications.length === 0 ? (
-        <div className="border-border bg-card rounded-[2.5rem] border p-24 text-center shadow-sm">
-          <div className="bg-muted/20 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full">
-            <Bell className="text-muted-foreground/30 h-10 w-10" />
-          </div>
-          <p className="text-foreground text-xl font-black">Quiet for now</p>
-          <p className="text-muted-foreground font-medium">
-            No stock alerts found matching your criteria
-          </p>
-        </div>
+        <NotificationEmptyState />
       ) : (
         <>
           <NotificationTable
