@@ -66,28 +66,28 @@ const STATS = [
 
 export function JourneySection() {
   return (
-    <section className="font-quicksand relative overflow-hidden bg-white py-16">
+    <section className="bg-background relative overflow-hidden py-16">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.02]"
         style={{
-          backgroundImage: 'radial-gradient(#0052CC 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(var(--primary) 1px, transparent 1px)',
           backgroundSize: '32px 32px',
         }}
       />
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 container mx-auto px-4 lg:px-8">
         <div className="mb-12 text-center">
-          <div className="bg-primary/5 border-primary/10 text-primary mb-4 inline-flex items-center space-x-2 rounded-full border px-3 py-1 text-[9px] font-black tracking-[0.3em] uppercase">
+          <div className="bg-primary/5 border-primary/10 text-primary mb-4 inline-flex items-center space-x-2 rounded-full border px-3 py-1 text-[9px] font-black tracking-[0.3em]">
             <span className="relative flex h-1.5 w-1.5">
               <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
               <span className="bg-primary relative inline-flex h-1.5 w-1.5 rounded-full" />
             </span>
             <span>Impact Metrics</span>
           </div>
-          <h2 className="mb-3 text-3xl font-black tracking-tight text-gray-900 lg:text-5xl">
+          <h2 className="font-quicksand text-foreground mb-3 text-3xl font-black tracking-tight lg:text-5xl">
             Our Journey <span className="text-primary">In Numbers</span>
           </h2>
           <div className="bg-primary mx-auto mb-4 h-1 w-12 rounded-full" />
-          <p className="mx-auto max-w-xl text-base font-medium text-gray-500">
+          <p className="text-muted-foreground mx-auto max-w-xl text-base font-medium">
             Reporting our global environmental footprint and key energy milestones achieved through
             continuous innovation.
           </p>
@@ -95,25 +95,19 @@ export function JourneySection() {
         <div className="grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-3">
           {STATS.map((s, i) => (
             <div key={i} className="group flex flex-col items-center p-2 text-center">
-              <div className="group-hover:text-primary text-4xl font-black tracking-tighter text-gray-900 transition-colors duration-300 lg:text-6xl">
+              <div className="text-foreground group-hover:text-primary text-4xl font-black tracking-tighter transition-colors duration-300 lg:text-6xl">
                 <CountUp end={s.target} decimals={s.decimals} suffix={s.suffix} />
               </div>
-              <p className="text-[11px] font-extrabold tracking-[0.2em] text-gray-500 uppercase group-hover:text-gray-900">
+              <p className="font-quicksand text-muted-foreground group-hover:text-foreground text-[11px] font-extrabold tracking-[0.2em] transition-colors">
                 {s.label}
               </p>
               {s.sublabel && (
-                <p className="mx-auto mt-1 max-w-[150px] text-[10px] font-bold text-gray-400 italic">
+                <p className="text-muted-foreground/70 mx-auto mt-1 max-w-[150px] text-[10px] font-bold">
                   {s.sublabel}
                 </p>
               )}
             </div>
           ))}
-        </div>
-        <div className="mt-16 flex flex-col items-center justify-between gap-4 pt-8 md:flex-row">
-          <Separator />
-          <p className="text-[9px] font-bold tracking-widest text-gray-400 uppercase">
-            Verified by PentoraX Labs 2024
-          </p>
         </div>
       </div>
     </section>
