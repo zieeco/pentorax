@@ -15,7 +15,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <ProtectedRoute>
-      <div className="font-sand flex h-screen overflow-hidden bg-gray-50">
+      <div className="font-sand bg-background flex h-screen overflow-hidden">
         {/* LEFT - Sidebar with transition effects */}
         <Sidebar
           collapsed={sidebarCollapsed}
