@@ -3,7 +3,6 @@
  * Original: frontend/src/components/landing/Solutions.tsx (450 lines → decomposed)
  * Uses SolutionCard sub-component per SRP
  */
-import { Building2, Factory, Home, MapPin } from 'lucide-react';
 import { SolutionCard } from './SolutionCard';
 
 const SOLUTIONS = [
@@ -13,7 +12,6 @@ const SOLUTIONS = [
     ratingScore: 5,
     description:
       'Stable, healthy, and noiseless electricity that meets the energy and comfort needs of homes.',
-    icon: <Home className="h-5 w-5" />,
     features: [
       '25-year performance warranty',
       'Smart home integration ready',
@@ -33,7 +31,6 @@ const SOLUTIONS = [
     ratingScore: 5,
     description:
       'Reliable, cost-effective, and sustainable energy solutions tailored for businesses.',
-    icon: <Building2 className="h-5 w-5" />,
     features: [
       'Scalable system architecture',
       'Real-time monitoring dashboard',
@@ -51,7 +48,6 @@ const SOLUTIONS = [
     title: 'Industrial Solar Solutions',
     ratingScore: 4,
     description: 'Power factories and large-scale operations with high-capacity solar energy.',
-    icon: <Factory className="h-5 w-5" />,
     features: [
       'High-capacity systems',
       'Industrial-grade components',
@@ -69,7 +65,6 @@ const SOLUTIONS = [
     title: 'Off-Grid Solar Systems',
     ratingScore: 5,
     description: 'Stay powered in remote areas with fully independent off-grid solar systems.',
-    icon: <MapPin className="h-5 w-5" />,
     features: [
       'Complete energy independence',
       'Advanced battery storage',
@@ -80,23 +75,26 @@ const SOLUTIONS = [
       { value: '100%', label: 'Independence' },
     ],
     badge: 'Recommended',
-    testimonial: 'Perfect solution for our remote research station.',
     link: '/solutions/off-grid',
   },
 ];
 
 export function SolutionsSection() {
   return (
-    <section className="font-quicksand relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50/30 to-cyan-50/30 py-20 lg:pt-28">
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12">
-          <h2 className="bg-gradient-to-r from-gray-800 via-blue-700 to-cyan-600 bg-clip-text text-left text-4xl font-bold text-transparent lg:text-5xl">
-            Our Solar Solutions
+    <section className="bg-muted/30 relative overflow-hidden py-24 lg:py-32">
+      <div className="relative container mx-auto px-4 lg:px-8">
+        <div className="mb-20 text-center">
+          <h2 className="font-quicksand from-foreground via-primary to-secondary mb-8 bg-gradient-to-r bg-clip-text text-4xl font-black tracking-tighter text-transparent lg:text-7xl">
+            Our <span className="text-primary">Solar Solutions</span>
           </h2>
+          <p className="text-muted-foreground mx-auto max-w-2xl text-xl font-medium">
+            Harness the power of the sun with our specialized renewable technologies for every
+            scale.
+          </p>
         </div>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {SOLUTIONS.map((item, i) => (
-            <div key={i} className="transform transition-all duration-500 hover:scale-105">
+            <div key={i} className="flex flex-col">
               <SolutionCard {...item} />
             </div>
           ))}
