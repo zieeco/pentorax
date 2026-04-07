@@ -14,10 +14,10 @@ const RECENT_ACTIVITY = [
 export function DashboardForecastAndActivity() {
   return (
     <div className="space-y-6">
-      <Card className="border-border bg-brand-dark text-brand-light relative overflow-hidden rounded-[2rem] shadow-sm">
-        <div className="bg-brand-primary/20 absolute top-0 right-0 h-32 w-32 translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
+      <Card className="border-border bg-foreground text-background relative overflow-hidden rounded-[2rem] shadow-sm">
+        <div className="bg-primary/20 absolute top-0 right-0 h-32 w-32 translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
         <CardHeader className="relative z-10">
-          <CardTitle className="text-lg font-black">Sales Forecast</CardTitle>
+          <CardTitle className="text-lg font-black tracking-tight">Sales Forecast</CardTitle>
         </CardHeader>
         <CardContent className="relative z-10">
           <div className="mb-6 flex h-32 items-end justify-between gap-2">
@@ -38,16 +38,14 @@ export function DashboardForecastAndActivity() {
               );
             })}
           </div>
-          <div className="border-brand-light/10 flex items-center justify-between border-t pt-4">
+          <div className="border-background/10 flex items-center justify-between border-t pt-4">
             <div>
-              <p className="text-brand-light/40 text-[10px] font-black uppercase">
-                Expected Growth
-              </p>
-              <p className="text-brand-secondary text-xl font-black">+28.5%</p>
+              <p className="text-[10px] font-black uppercase opacity-40">Expected Growth</p>
+              <p className="text-secondary text-xl font-black">+28.5%</p>
             </div>
             <Button
               size="icon"
-              className="shadow-brand-primary/30 bg-brand-primary hover:bg-brand-primary/90 rounded-xl shadow-xl"
+              className="bg-primary shadow-primary/30 hover:bg-primary/90 rounded-xl shadow-xl"
             >
               <ArrowUpRight className="h-4 w-4" />
             </Button>
