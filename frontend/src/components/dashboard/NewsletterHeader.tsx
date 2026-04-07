@@ -17,11 +17,11 @@ export function NewsletterHeader({ onExport, onRefresh, isRefetching }: Newslett
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div>
-        <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-gray-900">
+        <h1 className="text-foreground flex items-center gap-3 text-3xl font-black tracking-tight">
           <Mail className="text-primary h-8 w-8" />
           Newsletter Analytics
         </h1>
-        <p className="mt-1 font-medium text-gray-500">
+        <p className="text-muted-foreground mt-1 font-medium">
           Manage audience growth and engagement metrics.
         </p>
       </div>
@@ -29,7 +29,7 @@ export function NewsletterHeader({ onExport, onRefresh, isRefetching }: Newslett
         <Button
           variant="outline"
           onClick={onExport}
-          className="gap-2 rounded-xl border-gray-100 bg-white font-bold shadow-sm"
+          className="border-border bg-card gap-2 rounded-xl font-bold shadow-sm"
         >
           <Download className="h-4 w-4" />
           Export CSV
@@ -38,7 +38,7 @@ export function NewsletterHeader({ onExport, onRefresh, isRefetching }: Newslett
           variant="ghost"
           onClick={onRefresh}
           disabled={isRefetching}
-          className="gap-2 rounded-xl font-bold text-gray-400"
+          className="text-muted-foreground gap-2 rounded-xl font-bold"
         >
           <RefreshCw className={`h-4 w-4 ${isRefetching ? 'animate-spin' : ''}`} />
           Sync
