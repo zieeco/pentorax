@@ -24,54 +24,54 @@ const formatPrice = (price: string | number) => {
 
 export function OrderSummary({ items, total }: OrderSummaryProps) {
   return (
-    <Card className="sticky top-8 rounded-[2.5rem] border border-gray-100 bg-white p-8 shadow-xl shadow-gray-200/50">
+    <Card className="border-border bg-card sticky top-8 rounded-[2.5rem] border p-8 shadow-xl">
       <div className="mb-8 flex items-center gap-3">
         <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-xl">
           <ShoppingBag className="text-primary h-5 w-5" />
         </div>
-        <h2 className="text-xl font-black text-gray-900">Procurement Summary</h2>
+        <h2 className="text-foreground text-xl font-black">Procurement Summary</h2>
       </div>
 
       <div className="scrollbar-hide mb-8 max-h-[40vh] space-y-6 overflow-y-auto pr-2">
         {items.map((item) => (
           <div key={item.id} className="flex justify-between gap-4">
             <div className="min-w-0">
-              <p className="line-clamp-1 truncate text-sm font-black text-gray-900">
+              <p className="text-foreground line-clamp-1 truncate text-sm font-black">
                 {item.product.name}
               </p>
-              <p className="mt-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+              <p className="text-muted-foreground mt-1 text-[10px] font-black tracking-widest uppercase">
                 Qty: {item.quantity}
               </p>
             </div>
-            <span className="text-sm font-black text-gray-900 italic">
+            <span className="text-foreground text-sm font-black italic">
               {formatPrice(item.subtotal)}
             </span>
           </div>
         ))}
       </div>
 
-      <div className="mb-6 h-px bg-gray-100" />
+      <div className="border-border mb-6 h-px border-t" />
 
       <div className="mb-8 space-y-4">
-        <div className="flex items-center justify-between text-xs font-black tracking-widest text-gray-400 uppercase">
+        <div className="text-muted-foreground flex items-center justify-between text-xs font-black tracking-widest uppercase">
           <span>Base Value</span>
-          <span className="text-gray-900 italic">{formatPrice(total)}</span>
+          <span className="text-foreground italic">{formatPrice(total)}</span>
         </div>
-        <div className="flex items-center justify-between text-xs font-black tracking-widest text-gray-400 uppercase">
+        <div className="text-muted-foreground flex items-center justify-between text-xs font-black tracking-widest uppercase">
           <span>Logistics</span>
-          <span className="text-emerald-500 italic">COMPLIMENTARY</span>
+          <span className="text-secondary italic">COMPLIMENTARY</span>
         </div>
-        <div className="flex items-center justify-between border-t border-gray-50 pt-2">
-          <span className="text-sm font-black tracking-widest text-gray-900 uppercase">
+        <div className="border-border flex items-center justify-between border-t pt-2">
+          <span className="text-foreground text-sm font-black tracking-widest uppercase">
             Aggregate Total
           </span>
           <span className="text-primary text-2xl font-black italic">{formatPrice(total)}</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-gray-50 p-4">
+      <div className="border-border bg-muted flex items-center gap-4 rounded-2xl border p-4">
         <ShieldCheck className="text-primary h-5 w-5" />
-        <p className="text-[10px] leading-relaxed font-black text-gray-500 uppercase">
+        <p className="text-muted-foreground text-[10px] leading-relaxed font-black uppercase">
           Secure payment processing via Paystack API infrastructure.
         </p>
       </div>
