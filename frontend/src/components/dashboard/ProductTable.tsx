@@ -62,7 +62,7 @@ export function ProductTable({
                 className="rounded-md"
               />
             </TableHead>
-            <TableHead className="px-4 py-4 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+            <TableHead className="text-muted-foreground px-4 py-4 text-[10px] font-black tracking-widest uppercase">
               Product Details
             </TableHead>
             <TableHead className="text-muted-foreground px-4 py-4 text-[10px] font-black tracking-widest uppercase">
@@ -84,7 +84,7 @@ export function ProductTable({
             Array(10)
               .fill(0)
               .map((_, i) => (
-                <TableRow key={i} className="border-gray-50">
+                <TableRow key={i} className="border-border/50">
                   <TableCell className="px-6 py-4">
                     <div className="bg-muted h-4 w-4 animate-pulse rounded" />
                   </TableCell>
