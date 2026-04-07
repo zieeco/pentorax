@@ -28,7 +28,7 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
   return (
     <div className="space-y-6">
       {/* Main Image with Zoom */}
-      <div className="group relative aspect-square overflow-hidden rounded-[2.5rem] border border-gray-100 bg-white shadow-xl shadow-gray-200/50 transition-all duration-500">
+      <div className="group border-border bg-card relative aspect-square overflow-hidden rounded-[2.5rem] border shadow-xl transition-all duration-500">
         <Image
           src={currentImage?.image_url || '/placeholder-product.png'}
           alt={currentImage?.alt_text || productName}
@@ -40,7 +40,7 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
 
         <Button
           onClick={() => setIsLightboxOpen(true)}
-          className="absolute top-6 right-6 h-12 w-12 rounded-2xl bg-white/90 text-gray-900 opacity-0 shadow-xl backdrop-blur-md transition-all duration-300 group-hover:opacity-100 hover:bg-white active:scale-95"
+          className="text-foreground border-border bg-card/90 hover:bg-card absolute top-6 right-6 h-12 w-12 rounded-2xl opacity-0 shadow-xl ring-1 backdrop-blur-md transition-all duration-300 group-hover:opacity-100 active:scale-95"
           aria-label="View full screen"
           size="icon"
         >
@@ -52,7 +52,7 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
             <Button
               variant="secondary"
               size="icon"
-              className="pointer-events-auto h-10 w-10 rounded-xl bg-white/80 shadow-lg"
+              className="bg-card/80 hover:bg-card pointer-events-auto h-10 w-10 rounded-xl shadow-lg"
               onClick={() =>
                 setSelectedImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
               }
@@ -62,7 +62,7 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
             <Button
               variant="secondary"
               size="icon"
-              className="pointer-events-auto h-10 w-10 rounded-xl bg-white/80 shadow-lg"
+              className="bg-card/80 hover:bg-card pointer-events-auto h-10 w-10 rounded-xl shadow-lg"
               onClick={() =>
                 setSelectedImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
               }
