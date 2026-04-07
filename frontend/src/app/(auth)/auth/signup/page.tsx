@@ -53,7 +53,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="font-quicksand flex h-screen flex-col overflow-hidden bg-white lg:flex-row">
+    <div className="font-quicksand bg-background flex h-screen flex-col overflow-hidden lg:flex-row">
       <SignupLeftPane />
 
       {/* Right Pane — Form */}
@@ -62,7 +62,7 @@ export default function SignupPage() {
           <Button
             variant="outline"
             size="sm"
-            className="flex items-center space-x-1.5 rounded-xl font-bold text-gray-700"
+            className="border-border text-muted-foreground flex items-center space-x-1.5 rounded-xl font-bold"
           >
             <Globe className="h-3.5 w-3.5" />
             <span>En</span>
@@ -70,25 +70,25 @@ export default function SignupPage() {
           </Button>
         </div>
         <div className="flex flex-1 items-center justify-center overflow-y-auto px-6">
-          <div className="my-6 w-full max-w-[480px] rounded-2xl border border-gray-100 bg-white p-6 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.06)] lg:p-8">
-            <h1 className="mb-6 text-center text-[2.2rem] font-black tracking-tight text-gray-900">
+          <div className="border-border bg-card my-6 w-full max-w-[480px] rounded-2xl border p-6 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.06)] lg:p-8">
+            <h1 className="text-foreground mb-6 text-center text-[2.2rem] font-black tracking-tight">
               Create account
             </h1>
 
             <ToggleGroup
               type="single"
               defaultValue="individual"
-              className="mb-6 w-full rounded-xl bg-gray-50 p-1"
+              className="bg-muted/50 mb-6 w-full rounded-xl p-1"
             >
               <ToggleGroupItem
                 value="individual"
-                className="data-[state=on]:text-primary flex flex-1 items-center justify-center gap-1.5 rounded-lg text-sm font-bold text-gray-400 data-[state=on]:bg-white data-[state=on]:shadow-md"
+                className="data-[state=on]:text-primary text-muted-foreground data-[state=on]:bg-background flex flex-1 items-center justify-center gap-1.5 rounded-lg text-sm font-bold data-[state=on]:shadow-md"
               >
                 <UserCircle className="h-4 w-4" /> Individual
               </ToggleGroupItem>
               <ToggleGroupItem
                 value="business"
-                className="data-[state=on]:text-primary flex flex-1 items-center justify-center gap-1.5 rounded-lg text-sm font-bold text-gray-400 data-[state=on]:bg-white data-[state=on]:shadow-md"
+                className="data-[state=on]:text-primary text-muted-foreground data-[state=on]:bg-background flex flex-1 items-center justify-center gap-1.5 rounded-lg text-sm font-bold data-[state=on]:shadow-md"
               >
                 <Building2 className="h-4 w-4" /> Business
               </ToggleGroupItem>
@@ -102,13 +102,13 @@ export default function SignupPage() {
                     name="firstName"
                     render={({ field }: { field: any }) => (
                       <FormItem className="space-y-1">
-                        <FormLabel className="ml-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                        <FormLabel className="text-muted-foreground ml-1 text-[10px] font-black tracking-widest uppercase">
                           First Name
                         </FormLabel>
                         <FormControl>
                           <Input
                             placeholder="John"
-                            className="focus:border-primary h-auto rounded-xl border-transparent bg-gray-50 px-3.5 py-3 font-bold shadow-sm focus:bg-white"
+                            className="focus:border-primary border-border bg-muted/50 focus:bg-background h-auto rounded-xl px-3.5 py-3 font-bold shadow-sm"
                             disabled={isLoading}
                             {...field}
                           />
@@ -122,13 +122,13 @@ export default function SignupPage() {
                     name="lastName"
                     render={({ field }: { field: any }) => (
                       <FormItem className="space-y-1">
-                        <FormLabel className="ml-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                        <FormLabel className="text-muted-foreground ml-1 text-[10px] font-black tracking-widest uppercase">
                           Last Name
                         </FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Doe"
-                            className="focus:border-primary h-auto rounded-xl border-transparent bg-gray-50 px-3.5 py-3 font-bold shadow-sm focus:bg-white"
+                            className="focus:border-primary border-border bg-muted/50 focus:bg-background h-auto rounded-xl px-3.5 py-3 font-bold shadow-sm"
                             disabled={isLoading}
                             {...field}
                           />
@@ -143,14 +143,14 @@ export default function SignupPage() {
                   name="email"
                   render={({ field }: { field: any }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="ml-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                      <FormLabel className="text-muted-foreground ml-1 text-[10px] font-black tracking-widest uppercase">
                         Work Email
                       </FormLabel>
                       <FormControl>
                         <Input
                           type="email"
                           placeholder="name@company.com"
-                          className="focus:border-primary h-auto rounded-xl border-transparent bg-gray-50 px-3.5 py-3 font-bold shadow-sm focus:bg-white"
+                          className="focus:border-primary border-border bg-muted/50 focus:bg-background h-auto rounded-xl px-3.5 py-3 font-bold shadow-sm"
                           disabled={isLoading}
                           {...field}
                         />
@@ -164,13 +164,13 @@ export default function SignupPage() {
                   name="password"
                   render={({ field }: { field: any }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="ml-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                      <FormLabel className="text-muted-foreground ml-1 text-[10px] font-black tracking-widest uppercase">
                         Create Password
                       </FormLabel>
                       <FormControl>
                         <PasswordInput
                           placeholder="Min. 8 characters"
-                          className="focus:border-primary h-auto rounded-xl border-transparent bg-gray-50 px-3.5 py-3 font-bold shadow-sm focus:bg-white"
+                          className="focus:border-primary border-border bg-muted/50 focus:bg-background h-auto rounded-xl px-3.5 py-3 font-bold shadow-sm"
                           disabled={isLoading}
                           {...field}
                         />
@@ -191,16 +191,16 @@ export default function SignupPage() {
                           className="mt-0.5 h-4 w-4"
                         />
                       </FormControl>
-                      <FormLabel className="ml-2.5 cursor-pointer text-xs leading-snug font-medium text-gray-500">
-                        I agree to the <span className="font-bold text-gray-900">Terms</span> and{' '}
-                        <span className="font-bold text-gray-900">Privacy Policy</span>.
+                      <FormLabel className="text-muted-foreground ml-2.5 cursor-pointer text-xs leading-snug font-medium">
+                        I agree to the <span className="text-foreground font-bold">Terms</span> and{' '}
+                        <span className="text-foreground font-bold">Privacy Policy</span>.
                       </FormLabel>
                     </FormItem>
                   )}
                 />
                 <Button
                   type="submit"
-                  className="bg-primary shadow-primary/10 mt-3 h-auto w-full rounded-xl py-4 text-lg font-bold text-white shadow-xl hover:bg-blue-700 active:scale-[0.98]"
+                  className="bg-primary text-primary-foreground shadow-primary/10 hover:bg-primary/90 mt-3 h-auto w-full rounded-xl py-4 text-lg font-bold shadow-xl active:scale-[0.98]"
                   disabled={isLoading}
                 >
                   {isLoading ? 'Creating...' : 'Start My Energy Journey'}
@@ -208,7 +208,7 @@ export default function SignupPage() {
               </form>
             </Form>
             <div className="mt-6 text-center text-sm">
-              <span className="font-medium text-gray-500">Already have an account? </span>
+              <span className="text-muted-foreground font-medium">Already have an account? </span>
               <Link href="/auth/login" className="text-primary font-bold hover:underline">
                 Log in
               </Link>
