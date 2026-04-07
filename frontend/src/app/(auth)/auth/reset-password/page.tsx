@@ -49,7 +49,7 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="font-quicksand flex h-screen flex-col overflow-hidden bg-white lg:flex-row">
+    <div className="font-quicksand bg-background flex h-screen flex-col overflow-hidden lg:flex-row">
       <ResetPasswordLeftPane />
 
       {/* Right Pane — Form */}
@@ -58,7 +58,7 @@ export default function ResetPasswordPage() {
           <Button
             variant="outline"
             size="sm"
-            className="flex items-center space-x-1.5 rounded-xl font-bold text-gray-700"
+            className="border-border text-muted-foreground flex items-center space-x-1.5 rounded-xl font-bold"
           >
             <Globe className="h-3.5 w-3.5" />
             <span>En</span>
@@ -68,7 +68,7 @@ export default function ResetPasswordPage() {
 
         <div className="flex flex-1 items-center justify-center px-6">
           <div className="w-full max-w-[400px]">
-            <h1 className="mb-8 text-center text-[2.5rem] font-black tracking-tight text-gray-900">
+            <h1 className="text-foreground mb-8 text-center text-[2.5rem] font-black tracking-tight">
               Set new password
             </h1>
             <Form {...form}>
@@ -78,13 +78,13 @@ export default function ResetPasswordPage() {
                   name="password"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="ml-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                      <FormLabel className="text-muted-foreground ml-1 text-[10px] font-black tracking-widest uppercase">
                         New Password
                       </FormLabel>
                       <FormControl>
                         <PasswordInput
                           placeholder="••••••••"
-                          className="focus:border-primary h-auto rounded-xl border-transparent bg-gray-50 px-4 py-3.5 font-bold shadow-sm focus:bg-white"
+                          className="focus:border-primary border-border bg-muted/50 focus:bg-background h-auto rounded-xl py-3.5 font-bold shadow-sm"
                           disabled={isLoading}
                           {...field}
                         />
@@ -98,13 +98,13 @@ export default function ResetPasswordPage() {
                   name="confirmPassword"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="ml-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                      <FormLabel className="text-muted-foreground ml-1 text-[10px] font-black tracking-widest uppercase">
                         Confirm Password
                       </FormLabel>
                       <FormControl>
                         <PasswordInput
                           placeholder="••••••••"
-                          className="focus:border-primary h-auto rounded-xl border-transparent bg-gray-50 px-4 py-3.5 font-bold shadow-sm focus:bg-white"
+                          className="focus:border-primary border-border bg-muted/50 focus:bg-background h-auto rounded-xl py-3.5 font-bold shadow-sm"
                           disabled={isLoading}
                           {...field}
                         />
@@ -115,7 +115,7 @@ export default function ResetPasswordPage() {
                 />
                 <Button
                   type="submit"
-                  className="bg-primary mt-2 h-auto w-full rounded-xl py-4 text-lg font-bold text-white shadow-xl hover:bg-blue-700 active:scale-[0.98]"
+                  className="bg-primary text-primary-foreground shadow-primary/10 hover:bg-primary/90 mt-2 h-auto w-full rounded-xl py-4 text-lg font-bold shadow-xl active:scale-[0.98]"
                   disabled={isLoading}
                 >
                   {isLoading ? 'Resetting...' : 'Reset Password'}
