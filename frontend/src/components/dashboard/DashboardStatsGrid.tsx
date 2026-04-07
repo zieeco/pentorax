@@ -10,28 +10,28 @@ const STATS = [
     value: '₦2.45M',
     trend: '+14%',
     icon: <DollarSign className="h-4 w-4" />,
-    color: 'bg-brand-primary',
+    color: 'bg-primary text-primary-foreground',
   },
   {
     label: 'Active Orders',
     value: '1,284',
     trend: '+8%',
     icon: <ShoppingCart className="h-4 w-4" />,
-    color: 'bg-brand-secondary',
+    color: 'bg-secondary text-secondary-foreground',
   },
   {
     label: 'Total Customers',
     value: '4,912',
     trend: '+22%',
     icon: <Users className="h-4 w-4" />,
-    color: 'bg-brand-tertiary text-brand-dark',
+    color: 'bg-accent text-accent-foreground',
   },
   {
     label: 'Inventory Health',
     value: '92%',
     trend: '+3%',
     icon: <Package className="h-4 w-4" />,
-    color: 'bg-brand-primary',
+    color: 'bg-primary text-primary-foreground',
   },
 ];
 
@@ -45,7 +45,7 @@ export function DashboardStatsGrid() {
         >
           <CardContent className="pt-6">
             <div className="mb-4 flex items-center justify-between">
-              <div className={`text-brand-light rounded-xl p-2.5 ${s.color}`}>{s.icon}</div>
+              <div className={`rounded-xl p-2.5 ${s.color}`}>{s.icon}</div>
               <Badge
                 variant={s.trend.startsWith('+') ? 'default' : 'destructive'}
                 className="rounded-lg text-[10px] font-black"
