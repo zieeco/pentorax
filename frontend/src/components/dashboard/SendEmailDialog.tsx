@@ -85,13 +85,13 @@ export function SendEmailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="gap-0 overflow-hidden rounded-[2.5rem] border-gray-100 p-0 shadow-2xl sm:max-w-[700px]">
-        <DialogHeader className="border-b border-gray-100 bg-gray-50/50 p-8">
-          <DialogTitle className="flex items-center gap-3 text-2xl font-black text-gray-900">
+      <DialogContent className="border-border gap-0 overflow-hidden rounded-[2.5rem] p-0 shadow-2xl sm:max-w-[700px]">
+        <DialogHeader className="border-border/50 bg-muted/20 border-b p-8">
+          <DialogTitle className="text-foreground flex items-center gap-3 text-2xl font-black">
             <Send className="text-primary h-6 w-6" />
             Communication Hub
           </DialogTitle>
-          <DialogDescription className="font-medium text-gray-500">
+          <DialogDescription className="text-muted-foreground font-medium">
             Mailing {recipientCount} customer{recipientCount !== 1 ? 's' : ''} regarding stock
             interest
           </DialogDescription>
@@ -135,14 +135,13 @@ export function SendEmailDialog({
               </Button>
             )}
           </div>
-
           {useAIBulk ? (
             <div className="bg-brand-indigo/5 border-brand-indigo/10 animate-in zoom-in-95 space-y-2 rounded-[1.5rem] border p-6 duration-300">
               <p className="text-brand-indigo flex items-center gap-2 text-sm font-black tracking-wider uppercase">
                 <Sparkles className="h-4 w-4" />
                 AI Personalization Enabled
               </p>
-              <p className="text-xs leading-relaxed font-medium text-gray-600">
+              <p className="text-muted-foreground text-xs leading-relaxed font-medium">
                 PentoraX AI will analyze each subscriber&apos;s profile and interest history to
                 craft unique, high-conversion messages. No manual input required.
               </p>
@@ -152,7 +151,7 @@ export function SendEmailDialog({
               <div className="space-y-2">
                 <Label
                   htmlFor="subject"
-                  className="ml-1 text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase"
+                  className="text-muted-foreground ml-1 text-[10px] font-black tracking-[0.2em] uppercase"
                 >
                   Email Subject
                 </Label>
@@ -162,14 +161,14 @@ export function SendEmailDialog({
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   disabled={isLoading || isGenerating}
-                  className="h-12 rounded-xl border-gray-100 bg-gray-50/30 px-5 font-bold focus:bg-white"
+                  className="border-border bg-muted/20 focus-visible:border-primary h-12 rounded-xl px-5 font-bold focus:bg-transparent"
                 />
               </div>
 
               <div className="space-y-2">
                 <Label
                   htmlFor="message"
-                  className="ml-1 text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase"
+                  className="text-muted-foreground ml-1 text-[10px] font-black tracking-[0.2em] uppercase"
                 >
                   Message Content
                 </Label>
@@ -180,14 +179,14 @@ export function SendEmailDialog({
                   onChange={(e) => setMessage(e.target.value)}
                   rows={10}
                   disabled={isLoading || isGenerating}
-                  className="resize-none rounded-[1.5rem] border-gray-100 bg-gray-50/30 p-5 font-medium focus:bg-white"
+                  className="border-border bg-muted/20 focus-visible:border-primary resize-none rounded-[1.5rem] p-5 font-medium focus:bg-transparent"
                 />
               </div>
             </div>
           )}
         </div>
 
-        <DialogFooter className="gap-3 border-t border-gray-100 bg-gray-50/30 p-6">
+        <DialogFooter className="bg-muted/10 border-border gap-3 border-t p-6">
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
