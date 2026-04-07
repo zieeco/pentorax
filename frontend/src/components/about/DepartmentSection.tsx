@@ -17,14 +17,14 @@ export function DepartmentSection({ department, members }: DepartmentSectionProp
   if (members.length === 0) return null;
 
   return (
-    <section className="border-y border-gray-100 py-24 odd:bg-gray-50/50 even:bg-white">
+    <section className="border-border odd:bg-muted/30 even:bg-background border-y py-24">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="mb-16 flex items-center gap-6">
-          <div className="h-px flex-grow bg-gray-200" />
-          <h2 className="text-3xl leading-none font-black tracking-tighter whitespace-nowrap text-gray-900 lowercase italic">
+          <div className="bg-border h-px flex-grow" />
+          <h2 className="text-foreground text-3xl leading-none font-black tracking-tighter whitespace-nowrap lowercase italic">
             {department} <span className="text-primary not-italic">Division.</span>
           </h2>
-          <div className="h-px flex-grow bg-gray-200" />
+          <div className="bg-border h-px flex-grow" />
         </div>
 
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
