@@ -14,6 +14,7 @@ export interface BlogPost {
   category: string | { name: string; slug: string };
   author?: { name: string; image: string; bio?: string };
   created_at: string;
+  published_at?: string;
   read_time?: string;
 }
 
