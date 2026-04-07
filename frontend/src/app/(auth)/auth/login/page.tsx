@@ -50,7 +50,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="font-quicksand flex h-screen flex-col overflow-hidden bg-white lg:flex-row">
+    <div className="font-quicksand bg-background flex h-screen flex-col overflow-hidden lg:flex-row">
       <LoginLeftPane />
 
       {/* Right Pane — Form */}
@@ -60,14 +60,14 @@ export default function LoginPage() {
           <div className="flex items-center space-x-4">
             <Link
               href="/support"
-              className="hover:text-primary hidden text-sm font-bold text-gray-900 transition-colors sm:inline"
+              className="hover:text-primary text-foreground hidden text-sm font-bold transition-colors sm:inline"
             >
               Contact support
             </Link>
             <Button
               variant="outline"
               size="sm"
-              className="flex items-center space-x-1.5 rounded-xl font-bold text-gray-700"
+              className="border-border text-muted-foreground flex items-center space-x-1.5 rounded-xl font-bold"
             >
               <Globe className="h-3.5 w-3.5" />
               <span>En</span>
@@ -78,7 +78,7 @@ export default function LoginPage() {
 
         <div className="flex flex-1 items-center justify-center px-6">
           <div className="w-full max-w-[420px]">
-            <h1 className="mb-8 text-center text-[2.2rem] font-black tracking-tight text-gray-900">
+            <h1 className="text-foreground mb-8 text-center text-[2.2rem] font-black tracking-tight">
               Welcome back
             </h1>
             <Form {...form}>
@@ -88,18 +88,18 @@ export default function LoginPage() {
                   name="email"
                   render={({ field }: { field: any }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="ml-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                      <FormLabel className="text-muted-foreground ml-1 text-[10px] font-black tracking-widest uppercase">
                         Email
                       </FormLabel>
                       <FormControl>
                         <div className="group relative">
                           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                            <Mail className="group-focus-within:text-primary h-4 w-4 text-gray-300 transition-colors" />
+                            <Mail className="group-focus-within:text-primary text-muted-foreground/50 h-4 w-4 transition-colors" />
                           </div>
                           <Input
                             type="email"
                             placeholder="name@company.com"
-                            className="focus:border-primary h-auto rounded-[1.25rem] border-transparent bg-gray-50 py-3.5 pr-4 pl-11 font-bold text-gray-900 shadow-sm focus:bg-white"
+                            className="focus:border-primary border-border bg-muted/50 text-foreground focus:bg-background h-auto rounded-[1.25rem] py-3.5 pr-4 pl-11 font-bold shadow-sm"
                             disabled={isLoading}
                             {...field}
                           />
@@ -114,16 +114,16 @@ export default function LoginPage() {
                   name="password"
                   render={({ field }: { field: any }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="ml-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                      <FormLabel className="text-muted-foreground ml-1 text-[10px] font-black tracking-widest uppercase">
                         Password
                       </FormLabel>
                       <FormControl>
                         <PasswordInput
                           placeholder="••••••••••••••••"
-                          className="focus:border-primary h-auto rounded-[1.25rem] border-transparent bg-gray-50 py-3.5 font-bold text-gray-900 shadow-sm focus:bg-white"
+                          className="focus:border-primary border-border bg-muted/50 text-foreground focus:bg-background h-auto rounded-[1.25rem] py-3.5 font-bold shadow-sm"
                           disabled={isLoading}
                           leftIcon={
-                            <Lock className="group-focus-within:text-primary h-4 w-4 text-gray-300 transition-colors" />
+                            <Lock className="group-focus-within:text-primary text-muted-foreground/50 h-4 w-4 transition-colors" />
                           }
                           {...field}
                         />
@@ -142,7 +142,7 @@ export default function LoginPage() {
                 </div>
                 <Button
                   type="submit"
-                  className="hover:bg-primary mt-2 h-auto w-full rounded-[1.25rem] bg-gray-900 py-4 text-lg font-bold text-white shadow-xl shadow-black/5 transition-all active:scale-[0.98]"
+                  className="hover:bg-brand-dark/90 bg-brand-dark mt-2 h-auto w-full rounded-[1.25rem] py-4 text-lg font-bold text-white shadow-xl shadow-black/5 transition-all active:scale-[0.98]"
                   disabled={isLoading}
                 >
                   {isLoading ? 'Logging in...' : 'Log in'}
@@ -150,7 +150,7 @@ export default function LoginPage() {
               </form>
             </Form>
             <div className="mt-8 text-center text-sm">
-              <p className="font-medium text-gray-500">
+              <p className="text-muted-foreground font-medium">
                 Don&apos;t have an account?{' '}
                 <Link href="/auth/signup" className="text-primary font-bold hover:underline">
                   Sign up
