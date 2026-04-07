@@ -44,7 +44,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="font-quicksand flex h-screen flex-col overflow-hidden bg-white lg:flex-row">
+    <div className="font-quicksand bg-background flex h-screen flex-col overflow-hidden lg:flex-row">
       <ForgotPasswordLeftPane />
 
       {/* Right Pane — Form */}
@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
           <Button
             variant="outline"
             size="sm"
-            className="flex items-center space-x-1.5 rounded-xl font-bold text-gray-700"
+            className="border-border text-muted-foreground flex items-center space-x-1.5 rounded-xl font-bold"
           >
             <Globe className="h-3.5 w-3.5" />
             <span>En</span>
@@ -63,10 +63,10 @@ export default function ForgotPasswordPage() {
 
         <div className="flex flex-1 items-center justify-center px-6">
           <div className="w-full max-w-[400px]">
-            <h1 className="mb-3 text-center text-[2.5rem] font-black tracking-tight text-gray-900">
+            <h1 className="text-foreground mb-3 text-center text-[2.5rem] font-black tracking-tight">
               Forgot password?
             </h1>
-            <p className="mb-8 text-center font-medium text-gray-500">
+            <p className="text-muted-foreground mb-8 text-center font-medium">
               Enter your email and we&apos;ll send you a recovery link.
             </p>
 
@@ -77,14 +77,14 @@ export default function ForgotPasswordPage() {
                   name="email"
                   render={({ field }: { field: any }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="ml-1 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                      <FormLabel className="text-muted-foreground ml-1 text-[10px] font-black tracking-widest uppercase">
                         Registered Email
                       </FormLabel>
                       <FormControl>
                         <Input
                           type="email"
                           placeholder="name@company.com"
-                          className="focus:border-primary h-auto rounded-xl border-transparent bg-gray-50 px-4 py-3.5 font-bold shadow-sm focus:bg-white"
+                          className="focus:border-primary border-border bg-muted/50 focus:bg-background h-auto rounded-xl py-3.5 font-bold shadow-sm"
                           disabled={isLoading}
                           {...field}
                         />
@@ -95,7 +95,7 @@ export default function ForgotPasswordPage() {
                 />
                 <Button
                   type="submit"
-                  className="hover:bg-primary h-auto w-full rounded-xl bg-gray-900 py-4 text-lg font-bold text-white shadow-xl active:scale-[0.98]"
+                  className="hover:bg-brand-dark/90 bg-brand-dark mt-2 h-auto w-full rounded-xl py-4 text-lg font-bold text-white shadow-xl active:scale-[0.98]"
                   disabled={isLoading}
                 >
                   {isLoading ? 'Sending...' : 'Send Recovery Link'}
