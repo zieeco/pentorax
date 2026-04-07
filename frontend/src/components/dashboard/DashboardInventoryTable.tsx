@@ -40,6 +40,12 @@ export function DashboardInventoryTable({
               <TableHead className="text-muted-foreground px-8 py-4 text-[10px] font-black tracking-widest uppercase">
                 Product
               </TableHead>
+              <TableHead className="text-muted-foreground px-6 py-4 text-[10px] font-black tracking-widest uppercase">
+                Stock
+              </TableHead>
+              <TableHead className="text-muted-foreground px-6 py-4 text-[10px] font-black tracking-widest uppercase">
+                Health
+              </TableHead>
               <TableHead className="text-muted-foreground px-6 py-4 text-center text-[10px] font-black tracking-widest uppercase">
                 Actions
               </TableHead>
