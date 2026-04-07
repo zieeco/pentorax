@@ -17,11 +17,11 @@ interface CartItemProps {
       id: string;
       name: string;
       slug: string;
-      price: number;
+      price: string | number;
       featured_image?: string;
     };
     quantity: number;
-    subtotal: number;
+    subtotal: string | number;
   };
   onUpdateQuantity: (itemId: string, newQuantity: number) => void;
   onRemove: (itemId: string) => void;
@@ -37,12 +37,12 @@ export function CartItem({
   isRemoving,
 }: CartItemProps) {
   return (
-    <Card className="rounded-[2rem] border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-md">
+    <Card className="border-border bg-card rounded-[2rem] p-6 shadow-sm transition-all duration-300 hover:shadow-md">
       <div className="flex flex-col gap-6 sm:flex-row">
         {/* Product Image */}
         <Link
           href={`/shop/${item.product.slug}`}
-          className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-2xl bg-gray-50 sm:h-32 sm:w-32"
+          className="bg-muted/30 relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-2xl sm:h-32 sm:w-32"
         >
           <Image
             src={item.product.featured_image || '/placeholder-product.png'}
@@ -58,33 +58,33 @@ export function CartItem({
             <div className="flex items-start justify-between gap-4">
               <Link
                 href={`/shop/${item.product.slug}`}
-                className="hover:text-primary line-clamp-2 text-xl leading-tight font-black text-gray-900 transition-colors"
+                className="hover:text-primary text-foreground line-clamp-2 text-xl leading-tight font-black transition-colors"
               >
                 {item.product.name}
               </Link>
               <p className="text-primary text-xl font-black whitespace-nowrap">
-                ₦{item.subtotal.toLocaleString()}
+                ₦{Number(item.subtotal).toLocaleString()}
               </p>
             </div>
-            <p className="mt-2 text-xs font-black tracking-widest text-gray-400 uppercase">
-              ₦{item.product.price.toLocaleString()} per unit
+            <p className="text-muted-foreground mt-2 text-xs font-black tracking-widest uppercase">
+              ₦{Number(item.product.price).toLocaleString()} per unit
             </p>
           </div>
 
           <div className="mt-6 flex items-center justify-between">
-            <div className="flex items-center rounded-xl border border-gray-100 bg-gray-50 p-1">
+            <div className="border-border bg-muted/30 flex items-center rounded-xl p-1">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
                 disabled={isUpdating || item.quantity <= 1}
-                className="h-8 w-8 rounded-lg font-black hover:bg-white"
+                className="hover:bg-card h-8 w-8 rounded-lg font-black"
                 aria-label="Decrease quantity"
               >
                 <Minus className="h-4 w-4" />
               </Button>
 
-              <span className="min-w-[2.5rem] px-4 text-center text-sm font-black text-gray-900">
+              <span className="text-foreground min-w-[2.5rem] px-4 text-center text-sm font-black">
                 {item.quantity}
               </span>
 
@@ -93,7 +93,7 @@ export function CartItem({
                 size="icon"
                 onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
                 disabled={isUpdating}
-                className="h-8 w-8 rounded-lg font-black hover:bg-white"
+                className="hover:bg-card h-8 w-8 rounded-lg font-black"
                 aria-label="Increase quantity"
               >
                 <Plus className="h-4 w-4" />
