@@ -21,18 +21,18 @@ export default function BlogPage() {
   const regular = posts.slice(1);
 
   return (
-    <div className="min-h-screen bg-white pb-24">
+    <div className="bg-background min-h-screen pb-24">
       {/* High-Stakes Header */}
-      <section className="relative overflow-hidden border-b border-gray-100 bg-gray-50/50 py-32">
+      <section className="border-border bg-muted/30 relative overflow-hidden border-b py-32">
         <div className="relative z-10 container mx-auto px-4 text-center lg:px-8">
           <Badge className="bg-primary/20 text-primary mb-8 rounded-full border-none px-4 py-1 text-[10px] leading-none font-black tracking-widest uppercase italic shadow-sm">
             Intelligence Hub
           </Badge>
-          <h1 className="mb-8 text-6xl leading-none font-black tracking-tighter text-gray-900 lowercase italic md:text-9xl">
+          <h1 className="text-foreground mb-8 text-6xl leading-none font-black tracking-tighter lowercase italic md:text-9xl">
             Energy <br />
             <span className="text-primary not-italic">Insights.</span>
           </h1>
-          <p className="mx-auto max-w-2xl text-xl font-medium text-gray-500 lowercase shadow-sm">
+          <p className="text-muted-foreground mx-auto max-w-2xl text-xl font-medium lowercase shadow-sm">
             Latest updates from our labs, success stories, and expert takes on the clean energy
             revolution.
           </p>
@@ -57,8 +57,8 @@ export default function BlogPage() {
             </div>
           </>
         ) : (
-          <div className="rounded-[4rem] border border-gray-100 bg-gray-50 py-32 text-center">
-            <p className="text-[10px] font-black tracking-widest text-gray-400 uppercase italic">
+          <div className="border-border bg-muted/30 rounded-[4rem] border py-32 text-center">
+            <p className="text-muted-foreground text-[10px] font-black tracking-widest uppercase italic">
               No matching intelligence logs found in current sector.
             </p>
           </div>
