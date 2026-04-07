@@ -52,22 +52,22 @@ export function ProductInfoSection({ product }: { product: Product }) {
           </Badge>
           <div className="flex items-center gap-1">
             <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-            <span className="text-xs font-black text-gray-900">4.9 (2.4k sales)</span>
+            <span className="text-foreground text-xs font-black">4.9 (2.4k sales)</span>
           </div>
         </div>
-        <h1 className="text-4xl leading-tight font-black tracking-tight text-gray-900 lg:text-5xl">
+        <h1 className="text-foreground text-4xl leading-tight font-black tracking-tight lg:text-5xl">
           {product.name}
         </h1>
-        <p className="text-lg leading-relaxed font-medium text-gray-500">
+        <p className="text-muted-foreground text-lg leading-relaxed font-medium">
           {product.short_description}
         </p>
       </div>
 
-      <div className="rounded-[2rem] border border-gray-100 bg-gray-50/50 p-8">
+      <div className="border-border bg-muted/30 rounded-[2rem] p-8">
         <div className="mb-2 flex items-baseline gap-4">
           <span className="text-primary text-4xl font-black">{formatPrice(product.price)}</span>
           {discount > 0 && (
-            <span className="text-lg font-bold text-gray-400 line-through decoration-gray-300">
+            <span className="text-muted-foreground decoration-muted-foreground/30 text-lg font-bold line-through">
               {formatPrice(product.compare_at_price!)}
             </span>
           )}
@@ -77,16 +77,16 @@ export function ProductInfoSection({ product }: { product: Product }) {
             </Badge>
           )}
         </div>
-        <p className="mb-8 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+        <p className="text-muted-foreground mb-8 text-[10px] font-black tracking-widest uppercase">
           Price is VAT inclusive
         </p>
 
         <div className="flex flex-col gap-4 sm:flex-row">
-          <div className="flex items-center rounded-2xl border border-gray-100 bg-white p-1 shadow-sm">
+          <div className="border-border bg-card flex items-center rounded-2xl p-1 shadow-sm">
             <Button
               variant="ghost"
               size="icon"
-              className="h-10 w-10 rounded-xl font-black hover:bg-gray-50"
+              className="hover:bg-muted h-10 w-10 rounded-xl font-black"
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
             >
               -
@@ -95,7 +95,7 @@ export function ProductInfoSection({ product }: { product: Product }) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-10 w-10 rounded-xl font-black hover:bg-gray-50"
+              className="hover:bg-muted h-10 w-10 rounded-xl font-black"
               onClick={() => setQuantity(quantity + 1)}
             >
               +
@@ -114,17 +114,23 @@ export function ProductInfoSection({ product }: { product: Product }) {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="flex items-center gap-3 rounded-2xl border border-gray-50 bg-white p-4 shadow-sm">
-          <ShieldCheck className="h-5 w-5 text-emerald-500" />
-          <span className="text-[10px] font-black text-gray-400 uppercase">25 Yr Warranty</span>
+        <div className="border-border bg-card flex items-center gap-3 rounded-2xl p-4 shadow-sm">
+          <ShieldCheck className="text-secondary h-5 w-5" />
+          <span className="text-muted-foreground text-[10px] font-black uppercase">
+            25 Yr Warranty
+          </span>
         </div>
-        <div className="flex items-center gap-3 rounded-2xl border border-gray-50 bg-white p-4 shadow-sm">
-          <Truck className="h-5 w-5 text-blue-500" />
-          <span className="text-[10px] font-black text-gray-400 uppercase">Free Lagos Del.</span>
+        <div className="border-border bg-card flex items-center gap-3 rounded-2xl p-4 shadow-sm">
+          <Truck className="text-primary h-5 w-5" />
+          <span className="text-muted-foreground text-[10px] font-black uppercase">
+            Free Lagos Del.
+          </span>
         </div>
-        <div className="flex items-center gap-3 rounded-2xl border border-gray-50 bg-white p-4 shadow-sm">
-          <Zap className="h-5 w-5 text-amber-500" />
-          <span className="text-[10px] font-black text-gray-400 uppercase">Pro Install</span>
+        <div className="border-border bg-card flex items-center gap-3 rounded-2xl p-4 shadow-sm">
+          <Zap className="text-accent h-5 w-5" />
+          <span className="text-muted-foreground text-[10px] font-black uppercase">
+            Pro Install
+          </span>
         </div>
       </div>
     </div>
