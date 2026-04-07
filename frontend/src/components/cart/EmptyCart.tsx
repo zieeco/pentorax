@@ -12,16 +12,16 @@ export function EmptyCart() {
   return (
     <div className="container mx-auto px-4 py-24 text-center">
       <div className="mx-auto max-w-md">
-        <div className="group relative mb-10 inline-flex h-32 w-32 items-center justify-center overflow-hidden rounded-[2.5rem] border border-gray-100 bg-gray-50 shadow-xl shadow-gray-200/50">
+        <div className="group border-border bg-muted/30 relative mb-10 inline-flex h-32 w-32 items-center justify-center overflow-hidden rounded-[2.5rem] border shadow-xl">
           <div className="bg-primary/5 absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
           <ShoppingBag className="text-primary h-12 w-12 transition-transform duration-500 group-hover:scale-110" />
         </div>
 
-        <h2 className="mb-4 text-3xl font-black tracking-tight text-gray-900">
+        <h2 className="text-foreground mb-4 text-3xl font-black tracking-tight">
           Your Cart is Dormant
         </h2>
 
-        <p className="mb-10 leading-relaxed font-medium text-gray-500">
+        <p className="text-muted-foreground mb-10 leading-relaxed font-medium">
           The future of energy begins with a single selection. Your cart is currently empty and
           awaiting high-performance gear.
         </p>
@@ -36,8 +36,8 @@ export function EmptyCart() {
           </Link>
         </Button>
 
-        <div className="mt-16 border-t border-gray-100 pt-10">
-          <p className="mb-6 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+        <div className="border-border mt-16 border-t pt-10">
+          <p className="text-muted-foreground mb-6 text-[10px] font-black tracking-widest uppercase">
             Core Architectures
           </p>
           <div className="flex flex-wrap justify-center gap-3">
@@ -47,7 +47,7 @@ export function EmptyCart() {
                 variant="outline"
                 size="sm"
                 asChild
-                className="hover:bg-primary/5 hover:border-primary/20 hover:text-primary rounded-xl border-gray-200 font-bold transition-all"
+                className="hover:bg-primary/5 hover:border-primary/20 hover:text-primary border-border rounded-xl font-bold transition-all"
               >
                 <Link href={`/shop?category=${cat.toLowerCase().replace(' ', '-')}`}>{cat}</Link>
               </Button>
