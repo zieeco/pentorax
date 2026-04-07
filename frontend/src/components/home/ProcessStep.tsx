@@ -7,6 +7,7 @@
 import { ArrowRight, CheckCircle, Clock } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Card } from '../ui/card';
 
 interface ProcessStepProps {
   step: number;
@@ -38,20 +39,20 @@ export function ProcessStep({
       {/* Step number + connector */}
       <div className="mb-6 flex items-center">
         <div
-          className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-full font-bold text-white transition-all duration-500 ${isHovered ? 'scale-110 bg-gradient-to-r from-blue-600 to-cyan-600 shadow-lg' : 'bg-gray-400 shadow-md'}`}
+          className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-full font-black transition-all duration-500 ${isHovered ? 'bg-primary text-primary-foreground scale-110 shadow-lg' : 'bg-muted-foreground/30 text-foreground shadow-md'}`}
         >
           {step}
         </div>
         {!isLast && (
           <div
-            className={`ml-4 h-0.5 flex-1 transition-all duration-700 ${isHovered ? 'bg-gradient-to-r from-blue-600 to-cyan-600' : 'bg-gray-300'}`}
+            className={`ml-4 h-0.5 flex-1 transition-all duration-700 ${isHovered ? 'from-primary to-secondary bg-gradient-to-r' : 'bg-border'}`}
           />
         )}
       </div>
 
       {/* Card */}
-      <div
-        className={`relative flex-1 overflow-hidden shadow-lg transition-all duration-500 ${isHovered ? '-translate-y-2 shadow-2xl shadow-blue-500/10' : ''}`}
+      <Card
+        className={`bg-card relative flex-1 overflow-hidden shadow-lg transition-all duration-500 ${isHovered ? 'shadow-primary/20 -translate-y-2 shadow-2xl' : ''}`}
       >
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700"
@@ -61,48 +62,49 @@ export function ProcessStep({
           }}
         />
         <div
-          className={`absolute inset-0 transition-all duration-500 ${isHovered ? 'bg-gradient-to-br from-blue-900/85 via-blue-800/80 to-cyan-900/85' : 'bg-gradient-to-br from-gray-900/75 via-gray-800/70 to-gray-900/75'}`}
+          className={`absolute inset-0 transition-all duration-500 ${isHovered ? 'bg-brand-dark/90 via-brand-dark/80' : 'bg-black/80 via-black/70'} bg-gradient-to-br to-transparent`}
         />
 
-        <div className="relative z-10 p-6 text-white">
+        <div className="relative z-10 p-6 text-white text-shadow-sm">
           <div className="mb-4 flex items-end justify-between">
             <div />
-            <div className="flex items-center text-sm text-white/80">
-              <Clock className="mr-1 h-4 w-4" />
+            <div className="flex items-center text-[10px] font-black tracking-widest text-white/80">
+              <Clock className="mr-1.5 h-3.5 w-3.5" />
               {duration}
             </div>
           </div>
           <h3
-            className={`mb-3 text-xl font-bold transition-colors duration-300 ${isHovered ? 'text-cyan-200' : 'text-white'}`}
+            className={`font-quicksand mb-3 text-xl font-black transition-colors duration-300 ${isHovered ? 'text-primary' : 'text-white'}`}
           >
             {title}
           </h3>
-          <p className="mb-4 leading-relaxed text-white/90">{description}</p>
+          <p className="mb-4 text-sm leading-relaxed font-medium text-white/90">{description}</p>
 
           <div
             className={`space-y-2 overflow-hidden transition-all duration-500 ${isHovered ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}
           >
             {details.map((d, i) => (
-              <div key={i} className="flex items-start text-sm text-white/90">
-                <CheckCircle className="mt-0.5 mr-2 h-4 w-4 flex-shrink-0 text-cyan-300" />
+              <div key={i} className="flex items-start text-xs font-medium text-white/90">
+                <CheckCircle className="text-secondary mt-0.5 mr-2 h-3.5 w-3.5 flex-shrink-0" />
                 {d}
               </div>
             ))}
           </div>
 
           <div
-            className={`mt-4 border-t border-white/20 pt-4 transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+            className={`mt-4 border-t border-white/10 pt-4 transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
           >
             <Button
               variant="ghost"
               size="sm"
-              className="flex items-center p-0 text-cyan-200 hover:bg-transparent hover:text-cyan-100"
+              className="font-quicksand text-primary hover:text-primary/80 flex items-center p-0 font-black tracking-widest hover:bg-transparent"
             >
-              Learn More <ArrowRight className="ml-1 h-4 w-4" />
+              Learn More{' '}
+              <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Button>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
