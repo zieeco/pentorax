@@ -16,7 +16,7 @@ interface MemberCardProps {
 
 export function MemberCard({ member }: MemberCardProps) {
   return (
-    <Card className="group flex h-full flex-col overflow-hidden rounded-[2.5rem] border border-gray-100 bg-white shadow-sm transition-all duration-700 hover:shadow-2xl">
+    <Card className="border-border bg-card group flex h-full flex-col overflow-hidden rounded-[2.5rem] border shadow-sm transition-all duration-700 hover:shadow-2xl">
       <div className="relative h-80 overflow-hidden">
         <Image
           src={
@@ -27,14 +27,14 @@ export function MemberCard({ member }: MemberCardProps) {
           fill
           className="object-cover grayscale transition-all duration-1000 group-hover:scale-110 group-hover:grayscale-0"
         />
-        <div className="absolute inset-0 flex items-end bg-gradient-to-t from-gray-900/80 via-transparent to-transparent p-8 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+        <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/80 via-transparent to-transparent p-8 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
           <div className="flex gap-4">
             {member.linkedin && (
               <a
                 href={member.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:bg-primary flex h-10 w-10 items-center justify-center rounded-xl bg-white text-gray-900 transition-colors hover:text-white"
+                className="bg-background text-foreground hover:bg-primary hover:text-primary-foreground flex h-10 w-10 items-center justify-center rounded-xl transition-colors"
               >
                 <FaLinkedin className="h-5 w-5" />
               </a>
@@ -43,13 +43,13 @@ export function MemberCard({ member }: MemberCardProps) {
         </div>
       </div>
       <div className="flex flex-grow flex-col p-8">
-        <h4 className="mb-1 text-xl leading-none font-black tracking-tighter text-gray-900 lowercase italic">
+        <h4 className="text-foreground mb-1 text-xl leading-none font-black tracking-tighter lowercase italic">
           {member.name}
         </h4>
         <p className="text-primary mb-4 text-[10px] font-black tracking-[0.2em] uppercase">
           {member.role}
         </p>
-        <p className="line-clamp-3 text-xs leading-relaxed font-medium text-gray-500 lowercase">
+        <p className="text-muted-foreground line-clamp-3 text-xs leading-relaxed font-medium lowercase">
           {member.bio}
         </p>
       </div>
