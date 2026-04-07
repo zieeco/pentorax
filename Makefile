@@ -1,6 +1,6 @@
 .PHONY: help dev build up down logs shell-backend shell-frontend \
         migrate makemigrations test-backend test-frontend lint format clean \
-        lock sync add add-dev rebuild
+        lock sync add add-dev rebuild seed
 
 help:
 	@echo "Pentorax Monorepo Commands"
@@ -15,6 +15,7 @@ help:
 	@echo "shell-frontend     - Open frontend container shell"
 	@echo "migrate            - Run Django migrations"
 	@echo "makemigrations     - Create Django migrations"
+	@echo "seed file=<name>   - Run a seed command (e.g. make seed file=seed_products)"
 	@echo "test-backend       - Run Django tests"
 	@echo "test-frontend      - Run frontend tests"
 	@echo "lint               - Lint code"
@@ -35,7 +36,7 @@ COMPOSE = docker compose -f docker/docker-compose.dev.yml
 # ── Main Development Commands ────────────────────────────────────────────────
 
 dev:
-	$(COMPOSE) up --build
+	$(COMPOSE) up
 
 rebuild:
 	$(COMPOSE) down -v
@@ -67,6 +68,10 @@ migrate:
 
 makemigrations:
 	$(COMPOSE) exec backend python manage.py makemigrations
+
+seed:
+	@if [ -z "$(file)" ]; then echo "Usage: make seed file=<command_name>  e.g. make seed file=seed_products"; exit 1; fi
+	$(COMPOSE) exec backend python manage.py $(file)
 
 test-backend:
 	$(COMPOSE) exec backend python -m pytest
@@ -103,4 +108,3 @@ add:
 
 add-dev:
 	uv add --dev $(pkg)
-	
