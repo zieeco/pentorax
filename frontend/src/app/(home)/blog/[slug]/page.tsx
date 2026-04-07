@@ -5,7 +5,7 @@
  * Precision-engineered interface for single blog asset visualization.
  * Adheres to 150-line rule.
  */
-import { ArrowLeft, Calendar, Clock, Share2, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Share2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { use } from 'react';
@@ -29,9 +29,9 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
   const categoryName = typeof post.category === 'object' ? post.category.name : 'Intelligence';
 
   return (
-    <div className="min-h-screen bg-white pb-24">
+    <div className="bg-background min-h-screen pb-24">
       {/* Immersive Header */}
-      <section className="relative overflow-hidden bg-gray-900 py-32 text-white">
+      <section className="bg-brand-dark relative overflow-hidden py-32 text-white">
         <div className="absolute inset-0 opacity-20">
           <Image
             src={
@@ -43,12 +43,12 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
             className="object-cover grayscale"
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent" />
+        <div className="from-brand-dark via-brand-dark/60 absolute inset-0 bg-gradient-to-t to-transparent" />
         <div className="relative z-10 container mx-auto px-4 lg:px-8">
           <Button
             asChild
             variant="ghost"
-            className="group mb-12 -ml-4 text-white/60 hover:text-white"
+            className="group mb-12 -ml-4 text-white/70 hover:text-white"
           >
             <Link href="/blog" className="flex items-center gap-3 italic">
               <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />{' '}
@@ -56,20 +56,20 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
             </Link>
           </Button>
           <div className="mb-8 flex flex-wrap items-center gap-6">
-            <Badge className="bg-primary rounded-full border-none px-4 py-1 text-[10px] font-black tracking-widest text-white uppercase italic">
+            <Badge className="bg-primary text-primary-foreground rounded-full border-none px-4 py-1 text-[10px] font-black tracking-widest uppercase italic shadow-lg">
               {categoryName}
             </Badge>
-            <span className="flex items-center gap-2 text-[10px] font-black tracking-widest text-white/40 uppercase italic">
+            <span className="flex items-center gap-2 text-[10px] font-black tracking-widest text-white/70 uppercase italic">
               <Calendar className="h-3 w-3" /> {date}
             </span>
-            <span className="flex items-center gap-2 text-[10px] font-black tracking-widest text-white/40 uppercase italic">
+            <span className="flex items-center gap-2 text-[10px] font-black tracking-widest text-white/70 uppercase italic">
               <Clock className="h-3 w-3" /> {post.read_time || '5 MIN'} READ
             </span>
           </div>
           <h1 className="mb-12 max-w-5xl text-4xl leading-none font-black tracking-tighter lowercase italic text-shadow-sm md:text-7xl lg:text-8xl">
             {post.title}
           </h1>
-          <div className="flex items-center gap-4 text-white/60">
+          <div className="flex items-center gap-4 text-white/70">
             <Image
               src={post.author?.image || 'https://via.placeholder.com/100'}
               alt={post.author?.name || 'Author'}
@@ -78,7 +78,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
               className="border-primary/20 rounded-full border-2"
             />
             <div className="pt-1">
-              <p className="mb-0.5 text-[10px] font-black tracking-widest text-white/30 uppercase">
+              <p className="mb-0.5 text-[10px] font-black tracking-widest text-white/50 uppercase">
                 Primary Author
               </p>
               <p className="text-sm font-black italic">
@@ -95,21 +95,21 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
           <Button
             variant="outline"
             size="icon"
-            className="hover:bg-primary h-14 w-14 rounded-2xl border-gray-100 shadow-sm transition-all hover:text-white"
+            className="border-border hover:bg-primary hover:text-primary-foreground h-14 w-14 rounded-2xl shadow-sm transition-all"
           >
             <Share2 className="h-5 w-5" />
           </Button>
         </div>
 
         <div
-          className="prose prose-2xl prose-gray prose-headings:font-black prose-headings:italic prose-headings:tracking-tighter prose-headings:lowercase prose-p:font-medium prose-p:text-gray-600 prose-p:leading-relaxed prose-img:rounded-[3rem] prose-img:shadow-2xl prose-a:text-primary prose-a:font-black prose-a:no-underline hover:prose-a:underline max-w-none transition-all"
+          className="prose dark:prose-invert prose-2xl prose-gray prose-headings:font-black prose-headings:italic prose-headings:tracking-tighter prose-headings:lowercase prose-p:font-medium prose-p:text-muted-foreground prose-p:leading-relaxed prose-img:rounded-[3rem] prose-img:shadow-2xl prose-a:text-primary prose-a:font-black prose-a:no-underline hover:prose-a:underline max-w-none transition-all"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </article>
 
       {/* Narrative Footer CTA */}
       <section className="container mx-auto px-4 py-24 lg:px-8">
-        <div className="relative overflow-hidden rounded-[4rem] bg-gray-900 p-12 text-center text-white shadow-2xl lg:p-24">
+        <div className="bg-brand-dark relative overflow-hidden rounded-[4rem] p-12 text-center text-white shadow-2xl lg:p-24">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1600&q=40')] bg-cover bg-center opacity-10" />
           <h2 className="relative z-10 mb-12 text-4xl leading-none font-black tracking-tighter uppercase italic md:text-6xl">
             Power Your <br />
@@ -118,7 +118,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
           <Button
             asChild
             size="lg"
-            className="bg-primary relative z-10 h-20 rounded-[2.5rem] px-16 font-black tracking-widest text-white uppercase italic shadow-xl transition-all hover:bg-white hover:text-gray-900"
+            className="bg-primary hover:bg-background hover:text-foreground text-primary-foreground relative z-10 h-20 rounded-[2.5rem] px-16 font-black tracking-widest uppercase italic shadow-xl transition-all"
           >
             <Link href="/contact">Synchronize With Experts</Link>
           </Button>
@@ -130,10 +130,10 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
 
 function PostSkeleton() {
   return (
-    <div className="min-h-screen bg-white">
-      <div className="bg-gray-900 py-32">
+    <div className="bg-background min-h-screen">
+      <div className="bg-brand-dark py-32">
         <div className="container mx-auto px-4">
-          <Skeleton className="h-40 w-full rounded-3xl bg-gray-800" />
+          <Skeleton className="bg-muted/20 h-40 w-full rounded-3xl" />
         </div>
       </div>
       <div className="mx-auto max-w-4xl space-y-8 px-4 py-24">
@@ -148,8 +148,8 @@ function PostSkeleton() {
 function PostNotFound() {
   return (
     <div className="flex h-screen flex-col items-center justify-center p-8 text-center">
-      <h2 className="mb-8 text-4xl font-black italic">Narrative Log Void.</h2>
-      <Button asChild className="h-16 rounded-2xl bg-gray-900 px-10 italic">
+      <h2 className="text-foreground mb-8 text-4xl font-black italic">Narrative Log Void.</h2>
+      <Button asChild className="bg-brand-dark h-16 rounded-2xl px-10 italic">
         <Link href="/blog">Return to Hub</Link>
       </Button>
     </div>
