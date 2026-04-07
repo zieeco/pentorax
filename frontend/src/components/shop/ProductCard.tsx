@@ -46,10 +46,10 @@ export function ProductCard({ product }: ProductCardProps) {
   const discountPercentage = product.discount_percentage || 0;
 
   return (
-    <Card className="group hover:shadow-primary/5 relative flex h-full flex-col overflow-hidden rounded-[2rem] border-gray-100 bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+    <Card className="group hover:shadow-primary/5 border-border bg-card relative flex h-full flex-col overflow-hidden rounded-[2rem] shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
       <Link
         href={`/shop/${product.slug}`}
-        className="relative aspect-square overflow-hidden bg-gray-50"
+        className="bg-muted/30 relative aspect-square overflow-hidden"
       >
         <Image
           src={product.featured_image || '/placeholder-product.png'}
@@ -58,11 +58,11 @@ export function ProductCard({ product }: ProductCardProps) {
           className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
         <div className="absolute top-4 left-4 flex flex-col gap-2">
           {product.is_featured && (
-            <Badge className="bg-primary/90 rounded-lg border-none px-3 py-1 text-[10px] font-black text-white uppercase shadow-lg backdrop-blur-md">
+            <Badge className="bg-primary/90 text-primary-foreground rounded-lg border-none px-3 py-1 text-[10px] font-black uppercase shadow-lg backdrop-blur-md">
               Featured
             </Badge>
           )}
@@ -80,31 +80,31 @@ export function ProductCard({ product }: ProductCardProps) {
           <Button
             size="icon"
             variant="secondary"
-            className="h-10 w-10 rounded-xl bg-white/90 shadow-xl backdrop-blur-md hover:bg-white"
+            className="bg-card/90 hover:bg-card h-10 w-10 rounded-xl shadow-xl backdrop-blur-md"
           >
-            <Eye className="h-4 w-4 text-gray-900" />
+            <Eye className="text-foreground h-4 w-4" />
           </Button>
         </div>
       </Link>
 
       <CardContent className="flex flex-1 flex-col p-6">
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-[10px] font-black tracking-widest text-gray-400 uppercase">
+          <span className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
             Solar Energy
           </span>
           <div className="flex items-center gap-1">
             <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-            <span className="text-[10px] font-black text-gray-900">4.9</span>
+            <span className="text-foreground text-[10px] font-black">4.9</span>
           </div>
         </div>
 
         <Link href={`/shop/${product.slug}`}>
-          <h3 className="group-hover:text-primary mb-2 line-clamp-2 text-lg leading-tight font-black text-gray-900 transition-colors">
+          <h3 className="group-hover:text-primary text-foreground mb-2 line-clamp-2 text-lg leading-tight font-black transition-colors">
             {product.name}
           </h3>
         </Link>
 
-        <p className="mb-4 line-clamp-2 text-xs leading-relaxed font-medium text-gray-500">
+        <p className="text-muted-foreground mb-4 line-clamp-2 text-xs leading-relaxed font-medium">
           {product.short_description}
         </p>
 
@@ -112,7 +112,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <span className="text-primary text-xl font-black">{formatPrice(product.price)}</span>
           {product.compare_at_price &&
             parseFloat(String(product.compare_at_price)) > parseFloat(String(product.price)) && (
-              <span className="text-sm font-bold text-gray-400 line-through decoration-gray-300">
+              <span className="text-muted-foreground decoration-muted-foreground/30 text-sm font-bold line-through">
                 {formatPrice(product.compare_at_price)}
               </span>
             )}
