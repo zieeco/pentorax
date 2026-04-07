@@ -34,14 +34,14 @@ export function ProductFilters({
   categories,
 }: ProductFiltersProps) {
   return (
-    <Card className="overflow-hidden rounded-[2rem] border-gray-100 shadow-sm">
+    <Card className="border-border overflow-hidden rounded-[2rem] shadow-sm">
       <CardContent className="p-6">
         <div className="flex flex-col items-center justify-between gap-4 lg:flex-row">
           <form onSubmit={onSearchSubmit} className="relative w-full lg:w-96">
-            <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Search className="text-muted-foreground absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="Search products, SKUs..."
-              className="rounded-xl border-gray-100 bg-gray-50/50 py-5 pl-10 font-medium shadow-none transition-all focus-visible:bg-white"
+              className="border-border bg-muted/30 focus-visible:border-primary rounded-xl py-5 pl-10 font-medium shadow-none transition-all"
               value={searchInput}
               onChange={(e) => onSearchInputChange(e.target.value)}
             />
@@ -49,9 +49,9 @@ export function ProductFilters({
 
           <div className="flex w-full flex-wrap items-center gap-3 lg:w-auto">
             <Select value={categoryFilter} onValueChange={onCategoryFilterChange}>
-              <SelectTrigger className="h-10 w-full rounded-xl border-gray-100 bg-gray-50/50 font-bold shadow-none sm:w-48">
+              <SelectTrigger className="border-border bg-muted/30 h-10 w-full rounded-xl font-bold shadow-none sm:w-48">
                 <div className="flex items-center gap-2">
-                  <Filter className="h-3.5 w-3.5 text-gray-400" />
+                  <Filter className="text-muted-foreground h-3.5 w-3.5" />
                   <SelectValue placeholder="All Categories" />
                 </div>
               </SelectTrigger>
@@ -67,15 +67,19 @@ export function ProductFilters({
               </SelectContent>
             </Select>
 
-            <div className="hidden rounded-xl border border-gray-100 bg-gray-50/50 p-1 sm:flex">
+            <div className="border-border bg-muted/30 hidden rounded-xl border p-1 sm:flex">
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-primary h-8 w-8 rounded-lg bg-white shadow-sm"
+                className="text-primary bg-background h-8 w-8 rounded-lg shadow-sm"
               >
                 <ListIcon className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-gray-400">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground h-8 w-8 rounded-lg"
+              >
                 <LayoutGrid className="h-4 w-4" />
               </Button>
             </div>
