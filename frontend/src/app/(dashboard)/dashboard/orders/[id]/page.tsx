@@ -34,16 +34,16 @@ import { useOrder, useUpdateOrderStatus } from '@/hooks/orders-hooks';
 const statusConfig: Record<string, { label: string; color: string }> = {
   pending: {
     label: 'Pending',
-    color: 'bg-brand-yellow/10 text-brand-yellow border-brand-yellow/20',
+    color: 'bg-accent/10 text-accent border-accent/20',
   },
   processing: {
     label: 'Processing',
-    color: 'bg-brand-indigo/10 text-brand-indigo border-brand-indigo/20',
+    color: 'bg-primary/10 text-primary border-primary/20',
   },
   shipped: { label: 'Shipped', color: 'bg-primary/10 text-primary border-primary/20' },
   delivered: {
     label: 'Delivered',
-    color: 'bg-brand-green/10 text-brand-green border-brand-green/20',
+    color: 'bg-secondary/10 text-secondary border-secondary/20',
   },
   cancelled: {
     label: 'Cancelled',
@@ -71,8 +71,8 @@ export default function OrderDetailPage() {
   if (isLoading)
     return (
       <div className="animate-pulse space-y-4 p-8">
-        <div className="h-8 w-1/4 rounded-xl bg-gray-100" />
-        <div className="h-64 w-full rounded-[2rem] bg-gray-100" />
+        <div className="bg-muted h-8 w-1/4 rounded-xl" />
+        <div className="bg-muted h-64 w-full rounded-[2rem]" />
       </div>
     );
   if (error || !order)
@@ -89,7 +89,7 @@ export default function OrderDetailPage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-black tracking-tight text-gray-900">
+            <h1 className="text-foreground text-3xl font-black tracking-tight">
               Order #{order.id.slice(0, 8).toUpperCase()}
             </h1>
             <div className="mt-1 flex items-center gap-2">
@@ -98,7 +98,7 @@ export default function OrderDetailPage() {
               >
                 {status.label}
               </Badge>
-              <span className="text-sm font-medium text-gray-400">
+              <span className="text-muted-foreground text-sm font-medium">
                 Placed on {format(new Date(order.created_at), 'MMM dd, yyyy')},{' '}
                 {format(new Date(order.created_at), 'h:mm a')}
               </span>
@@ -108,7 +108,7 @@ export default function OrderDetailPage() {
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
-            className="rounded-xl border-gray-100 bg-white font-bold"
+            className="border-border bg-background rounded-xl font-bold"
             onClick={() => window.print()}
           >
             <Printer className="mr-2 h-4 w-4" />
@@ -121,31 +121,31 @@ export default function OrderDetailPage() {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Left Column: Line Items & Summary */}
         <div className="space-y-8 lg:col-span-2">
-          <Card className="overflow-hidden rounded-[2.5rem] border-gray-100 bg-white shadow-sm">
+          <Card className="border-border bg-card overflow-hidden rounded-[2.5rem] shadow-sm">
             <CardHeader className="px-8 pt-8 pb-4">
-              <CardTitle className="text-xl font-black text-gray-900">Order Items</CardTitle>
+              <CardTitle className="text-foreground text-xl font-black">Order Items</CardTitle>
             </CardHeader>
             <CardContent className="px-8 pb-8">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-gray-50 hover:bg-transparent">
-                    <TableHead className="pl-0 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                  <TableRow className="border-border/50 hover:bg-transparent">
+                    <TableHead className="text-muted-foreground pl-0 text-[10px] font-black tracking-widest uppercase">
                       Product
                     </TableHead>
-                    <TableHead className="text-center text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                    <TableHead className="text-muted-foreground text-center text-[10px] font-black tracking-widest uppercase">
                       Qty
                     </TableHead>
-                    <TableHead className="pr-0 text-right text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                    <TableHead className="text-muted-foreground pr-0 text-right text-[10px] font-black tracking-widest uppercase">
                       Total
                     </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {order.items.map((item) => (
-                    <TableRow key={item.id} className="border-gray-50 hover:bg-transparent">
+                    <TableRow key={item.id} className="border-border/50 hover:bg-transparent">
                       <TableCell className="py-4 pl-0">
                         <div className="flex items-center gap-4">
-                          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
+                          <div className="border-border bg-muted/30 relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border">
                             {item.product.featured_image ? (
                               <Image
                                 src={item.product.featured_image}
@@ -154,38 +154,38 @@ export default function OrderDetailPage() {
                                 className="object-cover"
                               />
                             ) : (
-                              <Package className="m-3 h-6 w-6 text-gray-200" />
+                              <Package className="text-muted-foreground/30 m-3 h-6 w-6" />
                             )}
                           </div>
                           <div>
-                            <p className="font-bold text-gray-900">{item.product.name}</p>
-                            <p className="text-xs font-medium text-gray-400">
+                            <p className="text-foreground font-bold">{item.product.name}</p>
+                            <p className="text-muted-foreground text-xs font-medium">
                               ₦{Number(item.price).toLocaleString()} each
                             </p>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="text-center font-bold text-gray-700">
+                      <TableCell className="text-foreground text-center font-bold">
                         ×{item.quantity}
                       </TableCell>
-                      <TableCell className="pr-0 text-right text-base font-black text-gray-900">
+                      <TableCell className="text-foreground pr-0 text-right text-base font-black">
                         ₦{(item.quantity * Number(item.price)).toLocaleString()}
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
-              <div className="mt-8 ml-auto max-w-xs space-y-3 border-t border-gray-50 pt-8">
-                <div className="flex justify-between text-sm font-bold text-gray-500">
+              <div className="border-border/50 mt-8 ml-auto max-w-xs space-y-3 border-t pt-8">
+                <div className="text-muted-foreground flex justify-between text-sm font-bold">
                   <span>Subtotal</span>
-                  <span className="text-gray-900">₦{Number(order.total).toLocaleString()}</span>
+                  <span className="text-foreground">₦{Number(order.total).toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between text-sm font-bold text-gray-500">
+                <div className="text-muted-foreground flex justify-between text-sm font-bold">
                   <span>Shipping</span>
-                  <span className="text-gray-900">Free</span>
+                  <span className="text-foreground">Free</span>
                 </div>
-                <Separator className="bg-gray-50" />
-                <div className="flex items-center justify-between pt-2 text-gray-900">
+                <Separator className="bg-border/50" />
+                <div className="text-foreground flex items-center justify-between pt-2">
                   <span className="text-lg font-black">Total</span>
                   <span className="text-primary text-2xl font-black">
                     ₦{Number(order.total).toLocaleString()}
@@ -198,36 +198,38 @@ export default function OrderDetailPage() {
 
         {/* Right Column: Customer & Shipping Details */}
         <div className="space-y-8">
-          <Card className="overflow-hidden rounded-[2rem] border-gray-100 bg-white shadow-sm">
-            <CardHeader className="border-b border-gray-50 bg-gray-50/30 px-6 pt-6 pb-2">
-              <CardTitle className="text-sm font-black tracking-widest text-gray-400 uppercase">
+          <Card className="border-border bg-card overflow-hidden rounded-[2rem] shadow-sm">
+            <CardHeader className="border-border/50 bg-muted/20 border-b px-6 pt-6 pb-2">
+              <CardTitle className="text-muted-foreground text-sm font-black tracking-widest uppercase">
                 Customer Details
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 p-6">
               <div className="flex items-start gap-3">
-                <div className="rounded-lg bg-gray-50 p-2">
-                  <User className="h-4 w-4 text-gray-400" />
+                <div className="bg-muted/30 rounded-lg p-2">
+                  <User className="text-muted-foreground h-4 w-4" />
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-black text-gray-900">{order.shipping_name}</p>
-                  <p className="truncate text-xs font-medium text-gray-500">
+                  <p className="text-foreground truncate text-sm font-black">
+                    {order.shipping_name}
+                  </p>
+                  <p className="text-muted-foreground truncate text-xs font-medium">
                     {order.user || 'Guest Checkout'}
                   </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="rounded-lg bg-gray-50 p-2">
-                  <Mail className="h-4 w-4 text-gray-400" />
+                <div className="bg-muted/30 rounded-lg p-2">
+                  <Mail className="text-muted-foreground h-4 w-4" />
                 </div>
-                <p className="truncate text-sm font-bold text-gray-600">{order.user}</p>
+                <p className="text-muted-foreground truncate text-sm font-bold">{order.user}</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="overflow-hidden rounded-[2rem] border-gray-100 bg-white shadow-sm">
-            <CardHeader className="border-b border-gray-50 bg-gray-50/30 px-6 pt-6 pb-2">
-              <CardTitle className="text-sm font-black tracking-widest text-gray-400 uppercase">
+          <Card className="border-border bg-card overflow-hidden rounded-[2rem] shadow-sm">
+            <CardHeader className="border-border/50 bg-muted/20 border-b px-6 pt-6 pb-2">
+              <CardTitle className="text-muted-foreground text-sm font-black tracking-widest uppercase">
                 Shipping & Payment
               </CardTitle>
             </CardHeader>
@@ -235,7 +237,7 @@ export default function OrderDetailPage() {
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <MapPin className="text-primary mt-0.5 h-4 w-4" />
-                  <div className="text-sm leading-relaxed font-bold text-gray-600">
+                  <div className="text-muted-foreground text-sm leading-relaxed font-bold">
                     {order.shipping_address}
                     <br />
                     {order.shipping_city}, {order.shipping_state}
@@ -243,22 +245,28 @@ export default function OrderDetailPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="text-primary h-4 w-4" />
-                  <span className="text-sm font-bold text-gray-600">{order.shipping_phone}</span>
+                  <span className="text-muted-foreground text-sm font-bold">
+                    {order.shipping_phone}
+                  </span>
                 </div>
               </div>
-              <Separator className="bg-gray-50" />
+              <Separator className="bg-border/50" />
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm font-bold text-gray-400">
+                  <div className="text-muted-foreground flex items-center gap-2 text-sm font-bold">
                     <CreditCard className="h-4 w-4" /> Payment
                   </div>
-                  <span className="text-sm font-black text-gray-900 uppercase">Bank Transfer</span>
+                  <span className="text-foreground text-sm font-black uppercase">
+                    Bank Transfer
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm font-bold text-gray-400">
+                  <div className="text-muted-foreground flex items-center gap-2 text-sm font-bold">
                     <Truck className="h-4 w-4" /> Fulfillment
                   </div>
-                  <span className="text-sm font-black text-gray-900 uppercase">{order.status}</span>
+                  <span className="text-foreground text-sm font-black uppercase">
+                    {order.status}
+                  </span>
                 </div>
               </div>
             </CardContent>
