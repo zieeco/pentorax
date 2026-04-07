@@ -18,7 +18,7 @@ interface FeaturedPostProps {
 export function FeaturedPost({ post }: FeaturedPostProps) {
   return (
     <Link href={`/blog/${post.slug}`} className="group mb-24 block">
-      <div className="relative flex min-h-[600px] items-end overflow-hidden rounded-[4rem] border border-white/5 bg-gray-900 text-white shadow-2xl">
+      <div className="border-border/50 bg-brand-dark relative flex min-h-[600px] items-end overflow-hidden rounded-[4rem] border text-white shadow-2xl">
         <Image
           src={
             post.featured_image ||
@@ -28,7 +28,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
           fill
           className="object-cover opacity-40 grayscale transition-all duration-1000 group-hover:scale-105 group-hover:grayscale-0"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent opacity-80" />
+        <div className="from-brand-dark via-brand-dark/40 absolute inset-0 bg-gradient-to-t to-transparent opacity-80" />
 
         <div className="relative z-10 max-w-4xl p-12 lg:p-24">
           <Badge className="bg-primary mb-10 rounded-full border-none px-5 py-1.5 text-[10px] font-black tracking-widest text-white uppercase italic shadow-lg">
@@ -37,7 +37,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
           <h2 className="group-hover:text-primary mb-8 text-4xl leading-none font-black tracking-tighter lowercase italic transition-colors lg:text-7xl">
             {post.title}
           </h2>
-          <p className="mb-12 line-clamp-2 max-w-2xl text-xl leading-relaxed font-medium text-white/50 lowercase">
+          <p className="mb-12 line-clamp-2 max-w-2xl text-xl leading-relaxed font-medium text-white/70 lowercase">
             {post.excerpt}
           </p>
           <div className="text-primary flex items-center gap-4 text-[10px] font-black tracking-widest uppercase italic transition-transform group-hover:translate-x-4">
