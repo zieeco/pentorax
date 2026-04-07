@@ -63,13 +63,13 @@ export function ImageLightbox({ images, initialIndex, isOpen, onClose }: ImageLi
 
   return (
     <div
-      className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/95 backdrop-blur-xl duration-300"
+      className="animate-in fade-in bg-background/95 fixed inset-0 z-[100] flex items-center justify-center backdrop-blur-xl duration-300"
       onClick={onClose}
     >
       <Button
         variant="ghost"
         size="icon"
-        className="absolute top-6 right-6 z-50 h-12 w-12 rounded-2xl text-white hover:bg-white/10"
+        className="text-foreground hover:bg-foreground/10 absolute top-6 right-6 z-50 h-12 w-12 rounded-2xl"
         onClick={onClose}
       >
         <X className="h-6 w-6" />
@@ -80,7 +80,7 @@ export function ImageLightbox({ images, initialIndex, isOpen, onClose }: ImageLi
           <Button
             variant="ghost"
             size="icon"
-            className="absolute left-6 z-50 h-16 w-16 rounded-3xl text-white transition-transform hover:bg-white/10 active:scale-90"
+            className="text-foreground hover:bg-foreground/10 absolute left-6 z-50 h-16 w-16 rounded-3xl transition-transform active:scale-90"
             onClick={(e) => {
               e.stopPropagation();
               goToPrevious();
@@ -91,7 +91,7 @@ export function ImageLightbox({ images, initialIndex, isOpen, onClose }: ImageLi
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-6 z-50 h-16 w-16 rounded-3xl text-white transition-transform hover:bg-white/10 active:scale-90"
+            className="text-foreground hover:bg-foreground/10 absolute right-6 z-50 h-16 w-16 rounded-3xl transition-transform active:scale-90"
             onClick={(e) => {
               e.stopPropagation();
               goToNext();
@@ -116,7 +116,7 @@ export function ImageLightbox({ images, initialIndex, isOpen, onClose }: ImageLi
       </div>
 
       {images.length > 1 && (
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 rounded-2xl border border-white/10 bg-white/10 px-6 py-2 text-xs font-black text-white backdrop-blur-md">
+        <div className="border-foreground/10 bg-foreground/10 text-foreground absolute bottom-10 left-1/2 -translate-x-1/2 rounded-2xl border px-6 py-2 text-xs font-black backdrop-blur-md">
           {currentIndex + 1} / {images.length}
         </div>
       )}
