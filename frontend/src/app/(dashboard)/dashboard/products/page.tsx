@@ -2,22 +2,18 @@
 
 /**
  * Product Catalog Management Page
- * Refactored: ProductHeader, ProductFilters, ProductTable, ProductPagination extracted
- * Status: Refactored to < 150 lines
+ * Refactored: Header, Filters, Table, Pagination, BulkActions extracted
+ * Status: Refactored to < 110 lines
  */
-import { Trash2 } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ProductFilters } from '@/components/dashboard/ProductFilters';
 import { ProductHeader } from '@/components/dashboard/ProductHeader';
 import { ProductPagination } from '@/components/dashboard/ProductPagination';
+import { ProductBulkActions } from '@/components/dashboard/products/ProductBulkActions';
 import { ProductTable } from '@/components/dashboard/ProductTable';
-import { BulkAction, BulkActionsToolbar } from '@/components/ui/bulk-actions-toolbar';
 import {
-  useBulkActivateProducts,
-  useBulkDeactivateProducts,
-  useBulkDeleteProducts,
   useCategories,
   useDeleteProduct,
   useDuplicateProduct,
@@ -50,9 +46,6 @@ export default function ProductsPage() {
 
   const deleteProduct = useDeleteProduct();
   const duplicateProduct = useDuplicateProduct();
-  const bulkDelete = useBulkDeleteProducts();
-  const bulkActivate = useBulkActivateProducts();
-  const bulkDeactivate = useBulkDeactivateProducts();
 
   const updateParams = (updates: Record<string, string | null>) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -61,47 +54,6 @@ export default function ProductsPage() {
     );
     router.push(`${pathname}?${params.toString()}`);
   };
-
-  const bulkActions: BulkAction[] = [
-    {
-      id: 'activate',
-      label: 'Activate',
-      variant: 'default',
-      onClick: (ids) =>
-        bulkActivate.mutate(ids, {
-          onSuccess: () => {
-            toast.success(`Activated ${ids.length} products`);
-            setSelectedIds([]);
-          },
-        }),
-    },
-    {
-      id: 'deactivate',
-      label: 'Deactivate',
-      variant: 'secondary',
-      onClick: (ids) =>
-        bulkDeactivate.mutate(ids, {
-          onSuccess: () => {
-            toast.success(`Deactivated ${ids.length} products`);
-            setSelectedIds([]);
-          },
-        }),
-    },
-    {
-      id: 'delete',
-      label: 'Delete',
-      icon: Trash2,
-      variant: 'destructive',
-      onClick: (ids) =>
-        confirm(`Delete ${ids.length} products?`) &&
-        bulkDelete.mutate(ids, {
-          onSuccess: () => {
-            toast.success(`Deleted ${ids.length} products`);
-            setSelectedIds([]);
-          },
-        }),
-    },
-  ];
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-2 space-y-8 duration-700">
@@ -117,14 +69,13 @@ export default function ProductsPage() {
         onCategoryFilterChange={(v) => updateParams({ category: v, page: '1' })}
         categories={categories}
       />
-      <BulkActionsToolbar
-        selectedCount={selectedIds.length}
-        totalCount={products.length}
-        onClearSelection={() => setSelectedIds([])}
-        actions={bulkActions}
+
+      <ProductBulkActions
         selectedIds={selectedIds}
-        resourceName="product"
+        totalDisplayed={products.length}
+        onClearSelection={() => setSelectedIds([])}
       />
+
       <div className="border-border bg-card overflow-hidden rounded-[2.5rem] border shadow-sm">
         <ProductTable
           products={products}
