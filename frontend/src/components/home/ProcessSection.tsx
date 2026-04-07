@@ -67,18 +67,18 @@ const STEPS = [
 
 export function ProcessSection() {
   return (
-    <section className="font-quicksand relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50/30 to-cyan-50/30 py-20">
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-16 text-center">
-          <h2 className="mb-6 bg-gradient-to-r from-gray-800 via-blue-700 to-cyan-600 bg-clip-text text-4xl font-bold text-transparent lg:text-5xl">
+    <section className="bg-muted/30 relative overflow-hidden py-24">
+      <div className="relative container mx-auto px-4 lg:px-8">
+        <div className="mb-20 text-center">
+          <h2 className="font-quicksand from-foreground via-primary to-secondary mb-8 bg-gradient-to-r bg-clip-text text-4xl font-black tracking-tighter text-transparent lg:text-6xl">
             What Will Pentorax Offer You?
           </h2>
-          <p className="mx-auto max-w-3xl text-xl text-gray-600">
+          <p className="text-muted-foreground mx-auto max-w-3xl text-xl font-medium">
             From initial consultation to long-term support, we guide you through every step of your
             solar journey.
           </p>
         </div>
-        <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((step, i) => (
             <ProcessStep key={i} {...step} isLast={i === STEPS.length - 1} />
           ))}
