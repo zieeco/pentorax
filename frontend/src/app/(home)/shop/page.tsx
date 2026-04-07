@@ -40,9 +40,9 @@ export default function ShopPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/50 pb-20">
+    <div className="bg-background/50 min-h-screen pb-20">
       {/* Header Banner */}
-      <div className="relative overflow-hidden bg-gray-900 py-24 text-white">
+      <div className="bg-foreground text-background relative overflow-hidden py-24">
         <div className="from-primary/20 to-primary/10 absolute inset-0 bg-gradient-to-r via-transparent" />
         <div className="bg-primary/20 absolute top-0 right-0 -mt-32 -mr-32 h-64 w-64 rounded-full blur-[120px]" />
         <div className="relative z-10 container mx-auto px-4 lg:px-8">
@@ -53,7 +53,7 @@ export default function ShopPage() {
             Shop Solar <br />
             <span className="text-primary italic">Solutions.</span>
           </h1>
-          <p className="max-w-xl text-lg font-medium text-gray-400">
+          <p className="text-background/60 max-w-xl text-lg font-medium">
             Discover a curated range of high-performance solar panels, inverters, and battery
             storage systems designed for African climate resilience.
           </p>
@@ -63,9 +63,9 @@ export default function ShopPage() {
       <div className="container mx-auto -mt-10 px-4 lg:px-8">
         <div className="flex flex-col gap-10">
           {/* Controls Bar */}
-          <div className="flex flex-col items-center justify-between gap-6 rounded-[2.5rem] border border-gray-100 bg-white p-6 shadow-xl shadow-gray-200/50 lg:flex-row">
+          <div className="border-border bg-card flex flex-col items-center justify-between gap-6 rounded-[2.5rem] p-6 shadow-xl lg:flex-row">
             <div className="relative w-full lg:w-96">
-              <Search className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Search className="text-muted-foreground absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2" />
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -73,7 +73,7 @@ export default function ShopPage() {
                 }}
               >
                 <Input
-                  className="focus-visible:ring-primary/20 rounded-2xl border-none bg-gray-50 py-6 pl-12 font-bold"
+                  className="focus-visible:ring-primary/20 bg-muted rounded-2xl border-none py-6 pl-12 font-bold"
                   placeholder="Search gear..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
@@ -101,14 +101,14 @@ export default function ShopPage() {
               ))}
             </div>
 
-            <div className="hidden items-center gap-3 border-l border-gray-100 pl-6 lg:flex">
-              <Button variant="ghost" size="icon" className="text-primary bg-primary/5 rounded-xl">
+            <div className="border-border hidden items-center gap-3 border-l pl-6 lg:flex">
+              <Button variant="ghost" size="icon" className="text-primary bg-primary/10 rounded-xl">
                 <LayoutGrid className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="rounded-xl text-gray-400">
+              <Button variant="ghost" size="icon" className="text-muted-foreground rounded-xl">
                 <List className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="rounded-xl text-gray-400">
+              <Button variant="ghost" size="icon" className="text-muted-foreground rounded-xl">
                 <SlidersHorizontal className="h-4 w-4" />
               </Button>
             </div>
@@ -117,7 +117,7 @@ export default function ShopPage() {
           <div className="flex flex-col gap-8 lg:flex-row">
             <main className="flex-1">
               <div className="mb-8 flex items-center justify-between">
-                <p className="text-sm font-black tracking-widest text-gray-500 uppercase">
+                <p className="text-muted-foreground text-sm font-black tracking-widest uppercase">
                   {isLoading ? 'Scanning Inventory...' : `${products.length} Items Found`}
                 </p>
               </div>
