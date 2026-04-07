@@ -37,8 +37,8 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <div className="container mx-auto px-4 py-24 text-center">
-        <h2 className="mb-4 text-2xl font-black text-gray-900">Product Lost in Orbit</h2>
-        <p className="mb-8 font-medium text-gray-500">
+        <h2 className="text-foreground mb-4 text-2xl font-black">Product Lost in Orbit</h2>
+        <p className="text-muted-foreground mb-8 font-medium">
           We couldn&apos;t find the solar gear you were looking for.
         </p>
         <Button onClick={() => router.push('/shop')} className="rounded-xl px-8 font-bold">
@@ -54,12 +54,12 @@ export default function ProductDetailPage() {
   ].filter((img) => img.image_url);
 
   return (
-    <div className="min-h-screen bg-gray-50/20 pb-20">
+    <div className="bg-background min-h-screen pb-20">
       <div className="container mx-auto px-4 py-8 lg:px-8">
         <Button
           variant="ghost"
           onClick={() => router.push('/shop')}
-          className="hover:text-primary hover:bg-primary/5 mb-8 gap-2 rounded-xl font-bold text-gray-400"
+          className="text-muted-foreground hover:text-primary hover:bg-primary/5 mb-8 gap-2 rounded-xl font-bold"
         >
           <ArrowLeft className="h-4 w-4" /> Back to Shop
         </Button>
@@ -69,14 +69,14 @@ export default function ProductDetailPage() {
           <ProductInfoSection product={product} />
         </div>
 
-        <div className="rounded-[2.5rem] border border-gray-100 bg-white p-8 shadow-sm lg:p-12">
+        <div className="border-border bg-card rounded-[2.5rem] p-8 p-12 shadow-sm lg:p-12">
           <Tabs defaultValue="description" className="w-full">
-            <TabsList className="mb-8 flex h-auto gap-8 rounded-none border-b border-gray-100 bg-transparent p-0">
+            <TabsList className="border-border mb-8 flex h-auto gap-8 rounded-none border-b bg-transparent p-0">
               {['description', 'specifications', 'reviews'].map((t) => (
                 <TabsTrigger
                   key={t}
                   value={t}
-                  className="data-[state=active]:text-primary data-[state=active]:border-primary rounded-none bg-transparent px-0 py-4 text-xs font-black tracking-widest text-gray-400 capitalize transition-all hover:text-gray-900 data-[state=active]:border-b-2"
+                  className="text-muted-foreground hover:text-foreground data-[state=active]:text-primary data-[state=active]:border-primary rounded-none bg-transparent px-0 py-4 text-xs font-black tracking-widest capitalize transition-all data-[state=active]:border-b-2"
                 >
                   {t}
                 </TabsTrigger>
@@ -87,7 +87,7 @@ export default function ProductDetailPage() {
               className="animate-in fade-in slide-in-from-bottom-2 duration-500"
             >
               <div className="prose prose-blue max-w-none">
-                <p className="text-lg leading-[1.8] font-medium text-gray-600">
+                <p className="text-muted-foreground text-lg leading-[1.8] font-medium">
                   {product.description}
                 </p>
               </div>
@@ -98,11 +98,11 @@ export default function ProductDetailPage() {
             >
               <div className="grid gap-4 sm:grid-cols-2">
                 {product.specifications?.map((s, i) => (
-                  <div key={i} className="flex justify-between rounded-xl bg-gray-50 p-4">
-                    <span className="text-[10px] font-black tracking-widest text-gray-400 uppercase">
+                  <div key={i} className="bg-muted flex justify-between rounded-xl p-4">
+                    <span className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
                       {s.key}
                     </span>
-                    <span className="font-bold text-gray-900">{s.value}</span>
+                    <span className="text-foreground font-bold">{s.value}</span>
                   </div>
                 ))}
               </div>
