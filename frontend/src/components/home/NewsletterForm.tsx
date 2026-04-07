@@ -34,7 +34,7 @@ export function NewsletterForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="full_name"
@@ -43,12 +43,12 @@ export function NewsletterForm() {
               <FormControl>
                 <Input
                   placeholder="Full Name"
-                  className="border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:ring-blue-500"
+                  className="focus:ring-primary h-14 rounded-2xl border-white/20 bg-white/10 font-black text-white placeholder:text-white/50"
                   disabled={isPending}
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-xs text-red-400" />
+              <FormMessage className="text-destructive text-xs" />
             </FormItem>
           )}
         />
@@ -61,19 +61,19 @@ export function NewsletterForm() {
                 <Input
                   type="email"
                   placeholder="Email Address"
-                  className="border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:ring-blue-500"
+                  className="focus:ring-primary h-14 rounded-2xl border-white/20 bg-white/10 font-black text-white placeholder:text-white/50"
                   disabled={isPending}
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-xs text-red-400" />
+              <FormMessage className="text-destructive text-xs" />
             </FormItem>
           )}
         />
         <Button
           type="submit"
           disabled={isPending}
-          className="w-full bg-blue-600 font-bold text-white hover:bg-blue-700"
+          className="font-quicksand bg-primary text-primary-foreground hover:bg-primary/90 h-14 w-full rounded-2xl font-black tracking-widest shadow-lg"
         >
           {isPending ? (
             <>
@@ -81,7 +81,7 @@ export function NewsletterForm() {
               Subscribing...
             </>
           ) : (
-            'SUBSCRIBE NOW'
+            'Subscribe Now'
           )}
         </Button>
       </form>
