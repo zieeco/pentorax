@@ -63,11 +63,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
 
   return (
     <aside
-      className={`${collapsed ? 'w-20' : 'w-64'} bg-brand-dark text-brand-light flex shrink-0 flex-col overflow-hidden transition-all duration-300`}
+      className={`${collapsed ? 'w-20' : 'w-64'} border-border bg-card text-foreground flex shrink-0 flex-col overflow-hidden border-r transition-all duration-300`}
     >
       <Link
         href="/"
-        className={`border-brand-light/5 hover:bg-brand-light/5 block border-b p-6 transition-colors ${collapsed ? 'flex justify-center' : ''}`}
+        className={`border-border/50 hover:bg-muted/50 block border-b p-6 transition-colors ${collapsed ? 'flex justify-center' : ''}`}
       >
         <div className="flex items-center space-x-3">
           <Image
