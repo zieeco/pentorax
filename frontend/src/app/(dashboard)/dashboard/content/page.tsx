@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import {
   Table,
   TableBody,
@@ -114,8 +115,4 @@ export default function ContentPage() {
       </div>
     </div>
   );
-}
-
-function Separator({ className }: { className?: string }) {
-  return <div className={`h-[1px] w-full ${className}`} />;
 }
