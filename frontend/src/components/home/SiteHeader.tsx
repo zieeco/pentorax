@@ -62,11 +62,11 @@ export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-12 z-40 mt-12 bg-white shadow-sm">
+    <header className="bg-background/80 sticky z-40 shadow-sm backdrop-blur-md transition-all">
       <TopHeader />
-      <div className="bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
+      <div className="mt-12 bg-transparent">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="flex h-20 items-center justify-between">
             <Link href="/" aria-label="PentoraX Home" className="flex items-center">
               <Image
                 src="/pentorax.jpeg"
@@ -75,26 +75,25 @@ export function SiteHeader() {
                 height={90}
                 className="mt-[-16px] object-contain"
               />
-              <span className="font-quicksand text-primary mt-[-8px] ml-[-30px] text-[2rem] font-extrabold">
+              <span className="font-quicksand text-primary mt-[-8px] ml-[-30px] text-[2rem] font-black tracking-tighter">
                 PentoraX
               </span>
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="font-quicksand hidden items-center text-[14px] lg:flex">
+            <nav className="hidden items-center text-[13px] lg:flex">
               {NAV_LINKS.map((item, i) => (
                 <NavItem key={item.name} {...item} isLast={i === NAV_LINKS.length - 1} />
               ))}
             </nav>
 
-            <div className="hidden items-center gap-2 lg:flex">
+            <div className="hidden items-center gap-4 lg:flex">
               <Button
                 asChild
-                variant="outline"
-                className="border-primary text-primary hover:bg-primary shadow-primary/10 rounded-xl border-2 font-bold shadow-lg hover:text-white"
+                className="bg-primary text-primary-foreground h-12 rounded-xl px-8 font-black tracking-widest transition-all hover:scale-105"
               >
-                <Link href="/shop">
-                  Shop Now <ExternalLink className="ml-2 h-5 w-5" />
+                <Link href="/shop" className="font-quicksand">
+                  Shop Now <ExternalLink className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </div>
@@ -105,7 +104,7 @@ export function SiteHeader() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsMenuOpen(true)}
-                className="text-gray-600"
+                className="text-muted-foreground hover:bg-primary/5 h-12 w-12 rounded-xl"
               >
                 <Menu className="h-7 w-7" />
               </Button>
