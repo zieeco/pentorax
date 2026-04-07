@@ -18,20 +18,26 @@ export default function OrderHistoryPage() {
 
   if (isLoading)
     return (
-      <div className="container mx-auto px-4 py-20 lg:px-8">
-        <Skeleton className="mb-12 h-10 w-48 rounded-xl" />
-        <div className="mx-auto max-w-4xl space-y-6">
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-32 w-full rounded-[2rem]" />
-          ))}
+      <div className="bg-background min-h-screen">
+        <div className="bg-brand-dark py-24 text-white">
+          <div className="container mx-auto px-4 lg:px-8">
+            <Skeleton className="mb-8 h-12 w-64 bg-white/10" />
+          </div>
+        </div>
+        <div className="container mx-auto -mt-10 px-4 lg:px-8">
+          <div className="mx-auto max-w-4xl space-y-6">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="bg-muted h-32 w-full rounded-[2rem]" />
+            ))}
+          </div>
         </div>
       </div>
     );
 
   if (!orders || orders.length === 0)
     return (
-      <div className="min-h-screen bg-gray-50/50">
-        <div className="bg-gray-900 py-24 text-white">
+      <div className="bg-background min-h-screen">
+        <div className="bg-brand-dark py-24 text-white">
           <div className="container mx-auto px-4 text-center lg:px-8">
             <h1 className="mb-4 text-4xl leading-none font-black tracking-tight md:text-6xl">
               Order <span className="text-primary italic">History.</span>
@@ -40,11 +46,11 @@ export default function OrderHistoryPage() {
         </div>
         <div className="container mx-auto px-4 py-24 text-center">
           <div className="mx-auto max-w-md">
-            <div className="mb-10 inline-flex h-28 w-28 items-center justify-center rounded-[2.5rem] border border-gray-100 bg-white shadow-xl shadow-gray-200/50">
-              <ShoppingBag className="h-12 w-12 text-gray-300" />
+            <div className="border-border bg-card shadow-border/50 mb-10 inline-flex h-28 w-28 items-center justify-center rounded-[2.5rem] border shadow-xl">
+              <ShoppingBag className="text-muted-foreground/30 h-12 w-12" />
             </div>
-            <h2 className="mb-4 text-3xl font-black text-gray-900 italic">No Records Found</h2>
-            <p className="mb-10 px-4 leading-relaxed font-medium text-gray-500">
+            <h2 className="text-foreground mb-4 text-3xl font-black italic">No Records Found</h2>
+            <p className="text-muted-foreground mb-10 px-4 leading-relaxed font-medium">
               Your procurement record is currently empty. Start shopping to build your clean energy
               portfolio.
             </p>
@@ -63,14 +69,14 @@ export default function OrderHistoryPage() {
     );
 
   return (
-    <div className="min-h-screen bg-gray-50/50 pb-24">
-      <div className="bg-gray-900 py-24 text-white">
+    <div className="bg-background min-h-screen pb-24">
+      <div className="bg-brand-dark py-24 text-white">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="mb-4 flex items-center gap-4">
             <Badge className="bg-primary/20 text-primary rounded-full border-none px-4 py-1 text-[10px] font-black uppercase">
               Archive Phase
             </Badge>
-            <span className="text-xs font-black tracking-widest text-gray-400 uppercase italic">
+            <span className="text-xs font-black tracking-widest text-white/70 uppercase italic">
               {orders.length} Records Locked
             </span>
           </div>
