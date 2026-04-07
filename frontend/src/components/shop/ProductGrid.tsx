@@ -20,7 +20,7 @@ export function ProductGrid({ products, isLoading }: ProductGridProps) {
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="animate-pulse space-y-4 rounded-[2rem] border border-gray-100 bg-white/50 p-4"
+            className="border-border bg-card/50 animate-pulse space-y-4 rounded-[2rem] border p-4"
           >
             <Skeleton className="aspect-square w-full rounded-3xl" />
             <div className="space-y-2 px-2">
@@ -39,11 +39,11 @@ export function ProductGrid({ products, isLoading }: ProductGridProps) {
   if (products.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
-        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-50">
+        <div className="bg-muted/30 mb-6 flex h-20 w-20 items-center justify-center rounded-full">
           <span className="text-4xl">🔍</span>
         </div>
-        <h3 className="mb-2 text-xl font-black text-gray-900">No matching products</h3>
-        <p className="mx-auto max-w-xs text-sm font-medium text-gray-500">
+        <h3 className="text-foreground mb-2 text-xl font-black">No matching products</h3>
+        <p className="text-muted-foreground mx-auto max-w-xs text-sm font-medium">
           We couldn&apos;t find what you&apos;re looking for. Try adjusting your filters or search
           terms.
         </p>
