@@ -59,7 +59,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Wait for auth to initialize or handle redirects
   if (!isInitialized || isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50/50">
+      <div className="bg-background/50 flex min-h-screen items-center justify-center">
         <LoadingSpinner size="lg" />
       </div>
     );
