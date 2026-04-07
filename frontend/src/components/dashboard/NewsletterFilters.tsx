@@ -24,15 +24,15 @@ export function NewsletterFilters({
   return (
     <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
       <div className="relative w-full md:w-96">
-        <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <Search className="text-muted-foreground/50 absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
         <Input
           placeholder="Search email or subscriber name..."
-          className="focus-visible:ring-primary/20 rounded-2xl border-gray-100 bg-white py-6 pl-10 font-medium shadow-sm transition-all"
+          className="focus-visible:ring-primary/20 border-border bg-card rounded-2xl py-6 pl-10 font-medium shadow-sm transition-all"
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
         />
       </div>
-      <div className="flex rounded-2xl border border-gray-100 bg-gray-100/50 p-1.5">
+      <div className="border-border bg-muted/50 flex rounded-2xl border p-1.5">
         {(['all', 'active', 'inactive'] as const).map((filter) => (
           <Button
             key={filter}
@@ -40,8 +40,8 @@ export function NewsletterFilters({
             onClick={() => onStatusFilterChange(filter)}
             className={`h-auto rounded-xl px-6 py-2 text-xs font-black tracking-wider uppercase transition-all ${
               statusFilter === filter
-                ? 'text-primary bg-white shadow-sm hover:bg-white'
-                : 'text-gray-400 hover:bg-transparent hover:text-gray-600'
+                ? 'text-primary bg-background hover:bg-background shadow-sm'
+                : 'text-muted-foreground hover:text-foreground hover:bg-transparent'
             }`}
           >
             {filter}
