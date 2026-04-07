@@ -21,8 +21,8 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({ collapsed, isActiv
           className={cn(
             'flex items-center justify-center rounded-xl p-3 transition-all',
             isActive('/dashboard/settings')
-              ? 'bg-brand-primary shadow-brand-primary/20 text-brand-light shadow-lg'
-              : 'text-brand-light/40 hover:bg-brand-light/5 hover:text-brand-light'
+              ? 'bg-primary shadow-primary/20 text-primary-foreground shadow-lg'
+              : 'text-muted-foreground hover:bg-muted hover:text-foreground'
           )}
           title="Settings"
         >
@@ -48,8 +48,8 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({ collapsed, isActiv
         className={cn(
           'flex w-full items-center space-x-3 rounded-xl px-4 py-3 transition-all',
           isActive('/dashboard/settings')
-            ? 'bg-brand-primary shadow-brand-primary/20 text-brand-light shadow-lg'
-            : 'text-brand-light/40 hover:bg-brand-light/5 hover:text-brand-light'
+            ? 'bg-primary shadow-primary/20 text-primary-foreground shadow-lg'
+            : 'text-muted-foreground hover:bg-muted hover:text-foreground'
         )}
       >
         <Settings className="h-5 w-5" />
