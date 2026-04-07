@@ -11,47 +11,49 @@ import { Card } from '@/components/ui/card';
 
 interface CartSummaryProps {
   itemCount: number;
-  subtotal: number;
-  shipping?: number;
-  total: number;
+  subtotal: string | number;
+  shipping?: string | number;
+  total: string | number;
 }
 
 export function CartSummary({ itemCount, subtotal, shipping, total }: CartSummaryProps) {
   const router = useRouter();
 
   return (
-    <Card className="sticky top-8 rounded-[2.5rem] border border-gray-100 bg-white p-8 shadow-xl shadow-gray-200/50">
+    <Card className="border-border bg-card sticky top-8 rounded-[2.5rem] border p-8 shadow-xl">
       <div className="mb-8 flex items-center gap-3">
         <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-xl">
           <ShoppingCart className="text-primary h-5 w-5" />
         </div>
-        <h2 className="text-xl font-black text-gray-900">Order Totals</h2>
+        <h2 className="text-foreground text-xl font-black">Order Totals</h2>
       </div>
 
       <div className="mb-8 space-y-4">
-        <div className="flex items-center justify-between text-xs font-black tracking-widest text-gray-400 uppercase">
+        <div className="text-muted-foreground flex items-center justify-between text-xs font-black tracking-widest uppercase">
           <span>Subtotal ({itemCount} units)</span>
-          <span className="text-gray-900 italic">₦{subtotal.toLocaleString()}</span>
+          <span className="text-foreground italic">₦{Number(subtotal).toLocaleString()}</span>
         </div>
 
-        <div className="flex items-center justify-between text-xs font-black tracking-widest text-gray-400 uppercase">
+        <div className="text-muted-foreground flex items-center justify-between text-xs font-black tracking-widest uppercase">
           <span>Logistics</span>
-          <span className="text-gray-900 italic">
-            {shipping === 0
+          <span className="text-foreground italic">
+            {shipping === 0 || shipping === '0'
               ? 'COMPLIMENTARY'
               : shipping !== undefined
-                ? `₦${shipping.toLocaleString()}`
+                ? `₦${Number(shipping).toLocaleString()}`
                 : 'CALCULATED AT CHECKOUT'}
           </span>
         </div>
 
-        <div className="my-2 h-px bg-gray-100" />
+        <div className="border-border/50 my-2 h-px border-t" />
 
         <div className="flex items-center justify-between">
-          <span className="text-sm font-black tracking-widest text-gray-900 uppercase">
+          <span className="text-foreground text-sm font-black tracking-widest uppercase">
             Total Liability
           </span>
-          <span className="text-primary text-2xl font-black italic">₦{total.toLocaleString()}</span>
+          <span className="text-primary text-2xl font-black italic">
+            ₦{Number(total).toLocaleString()}
+          </span>
         </div>
       </div>
 
@@ -66,7 +68,7 @@ export function CartSummary({ itemCount, subtotal, shipping, total }: CartSummar
 
         <Button
           variant="ghost"
-          className="h-12 w-full rounded-xl text-[10px] font-black tracking-widest text-gray-400 uppercase hover:text-gray-900"
+          className="text-muted-foreground hover:text-foreground h-12 w-full rounded-xl text-[10px] font-black tracking-widest uppercase"
           onClick={() => router.push('/shop')}
         >
           Continue Exploration
@@ -75,13 +77,13 @@ export function CartSummary({ itemCount, subtotal, shipping, total }: CartSummar
 
       <div className="mt-8 space-y-4">
         {[
-          { icon: ShieldCheck, text: 'Vault-Grade Security', color: 'text-emerald-500' },
-          { icon: Truck, text: 'Expedited Dispatch', color: 'text-blue-500' },
-          { icon: RotateCcw, text: '30-Day Reversal Policy', color: 'text-amber-500' },
+          { icon: ShieldCheck, text: 'Vault-Grade Security', color: 'text-secondary' },
+          { icon: Truck, text: 'Expedited Dispatch', color: 'text-primary' },
+          { icon: RotateCcw, text: '30-Day Reversal Policy', color: 'text-accent' },
         ].map((item, i) => (
           <div key={i} className="flex items-center gap-3">
             <item.icon className={`h-4 w-4 ${item.color}`} />
-            <span className="text-[10px] font-black tracking-widest text-gray-400 uppercase">
+            <span className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
               {item.text}
             </span>
           </div>
