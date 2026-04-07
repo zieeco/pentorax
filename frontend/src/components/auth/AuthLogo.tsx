@@ -14,7 +14,7 @@ export function AuthLogo() {
         height={32}
         className="rounded-lg object-contain"
       />
-      <span className="font-quicksand text-xl font-extrabold text-gray-900">PentoraX</span>
+      <span className="text-foreground font-quicksand text-xl font-extrabold">PentoraX</span>
     </Link>
   );
 }
