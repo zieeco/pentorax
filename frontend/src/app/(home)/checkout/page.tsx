@@ -60,8 +60,8 @@ export default function CheckoutPage() {
   const isProcessing = createOrder.isPending || initializePayment.isPending;
 
   return (
-    <div className="min-h-screen bg-gray-50/50 pb-24">
-      <div className="bg-gray-900 py-24 text-white">
+    <div className="bg-background min-h-screen pb-24">
+      <div className="bg-foreground text-background py-24">
         <div className="container mx-auto px-4 lg:px-8">
           <Badge className="bg-primary/20 text-primary mb-4 rounded-full border-none px-4 py-1 text-[10px] font-black uppercase">
             Encryption Phase
